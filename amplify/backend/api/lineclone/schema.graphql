@@ -1,0 +1,93 @@
+type User
+  @model
+  @auth(
+    rules: [
+      { allow: groups, groups: ["admin"] }
+      { allow: owner, ownerField: "username", operations: [read] }
+    ]
+  ) {
+  id: ID!
+  username: String!
+  email: String!
+  lineID: String
+  displayName: String!
+  statusMessage: String
+  password: String!
+  profilePhoto: S3Object
+  coverPhoto: S3Object
+  phoneNumber: String!
+  groups: [UserGroups] @connection(name: "UserGroups")
+  friends: [UserFriends] @connection(name: "UserFriends")
+  blocked: [User]
+  favourites: [User]
+  posts: [Post] @connection(keyName: "UserPosts")
+}
+
+type Group @model {
+  id: ID!
+  name: String!
+  users: [UserGroups] @connection(name: "GroupUsers")
+  messages: [Message] @connection(name: "GroupUsers")
+  isDirect: Boolean!
+  announce: [Message] @connection(name: "GroupUsers")
+  files: S3Object
+  albums: [Album]
+}
+
+type UserGroups @model(queries: null) {
+  id: ID!
+  user: User @connection(name: "UserGroups")
+  group: Group @connection(name: "GroupUsers")
+}
+
+type UserFriends @model(queries: null) {
+  id: ID!
+  friendUser: User @connection(name: "UserFriends")
+  displayName: String
+}
+
+type Message
+  @model
+  @key(
+    name: "messageByDate"
+    fields: ["type", "createdAt"]
+    queryField: "messageByDate"
+  ) {
+  id: ID!
+  user: User @connection(name: "UserGroups")
+  group: Group @connection(name: "GroupUsers")
+  type: String!
+  message: String!
+  createdAt: String!
+  isBlock: Boolean!
+}
+
+type Post @model {
+  id: ID!
+  name: String!
+  description: String
+  comments: [Comment] @connection(keyName: "PostComments")
+  likes: [Like] @connection(keyName: "PostLikes")
+}
+
+type Comment @model {
+  id: ID!
+  comment: String!
+}
+
+type Like @model {
+  id: ID!
+  emoji: S3Object
+}
+
+type Album @model {
+  id: ID!
+  albumName: String
+  file: S3Object
+}
+
+type S3Object {
+  bucket: String!
+  region: String!
+  key: String!
+}
