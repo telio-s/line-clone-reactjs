@@ -43,3 +43,40 @@ export const deleteUser = /* GraphQL */ `
     }
   }
 `;
+
+export const createMessage = /* GraphQL */ `
+  mutation CreateMessage(
+    $input: CreateMessageInput!
+    $condition: ModelMessageConditionInput
+  ) {
+    createMessage(input: $input, condition: $condition) {
+      id
+      user {
+        id
+        username
+        groups {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      group {
+        id
+        name
+        users {
+          nextToken
+        }
+        messages {
+          nextToken
+        }
+        isDirect
+        createdAt
+        updatedAt
+      }
+      type
+      message
+      createdAt
+      updatedAt
+    }
+  }
+`;

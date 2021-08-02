@@ -7,13 +7,16 @@ import { BrowserRouter as Router, Route } from "react-router-dom";
 
 function App() {
   return (
-    <Router>
-      <div className="App">
-        <Route path="/login" exact component={Login} />
-        <Route path="/dashboard" exact component={Dashboard} />
-      </div>
-    </Router>
+    <div>
+      <Router>
+        <div className="App">
+          <Route path="/login" exact component={Login} />
+          <Route path="/dashboard" exact component={Dashboard} />
+        </div>
+      </Router>
+      <AmplifySignOut />
+    </div>
   );
 }
 
-export default App;
+export default withAuthenticator(App);

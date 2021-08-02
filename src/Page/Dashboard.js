@@ -1,104 +1,47 @@
-import React from "react";
-import { BrowserRouter as Router, Route, Link } from "react-router-dom";
-import {
-  AppBar,
-  Toolbar,
-  Drawer,
-  IconButton,
-  Typography,
-  Button,
-  Divider,
-} from "@material-ui/core";
-import {
-  Person,
-  PersonAdd,
-  WatchLater,
-  MoreHoriz,
-  VolumeDownOutlined,
-} from "@material-ui/icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faCommentDots, faNewspaper } from "@fortawesome/free-solid-svg-icons";
-
+import React, { useState, useEffect } from "react";
+import { Divider } from "@material-ui/core";
 import useStyles from "../Style/DashboardStyle";
-import ChatRoomList from "../Components/ChatRoomList";
-import ChatRoom from "../Components/ChatRoom";
+import Selection from "./../Components/Selection";
+import MenuBar from "../Components/MenuBar";
+import AllChats from "../Components/AllChats";
+
+import { getLoggedInUser } from "../api/queries";
+import SideBar from "../Components/SideBar";
+import Chat from "./../Components/Chat";
+
+export const DashboardContext = React.createContext();
 
 const Dashboard = () => {
+  const [user, setUser] = useState();
+  const [sideBar, setSideBar] = useState(null);
+  const [chat, setChat] = useState(null);
+
   const classes = useStyles();
 
-  const chatTypeSection = [
-    { title: "All" },
-    { title: "Friends" },
-    { title: "Groups" },
-  ];
+  useEffect(() => {
+    async function getUser() {
+      const data = await getLoggedInUser();
+      console.log(data);
+      setUser(data.data.listUsers.items[0]);
+    }
+    getUser();
+    setSideBar(<AllChats />);
+  }, []);
 
   return (
-    <div className={classes.root}>
-      <div>
-        <AppBar className={classes.appbar} elevation={0} position="static">
-          <Toolbar>
-            {chatTypeSection.map((obj, index) => (
-              <Button
-                disableRipple="true"
-                key={index}
-                className={classes.chatSection}
-              >
-                {obj.title}
-              </Button>
-            ))}
-          </Toolbar>
-        </AppBar>
+    <DashboardContext.Provider
+      value={{ user, sideBar, setSideBar, chat, setChat }}
+    >
+      <div className={classes.root}>
+        <Selection />
+        <Divider />
+        <div className={classes.mainDrawerRoot}>
+          <MenuBar />
+          <SideBar />
+          <Chat />
+        </div>
       </div>
-      <Divider />
-      <div className={classes.mainDrawerRoot}>
-        <Drawer
-          variant="permanent"
-          anchor="left"
-          className={classes.drawer}
-          classes={{ paper: classes.drawerPaper }}
-        >
-          <IconButton disableRipple="true" className={classes.iconButton}>
-            <Person
-              className={classes.iconMtDrawer}
-              style={{ marginTop: "30px" }}
-            />
-          </IconButton>
-          <IconButton disableRipple="true" className={classes.iconButton}>
-            <FontAwesomeIcon
-              className={classes.iconAweDrawer}
-              icon={faCommentDots}
-            />
-          </IconButton>
-          <IconButton disableRipple="true" className={classes.iconButton}>
-            <PersonAdd className={classes.iconMtDrawer} />
-          </IconButton>
-          <IconButton disableRipple="true" className={classes.iconButton}>
-            <WatchLater className={classes.iconMtDrawer} />
-          </IconButton>
-          <IconButton disableRipple="true" className={classes.iconButton}>
-            <FontAwesomeIcon
-              className={classes.iconAweDrawer}
-              icon={faNewspaper}
-            />
-          </IconButton>
-
-          <div className={classes.drawerIconBottom}>
-            <IconButton disableRipple="true" className={classes.iconButton}>
-              <VolumeDownOutlined className={classes.iconMtDrawer} />
-            </IconButton>
-            <IconButton disableRipple="true" className={classes.iconButton}>
-              <MoreHoriz className={classes.iconMtDrawer} />
-            </IconButton>
-          </div>
-        </Drawer>
-
-        <main className={classes.main}>
-          <ChatRoomList />
-          <Divider orientation="vertical" flexItem />
-          <ChatRoom />
-        </main>
-      </div>
-    </div>
+    </DashboardContext.Provider>
   );
 };
 
