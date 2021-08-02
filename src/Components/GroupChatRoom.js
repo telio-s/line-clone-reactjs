@@ -46,18 +46,18 @@ const GroupChatRoom = (props) => {
     };
     async function createMessage() {
       console.log(message);
-      await createMessageInGroup(message);
+      const data = await createMessageInGroup(message);
+      console.log(data);
+      setMessages([...messages, data.data.createMessage]);
     }
     try {
       createMessage();
       console.log("send message!", message);
-      setMessages([...messages, message]);
+      setCurrMessage(null);
     } catch (error) {
       console.log("Can't send Message", error);
     }
   }
-
-  console.log(messages);
   return (
     <div className={classes.root}>
       <Divider orientation="vertical" flexItem />
@@ -78,9 +78,15 @@ const GroupChatRoom = (props) => {
         </Toolbar>
       </AppBar>
       <div className={classes.chatArea}>
-        <MyMessageBubble />
-        <TheirMessageBubble />
-        <MyMessageBubble />
+        {messages.length
+          ? messages.map((message, index) =>
+              message.user.id === user.id ? (
+                <MyMessageBubble key={index} message={message} />
+              ) : (
+                <TheirMessageBubble key={index} message />
+              )
+            )
+          : null}
       </div>
       <Divider />
       <form className={classes.textArea} onSubmit={(e) => handleSendMessage(e)}>

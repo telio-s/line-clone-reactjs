@@ -13,7 +13,7 @@ import useStyles from "../Style/ChatRoomStyle";
 import MyMessageBubble from "./MyMessageBubble";
 import TheirMessageBubble from "./TheirMessageBubble";
 
-const ChatRoom = () => {
+const DirectChatRoom = () => {
   const classes = useStyles();
   return (
     <div className={classes.root}>
@@ -59,4 +59,4 @@ const ChatRoom = () => {
   );
 };
 
-export default ChatRoom;
+export default DirectChatRoom;
