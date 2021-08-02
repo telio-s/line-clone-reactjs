@@ -1,14 +1,11 @@
-import React from "react";
-import { BrowserRouter as Router, Route, Link } from "react-router-dom";
+import React, { useState, useEffect } from "react";
 import {
-  AppBar,
-  Toolbar,
-  Drawer,
-  IconButton,
-  Typography,
-  Button,
-  Divider,
-} from "@material-ui/core";
+  BrowserRouter as Router,
+  Route,
+  Link,
+  useHistory,
+} from "react-router-dom";
+import { Drawer, ListItem, ListItemIcon, List } from "@material-ui/core";
 import {
   Person,
   PersonAdd,
@@ -20,85 +17,156 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCommentDots, faNewspaper } from "@fortawesome/free-solid-svg-icons";
 
 import useStyles from "../Style/DashboardStyle";
-import ChatRoomList from "../Components/ChatRoomList";
-import ChatRoom from "../Components/ChatRoom";
+import ChatDashboard from "../Components/ChatDashboard";
 
 const Dashboard = () => {
   const classes = useStyles();
+  const [component, setComponent] = useState(null);
 
-  const chatTypeSection = [
-    { title: "All" },
-    { title: "Friends" },
-    { title: "Groups" },
-  ];
+  useEffect(() => {
+    setComponent("chats");
+  });
 
+  const changeComponent = (key) => {
+    switch (key) {
+      case "chats":
+        return <ChatDashboard />;
+      case "friends":
+        console.log(key);
+        break;
+      case "addFriend":
+        console.log(key);
+        break;
+      case "timeline":
+        console.log(key);
+        break;
+      case "news":
+        console.log(key);
+        break;
+      case "mute":
+        console.log(key);
+        break;
+      case "settings":
+        console.log(key);
+        break;
+      default:
+        return <ChatDashboard />;
+    }
+  };
   return (
-    <div className={classes.root}>
-      <div>
-        <AppBar className={classes.appbar} elevation={0} position="static">
-          <Toolbar>
-            {chatTypeSection.map((obj, index) => (
-              <Button
-                disableRipple="true"
-                key={index}
-                className={classes.chatSection}
+    <Router>
+      <div className={classes.root}>
+        <div className={classes.mainDrawerRoot}>
+          <Drawer
+            variant="permanent"
+            anchor="left"
+            className={classes.drawer}
+            classes={{ paper: classes.drawerPaper }}
+          >
+            <List>
+              <ListItem
+                button
+                disableRipple={true}
+                className={classes.iconButton}
+                onClick={() => {
+                  setComponent("friends");
+                }}
               >
-                {obj.title}
-              </Button>
-            ))}
-          </Toolbar>
-        </AppBar>
-      </div>
-      <Divider />
-      <div className={classes.mainDrawerRoot}>
-        <Drawer
-          variant="permanent"
-          anchor="left"
-          className={classes.drawer}
-          classes={{ paper: classes.drawerPaper }}
-        >
-          <IconButton disableRipple="true" className={classes.iconButton}>
-            <Person
-              className={classes.iconMtDrawer}
-              style={{ marginTop: "30px" }}
-            />
-          </IconButton>
-          <IconButton disableRipple="true" className={classes.iconButton}>
-            <FontAwesomeIcon
-              className={classes.iconAweDrawer}
-              icon={faCommentDots}
-            />
-          </IconButton>
-          <IconButton disableRipple="true" className={classes.iconButton}>
-            <PersonAdd className={classes.iconMtDrawer} />
-          </IconButton>
-          <IconButton disableRipple="true" className={classes.iconButton}>
-            <WatchLater className={classes.iconMtDrawer} />
-          </IconButton>
-          <IconButton disableRipple="true" className={classes.iconButton}>
-            <FontAwesomeIcon
-              className={classes.iconAweDrawer}
-              icon={faNewspaper}
-            />
-          </IconButton>
+                <ListItemIcon>
+                  <Person
+                    className={classes.iconMtDrawer}
+                    style={{ marginTop: "30px" }}
+                  />
+                </ListItemIcon>
+              </ListItem>
+              <ListItem
+                button
+                disableRipple={true}
+                className={classes.iconButton}
+                onClick={() => {
+                  setComponent("chats");
+                }}
+              >
+                <ListItemIcon style={{ paddingLeft: "5px" }}>
+                  <FontAwesomeIcon
+                    className={classes.iconAweDrawer}
+                    icon={faCommentDots}
+                  />
+                </ListItemIcon>
+              </ListItem>
+              <ListItem
+                button
+                disableRipple={true}
+                className={classes.iconButton}
+                onClick={() => {
+                  setComponent("addFriend");
+                }}
+              >
+                <ListItemIcon>
+                  <PersonAdd className={classes.iconMtDrawer} />
+                </ListItemIcon>
+              </ListItem>
+              <ListItem
+                button
+                disableRipple={true}
+                className={classes.iconButton}
+                onClick={() => {
+                  setComponent("timeline");
+                }}
+              >
+                <ListItemIcon>
+                  <WatchLater className={classes.iconMtDrawer} />
+                </ListItemIcon>
+              </ListItem>
+              <ListItem
+                button
+                disableRipple={true}
+                className={classes.iconButton}
+                onClick={() => {
+                  setComponent("news");
+                }}
+              >
+                <ListItemIcon>
+                  <FontAwesomeIcon
+                    className={classes.iconAweDrawer}
+                    icon={faNewspaper}
+                  />
+                </ListItemIcon>
+              </ListItem>
 
-          <div className={classes.drawerIconBottom}>
-            <IconButton disableRipple="true" className={classes.iconButton}>
-              <VolumeDownOutlined className={classes.iconMtDrawer} />
-            </IconButton>
-            <IconButton disableRipple="true" className={classes.iconButton}>
-              <MoreHoriz className={classes.iconMtDrawer} />
-            </IconButton>
-          </div>
-        </Drawer>
+              <div className={classes.drawerIconBottom}>
+                <ListItem
+                  button
+                  disableRipple={true}
+                  className={classes.iconButton}
+                  onClick={() => {
+                    setComponent("mute");
+                  }}
+                >
+                  <ListItemIcon>
+                    <VolumeDownOutlined className={classes.iconMtDrawer} />
+                  </ListItemIcon>
+                </ListItem>
+                <ListItem
+                  button
+                  disableRipple={true}
+                  className={classes.iconButton}
+                  onClick={() => {
+                    setComponent("settings");
+                  }}
+                >
+                  <ListItemIcon>
+                    <MoreHoriz className={classes.iconMtDrawer} />
+                  </ListItemIcon>
+                </ListItem>
+              </div>
+            </List>
+          </Drawer>
 
-        <main className={classes.main}>
-          <ChatRoomList />
-          <Divider orientation="vertical" flexItem />
-          <ChatRoom />
-        </main>
+          <main className={classes.main}>{changeComponent(component)}</main>
+        </div>
       </div>
-    </div>
+    </Router>
   );
 };
 
