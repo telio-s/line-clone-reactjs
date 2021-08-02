@@ -30,7 +30,7 @@ const ChatRoomList = () => {
           />
         </Toolbar>
       </AppBar>
-      <Button disableRipple="true" className={classes.chatRoom}>
+      <Button disableRipple={true} className={classes.chatRoom}>
         <AccountCircle style={{ fontSize: "60px" }} />
         <div className={classes.chatDesc}>
           <Typography className={classes.nameChat}>Name Chat</Typography>
@@ -47,7 +47,7 @@ const ChatRoomList = () => {
 
         <Typography className={classes.timeChat}>12:00AM</Typography>
       </Button>
-      <Button disableRipple="true" className={classes.chatRoom}>
+      <Button disableRipple={true} className={classes.chatRoom}>
         <AccountCircle style={{ fontSize: "60px" }} />
         <div className={classes.chatDesc}>
           <Typography className={classes.nameChat}>Name Chat</Typography>
@@ -63,7 +63,7 @@ const ChatRoomList = () => {
 
         <Typography className={classes.timeChat}>12:00AM</Typography>
       </Button>
-      <Button disableRipple="true" className={classes.chatRoom}>
+      <Button disableRipple={true} className={classes.chatRoom}>
         <AccountCircle style={{ fontSize: "60px" }} />
         <div className={classes.chatDesc}>
           <Typography className={classes.nameChat}>Name Chat</Typography>
