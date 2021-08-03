@@ -8,7 +8,7 @@ function Groups(props) {
   const { setChat } = useContext(DashboardContext);
 
   function handleDirectChatRoom(friend) {
-    setChat(<DirectChatRoom />);
+    setChat(<DirectChatRoom friend={friend} />);
   }
 
   return (
@@ -17,9 +17,9 @@ function Groups(props) {
         <ListItem
           key={index}
           button
-          onClick={() => handleDirectChatRoom(friend.friend)}
+          onClick={() => handleDirectChatRoom(friend.friendUser)}
         >
-          <p>{friend.friend.name}</p>
+          <p>{friend.friendUser.username}</p>
         </ListItem>
       ))}
     </div>

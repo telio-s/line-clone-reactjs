@@ -168,53 +168,40 @@ export const listUsers = /* GraphQL */ `
         id
         username
         email
-        lineID
-        displayName
-        statusMessage
-        profilePhoto {
-          bucket
-          region
-          key
-        }
-        coverPhoto {
-          bucket
-          region
-          key
-        }
-        phoneNumber
-        groups {
-          nextToken
-        }
-        friends {
-          nextToken
-        }
-        blocked {
-          id
-          username
-          email
-          lineID
-          displayName
-          statusMessage
-          phoneNumber
-          createdAt
-          updatedAt
-        }
-        favourites {
-          id
-          username
-          email
-          lineID
-          displayName
-          statusMessage
-          phoneNumber
-          createdAt
-          updatedAt
-        }
-        posts {
-          nextToken
-        }
         createdAt
         updatedAt
+        groups {
+          items {
+            group {
+              id
+              name
+              isDirect
+            }
+          }
+        }
+        friends {
+          items {
+            friendUser {
+              id
+              username
+              groups {
+                items {
+                  group {
+                    id
+                    name
+                    isDirect
+                    messages {
+                      items {
+                        id
+                        message
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
       }
       nextToken
     }
@@ -241,6 +228,10 @@ export const getGroup = /* GraphQL */ `
           createdAt
           isBlock
           updatedAt
+          user {
+            id
+            username
+          }
         }
         nextToken
       }
@@ -589,75 +580,6 @@ export const listAlbums = /* GraphQL */ `
         }
         createdAt
         updatedAt
-      }
-      nextToken
-    }
-  }
-`;
-export const messageByDate = /* GraphQL */ `
-  query MessageByDate(
-    $type: String
-    $createdAt: ModelStringKeyConditionInput
-    $sortDirection: ModelSortDirection
-    $filter: ModelMessageFilterInput
-    $limit: Int
-    $nextToken: String
-  ) {
-    messageByDate(
-      type: $type
-      createdAt: $createdAt
-      sortDirection: $sortDirection
-      filter: $filter
-      limit: $limit
-      nextToken: $nextToken
-    ) {
-      items {
-        id
-        user {
-          id
-          username
-          email
-          lineID
-          displayName
-          statusMessage
-          phoneNumber
-          createdAt
-          updatedAt
-        }
-        group {
-          id
-          name
-          isDirect
-          createdAt
-          updatedAt
-        }
-        type
-        message
-        createdAt
-        isBlock
-        updatedAt
-        friends {
-          items {
-            friendUser {
-              username
-              displayName
-              statusMessage
-            }
-          }
-        }
-        groups {
-          items {
-            group {
-              id
-              name
-              messages {
-                items {
-                  message
-                }
-              }
-            }
-          }
-        }
       }
       nextToken
     }

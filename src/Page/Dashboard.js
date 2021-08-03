@@ -5,7 +5,7 @@ import Selection from "./../Components/Selection";
 import MenuBar from "../Components/MenuBar";
 import AllChats from "../Components/AllChats";
 
-import { getLoggedInUser } from "../api/queries";
+import { getLoggedInUser } from "./../api/queries";
 import SideBar from "../Components/SideBar";
 import Chat from "./../Components/Chat";
 
@@ -17,7 +17,6 @@ const Dashboard = () => {
   const [chat, setChat] = useState(null);
 
   const classes = useStyles();
-  const [component, setComponent] = useState(null);
 
   useEffect(() => {
     async function getUser() {
@@ -26,35 +25,10 @@ const Dashboard = () => {
       setUser(data.data.listUsers.items[0]);
     }
     getUser();
+    console.log("Hello World");
     setSideBar(<AllChats />);
   }, []);
 
-  const changeComponent = (key) => {
-    switch (key) {
-      case "chats":
-        return <ChatDashboard />;
-      case "friends":
-        console.log(key);
-        break;
-      case "addFriend":
-        console.log(key);
-        break;
-      case "timeline":
-        console.log(key);
-        break;
-      case "news":
-        console.log(key);
-        break;
-      case "mute":
-        console.log(key);
-        break;
-      case "settings":
-        console.log(key);
-        break;
-      default:
-        return <ChatDashboard />;
-    }
-  };
   return (
     <DashboardContext.Provider
       value={{ user, sideBar, setSideBar, chat, setChat }}

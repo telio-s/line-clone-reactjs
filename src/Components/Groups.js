@@ -6,7 +6,6 @@ import GroupChatRoom from "./GroupChatRoom";
 function Groups(props) {
   const { user, showGroups } = props;
   const { setChat } = useContext(DashboardContext);
-  console.log(user.groups.items[0].group.name);
 
   function handleGroupChatRoom(group) {
     setChat(<GroupChatRoom group={group} />);
@@ -14,15 +13,18 @@ function Groups(props) {
 
   return (
     <div style={{ display: showGroups ? "" : "none" }}>
-      {user.groups.items.map((group, index) => (
-        <ListItem
-          key={index}
-          button
-          onClick={() => handleGroupChatRoom(group.group)}
-        >
-          <p>{group.group.name}</p>
-        </ListItem>
-      ))}
+      {user.groups.items.map(
+        (group, index) =>
+          !group.group.isDirect && (
+            <ListItem
+              key={index}
+              button
+              onClick={() => handleGroupChatRoom(group.group)}
+            >
+              <p>{group.group.name}</p>
+            </ListItem>
+          )
+      )}
     </div>
   );
 }
