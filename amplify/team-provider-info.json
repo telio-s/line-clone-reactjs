@@ -15,11 +15,12 @@
       "function": {
         "lineclone72af9dd372af9dd3PostConfirmation": {
           "deploymentBucketName": "amplify-lineclone-dev-140430-deployment",
-          "s3Key": "amplify-builds/lineclone72af9dd372af9dd3PostConfirmation-6e5a7a52514e444b6236-build.zip"
+          "s3Key": "amplify-builds/lineclone72af9dd372af9dd3PostConfirmation-713130574c2f5276786c-build.zip"
         }
       },
       "auth": {
-        "lineclone72af9dd372af9dd3": {}
+        "lineclone72af9dd372af9dd3": {},
+        "userPoolGroups": {}
       }
     }
   }
