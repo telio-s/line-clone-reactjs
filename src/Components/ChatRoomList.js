@@ -37,6 +37,7 @@ const ChatRoomList = () => {
           />
         </Toolbar>
       </AppBar>
+<<<<<<< HEAD
       {user
         ? user.friends.items.map((friend) => (
             <Button
@@ -67,6 +68,9 @@ const ChatRoomList = () => {
         className={classes.chatRoom}
         onClick={handleChatRoom}
       >
+=======
+      <Button disableRipple={true} className={classes.chatRoom}>
+>>>>>>> main
         <AccountCircle style={{ fontSize: "60px" }} />
         <div className={classes.chatDesc}>
           <Typography className={classes.nameChat}>Name Chat</Typography>
@@ -83,6 +87,41 @@ const ChatRoomList = () => {
 
         <Typography className={classes.timeChat}>12:00AM</Typography>
       </Button>
+<<<<<<< HEAD
+=======
+      <Button disableRipple={true} className={classes.chatRoom}>
+        <AccountCircle style={{ fontSize: "60px" }} />
+        <div className={classes.chatDesc}>
+          <Typography className={classes.nameChat}>Name Chat</Typography>
+          <Typography
+            noWrap={false}
+            gutterBottom
+            className={classes.multiLineEllipsis}
+          >
+            Aliquip veniam reprehenderit adipisicing aliqua pariatur commodo
+            sunt tempor ipsum enim labore ullamco dolore.
+          </Typography>
+        </div>
+
+        <Typography className={classes.timeChat}>12:00AM</Typography>
+      </Button>
+      <Button disableRipple={true} className={classes.chatRoom}>
+        <AccountCircle style={{ fontSize: "60px" }} />
+        <div className={classes.chatDesc}>
+          <Typography className={classes.nameChat}>Name Chat</Typography>
+          <Typography
+            noWrap={false}
+            gutterBottom
+            className={classes.multiLineEllipsis}
+          >
+            Aliquip veniam reprehenderit adipisicing aliqua pariatur commodo
+            sunt tempor ipsum enim labore ullamco dolore.
+          </Typography>
+        </div>
+
+        <Typography className={classes.timeChat}>12:00AM</Typography>
+      </Button>
+>>>>>>> main
     </div>
   );
 };

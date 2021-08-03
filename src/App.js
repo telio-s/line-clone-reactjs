@@ -1,6 +1,7 @@
 import "./App.css";
 import { withAuthenticator, AmplifySignOut } from "@aws-amplify/ui-react";
 
+import ChatDashboard from "./Components/ChatDashboard";
 import Dashboard from "./Page/Dashboard";
 import Login from "./Page/LogIn";
 import { BrowserRouter as Router, Route } from "react-router-dom";

@@ -17,6 +17,7 @@ const Dashboard = () => {
   const [chat, setChat] = useState(null);
 
   const classes = useStyles();
+  const [component, setComponent] = useState(null);
 
   useEffect(() => {
     async function getUser() {
@@ -28,6 +29,32 @@ const Dashboard = () => {
     setSideBar(<AllChats />);
   }, []);
 
+  const changeComponent = (key) => {
+    switch (key) {
+      case "chats":
+        return <ChatDashboard />;
+      case "friends":
+        console.log(key);
+        break;
+      case "addFriend":
+        console.log(key);
+        break;
+      case "timeline":
+        console.log(key);
+        break;
+      case "news":
+        console.log(key);
+        break;
+      case "mute":
+        console.log(key);
+        break;
+      case "settings":
+        console.log(key);
+        break;
+      default:
+        return <ChatDashboard />;
+    }
+  };
   return (
     <DashboardContext.Provider
       value={{ user, sideBar, setSideBar, chat, setChat }}

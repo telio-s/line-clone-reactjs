@@ -2,8 +2,13 @@ type User
   @model
   @auth(
     rules: [
+      { allow: private, provider: userPools }
       { allow: groups, groups: ["admin"] }
-      { allow: owner, ownerField: "username", operations: [read] }
+      {
+        allow: owner
+        ownerField: "username"
+        operations: [read, create, update, delete]
+      }
     ]
   ) {
   id: ID!
@@ -12,7 +17,6 @@ type User
   lineID: String
   displayName: String!
   statusMessage: String
-  password: String!
   profilePhoto: S3Object
   coverPhoto: S3Object
   phoneNumber: String!
@@ -42,7 +46,10 @@ type UserGroups @model(queries: null) {
 
 type UserFriends @model(queries: null) {
   id: ID!
-  friendUser: User @connection(name: "UserFriends")
+  user: User @connection(name: "UserFriends")
+  friendUser: User
+    @connection(name: "UserFriends")
+    @auth(rules: [{ allow: private, provider: userPools }])
   displayName: String
 }
 
