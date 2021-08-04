@@ -53,7 +53,7 @@ const GroupChatRoom = (props) => {
     try {
       createMessage();
       console.log("send message!", message);
-      setCurrMessage(null);
+      setCurrMessage("");
     } catch (error) {
       console.log("Can't send Message", error);
     }
