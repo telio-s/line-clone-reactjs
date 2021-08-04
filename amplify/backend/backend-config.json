@@ -1,6 +1,6 @@
 {
   "function": {
-    "lineclone72af9dd372af9dd3PostConfirmation": {
+    "lineclone7ec4df0d7ec4df0dPostConfirmation": {
       "build": true,
       "providerPlugin": "awscloudformation",
       "service": "Lambda"
@@ -13,7 +13,7 @@
       "dependsOn": [
         {
           "category": "auth",
-          "resourceName": "lineclone72af9dd372af9dd3",
+          "resourceName": "lineclone7ec4df0d7ec4df0d",
           "attributes": [
             "UserPoolId",
             "AppClientIDWeb",
@@ -23,13 +23,13 @@
         }
       ]
     },
-    "lineclone72af9dd372af9dd3": {
+    "lineclone7ec4df0d7ec4df0d": {
       "service": "Cognito",
       "providerPlugin": "awscloudformation",
       "dependsOn": [
         {
           "category": "function",
-          "resourceName": "lineclone72af9dd372af9dd3PostConfirmation",
+          "resourceName": "lineclone7ec4df0d7ec4df0dPostConfirmation",
           "triggerProvider": "Cognito",
           "attributes": [
             "Arn",
@@ -49,7 +49,7 @@
           "defaultAuthentication": {
             "authenticationType": "AMAZON_COGNITO_USER_POOLS",
             "userPoolConfig": {
-              "userPoolId": "authlineclonea47015c7a47015c7"
+              "userPoolId": "authlineclone7ec4df0d7ec4df0d"
             }
           },
           "additionalAuthenticationProviders": []

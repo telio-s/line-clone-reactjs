@@ -1,23 +1,23 @@
 {
     "AWSTemplateFormatVersion": "2010-09-09",
     "Parameters": {
-        "authlineclone72af9dd372af9dd3UserPoolId": {
+        "authlineclone7ec4df0d7ec4df0dUserPoolId": {
             "Type": "String",
-            "Default": "authlineclone72af9dd372af9dd3UserPoolId"
+            "Default": "authlineclone7ec4df0d7ec4df0dUserPoolId"
         },
         
-        "authlineclone72af9dd372af9dd3IdentityPoolId": {
+        "authlineclone7ec4df0d7ec4df0dIdentityPoolId": {
             "Type": "String",
-            "Default": "authlineclone72af9dd372af9dd3IdentityPoolId"
+            "Default": "authlineclone7ec4df0d7ec4df0dIdentityPoolId"
         },
         
-        "authlineclone72af9dd372af9dd3AppClientID": {
+        "authlineclone7ec4df0d7ec4df0dAppClientID": {
             "Type": "String",
-            "Default": "authlineclone72af9dd372af9dd3AppClientID"
+            "Default": "authlineclone7ec4df0d7ec4df0dAppClientID"
         },
-        "authlineclone72af9dd372af9dd3AppClientIDWeb": {
+        "authlineclone7ec4df0d7ec4df0dAppClientIDWeb": {
             "Type": "String",
-            "Default": "authlineclone72af9dd372af9dd3AppClientIDWeb"
+            "Default": "authlineclone7ec4df0d7ec4df0dAppClientIDWeb"
         },
         "AuthRoleArn": {
             "Type": "String"
@@ -41,26 +41,26 @@
     },
     "Resources": {
     
-        "adminGroup": {
+        "AdminGroup": {
           "Type" : "AWS::Cognito::UserPoolGroup",
           "Properties" : {
-              "GroupName" : "admin",
+              "GroupName" : "Admin",
               "Precedence" : 1,
               
               "RoleArn" : {
                 "Fn::GetAtt": [
-                    "adminGroupRole",
+                    "AdminGroupRole",
                     "Arn"
                 ]
               },
               
               "UserPoolId" : {
-                "Ref": "authlineclone72af9dd372af9dd3UserPoolId"
+                "Ref": "authlineclone7ec4df0d7ec4df0dUserPoolId"
               }
             }
         },
         
-        "adminGroupRole": {
+        "AdminGroupRole": {
             "Type": "AWS::IAM::Role",
             "Properties": {
                 "RoleName":{
@@ -68,9 +68,9 @@
                         "",
                         [
                           {
-                            "Ref": "authlineclone72af9dd372af9dd3UserPoolId"
+                            "Ref": "authlineclone7ec4df0d7ec4df0dUserPoolId"
                           },
-                          "-adminGroupRole"
+                          "-AdminGroupRole"
                         ]
                     ]
                 },
@@ -85,7 +85,7 @@
                             },
                             "Action": "sts:AssumeRoleWithWebIdentity",
                             "Condition": {
-                              "StringEquals": {"cognito-identity.amazonaws.com:aud": {"Ref":"authlineclone72af9dd372af9dd3IdentityPoolId"}},
+                              "StringEquals": {"cognito-identity.amazonaws.com:aud": {"Ref":"authlineclone7ec4df0d7ec4df0dIdentityPoolId"}},
                               "ForAnyValue:StringLike": {"cognito-identity.amazonaws.com:amr": "authenticated"}
                             }
                         }
@@ -111,7 +111,7 @@
                                 "",
                                 [
 
-                                  "lineclone72af9dd372af9dd3",
+                                  "lineclone7ec4df0d7ec4df0d",
                                   "-ExecutionRole-",
                                   {
                                     "Ref": "env"
@@ -272,16 +272,16 @@
                     "Ref": "UnauthRoleArn"
                 },
                 "identityPoolId": {
-                    "Ref": "authlineclone72af9dd372af9dd3IdentityPoolId"
+                    "Ref": "authlineclone7ec4df0d7ec4df0dIdentityPoolId"
                 },
                 "userPoolId": {
-                    "Ref": "authlineclone72af9dd372af9dd3UserPoolId"
+                    "Ref": "authlineclone7ec4df0d7ec4df0dUserPoolId"
                 },
                 "appClientIDWeb": {
-                    "Ref": "authlineclone72af9dd372af9dd3AppClientIDWeb"
+                    "Ref": "authlineclone7ec4df0d7ec4df0dAppClientIDWeb"
                 },
                 "appClientID": {
-                    "Ref": "authlineclone72af9dd372af9dd3AppClientID"
+                    "Ref": "authlineclone7ec4df0d7ec4df0dAppClientID"
                 },
                 "region": {
                     "Ref": "AWS::Region"
@@ -297,10 +297,10 @@
     
     "Outputs": {
       
-        "adminGroupRole": {
+        "AdminGroupRole": {
             "Value": {
                 "Fn::GetAtt": [
-                    "adminGroupRole",
+                    "AdminGroupRole",
                     "Arn"
                 ]
             }

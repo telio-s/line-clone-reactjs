@@ -1,8 +1,8 @@
 {
-    "identityPoolName": "lineclone72af9dd3_identitypool_72af9dd3",
+    "identityPoolName": "lineclone7ec4df0d_identitypool_7ec4df0d",
     "allowUnauthenticatedIdentities": false,
-    "resourceNameTruncated": "linecl72af9dd3",
-    "userPoolName": "lineclone72af9dd3_userpool_72af9dd3",
+    "resourceNameTruncated": "linecl7ec4df0d",
+    "userPoolName": "lineclone7ec4df0d_userpool_7ec4df0d",
     "autoVerifiedAttributes": [
         "email"
     ],
@@ -18,8 +18,7 @@
     "passwordPolicyMinLength": 8,
     "passwordPolicyCharacters": [],
     "requiredAttributes": [
-        "email",
-        "phone_number"
+        "email"
     ],
     "aliasAttributes": [
         "email",
@@ -33,10 +32,10 @@
     "userpoolClientReadAttributes": [
         "email"
     ],
-    "userpoolClientLambdaRole": "linecl72af9dd3_userpoolclient_lambda_role",
+    "userpoolClientLambdaRole": "linecl7ec4df0d_userpoolclient_lambda_role",
     "userpoolClientSetAttributes": false,
-    "sharedId": "72af9dd3",
-    "resourceName": "lineclone72af9dd372af9dd3",
+    "sharedId": "7ec4df0d",
+    "resourceName": "lineclone7ec4df0d7ec4df0d",
     "authSelections": "identityPoolAndUserPool",
     "authRoleArn": {
         "Fn::GetAtt": [
@@ -57,20 +56,20 @@
     "triggers": "{\n  \"PostConfirmation\": [\n    \"custom\"\n  ]\n}",
     "hostedUI": false,
     "userPoolGroupList": [
-        "admin"
+        "Admin"
     ],
     "serviceName": "Cognito",
     "usernameCaseSensitive": false,
     "parentStack": {
         "Ref": "AWS::StackId"
     },
-    "authTriggerConnections": "[\n  {\n    \"triggerType\": \"PostConfirmation\",\n    \"lambdaFunctionName\": \"lineclone72af9dd372af9dd3PostConfirmation\"\n  }\n]",
+    "authTriggerConnections": "[\n  {\n    \"triggerType\": \"PostConfirmation\",\n    \"lambdaFunctionName\": \"lineclone7ec4df0d7ec4df0dPostConfirmation\"\n  }\n]",
     "breakCircularDependency": true,
     "permissions": [],
     "dependsOn": [
         {
             "category": "function",
-            "resourceName": "lineclone72af9dd372af9dd3PostConfirmation",
+            "resourceName": "lineclone7ec4df0d7ec4df0dPostConfirmation",
             "triggerProvider": "Cognito",
             "attributes": [
                 "Arn",
