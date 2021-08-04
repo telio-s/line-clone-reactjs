@@ -34,11 +34,12 @@ const ChatRoom = () => {
           </IconButton>
         </Toolbar>
       </AppBar>
-      {/* <div className={classes.chatArea}>
+      <div className={classes.chatArea}>
         <MyMessageBubble />
         <TheirMessageBubble />
+        <TheirMessageBubble />
         <MyMessageBubble />
-      </div> */}
+      </div>
       <Divider />
       <form className={classes.textArea}>
         <InputBase

@@ -1,26 +1,15 @@
-import { Button, Dialog, TextField } from "@material-ui/core";
+import { ListItem } from "@material-ui/core";
 
-function CreateGroup(props) {
-  const { open, onClose } = props;
-  // const [group, setGroup] = useState("");
-
-  function handleClose() {
-    onClose();
-  }
-
-  function handelCreateGroup() {
-    console.log("create group");
-  }
-
+function CreateGroup() {
+  function handleCreateGroupDialog() {}
   return (
     <div>
-      <Dialog open={open} onClose={handleClose}>
-        <h1>CreateGroup</h1>
-        <form onSubmit={handelCreateGroup}>
-          <TextField placeholder="Group Name" />
-          <Button type="submit">Create</Button>
-        </form>
-      </Dialog>
+      <ListItem>
+        <h1>Search for friends</h1>
+      </ListItem>
+      <ListItem button onClick={handleCreateGroupDialog}>
+        <h1>Create a Group</h1>
+      </ListItem>
     </div>
   );
 }

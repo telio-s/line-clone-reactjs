@@ -17,9 +17,9 @@ function Groups(props) {
         <ListItem
           key={index}
           button
-          onClick={() => handleDirectChatRoom(friend.friendUser)}
+          onClick={() => handleDirectChatRoom(friend.friend)}
         >
-          <p>{friend.friendUser.username}</p>
+          <p>{friend.friend.username}</p>
         </ListItem>
       ))}
     </div>

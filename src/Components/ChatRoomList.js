@@ -38,7 +38,11 @@ const ChatRoomList = () => {
         </Toolbar>
       </AppBar>
 
-      <Button disableRipple={true} className={classes.chatRoom}>
+      <Button
+        disableRipple={true}
+        className={classes.chatRoom}
+        onClick={handleChatRoom}
+      >
         <AccountCircle style={{ fontSize: "60px" }} />
         <div className={classes.chatDesc}>
           <Typography className={classes.nameChat}>Name Chat</Typography>

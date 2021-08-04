@@ -181,24 +181,9 @@ export const listUsers = /* GraphQL */ `
         }
         friends {
           items {
-            friendUser {
+            friend {
               id
               username
-              groups {
-                items {
-                  group {
-                    id
-                    name
-                    isDirect
-                    messages {
-                      items {
-                        id
-                        message
-                      }
-                    }
-                  }
-                }
-              }
             }
           }
         }

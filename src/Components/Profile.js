@@ -1,16 +1,16 @@
 import React, { useState } from "react";
 import { ExpandLess, ExpandMore } from "@material-ui/icons";
 import { ListItem, Collapse } from "@material-ui/core";
-import useStyles from "../Style/DashboardStyle";
+import useStyles from "../Style/ChatRoomListStyle";
 import Groups from "./Groups";
 import Friends from "./Friends";
 
-function ProfileTest(props) {
+function Profile(props) {
   const { user } = props;
   const classes = useStyles();
 
-  const [showGroups, setShowGroups] = useState(false);
-  const [showFriends, setShowFriends] = useState(false);
+  const [showGroups, setShowGroups] = useState(true);
+  const [showFriends, setShowFriends] = useState(true);
 
   function handleShowGroups() {
     setShowGroups(!showGroups);
@@ -21,7 +21,7 @@ function ProfileTest(props) {
   }
 
   return (
-    <div className={classes.root} style={{ width: "650px" }}>
+    <div className={classes.root} style={{ marginLeft: "80px" }}>
       <main className={classes.main}>
         <h1>Profile, {user ? user.username : null}</h1>
         <ListItem
@@ -29,7 +29,7 @@ function ProfileTest(props) {
           onClick={handleShowGroups}
           style={{ color: "rgb(83,86,106)" }}
         >
-          Channels
+          Groups
           <div style={{ marginLeft: "auto" }}>
             {showGroups ? <ExpandLess /> : <ExpandMore />}
           </div>
@@ -55,4 +55,4 @@ function ProfileTest(props) {
   );
 }
 
-export default ProfileTest;
+export default Profile;

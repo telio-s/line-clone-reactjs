@@ -30,7 +30,7 @@ const DirectChatRoom = (props) => {
   useEffect(() => {
     async function getMessages() {
       const [data, id] = await getDirect(user.username, friend.username);
-      console.log(data);
+      console.log(data, id);
       setDirectId(id);
       setMessages(data);
     }

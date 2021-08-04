@@ -10,8 +10,8 @@ import {
 } from "@material-ui/icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCommentDots, faNewspaper } from "@fortawesome/free-solid-svg-icons";
-import CreateGroup from "./CreateGroup";
-import ProfileTest from "./ProfileTest";
+import CreateGroupDialog from "./CreateGroupDialog";
+import Profile from "./Profile";
 import { DashboardContext } from "../Page/Dashboard";
 
 function MenuBar() {
@@ -24,7 +24,7 @@ function MenuBar() {
   }
 
   function handleProfileBar() {
-    setSideBar(<ProfileTest user={user} />);
+    setSideBar(<Profile user={user} />);
   }
 
   return (
@@ -73,7 +73,10 @@ function MenuBar() {
             <MoreHoriz className={classes.iconMtDrawer} />
           </IconButton>
         </div>
-        <CreateGroup open={createGroup} onClose={handleCreateGroupDialog} />
+        <CreateGroupDialog
+          open={createGroup}
+          onClose={handleCreateGroupDialog}
+        />
       </Drawer>
     </div>
   );
