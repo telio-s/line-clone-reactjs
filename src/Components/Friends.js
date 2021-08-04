@@ -4,8 +4,8 @@ import { ListItem } from "@material-ui/core";
 import DirectChatRoom from "./DirectChatRoom";
 
 function Groups(props) {
-  const { user, showFriends } = props;
-  const { setChat } = useContext(DashboardContext);
+  const { showFriends } = props;
+  const { setChat, friends } = useContext(DashboardContext);
 
   function handleDirectChatRoom(friend) {
     setChat(<DirectChatRoom friend={friend} />);
@@ -13,7 +13,7 @@ function Groups(props) {
 
   return (
     <div style={{ display: showFriends ? "" : "none" }}>
-      {user.friends.items.map((friend, index) => (
+      {friends.map((friend, index) => (
         <ListItem
           key={index}
           button

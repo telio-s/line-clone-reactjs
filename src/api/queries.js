@@ -9,7 +9,6 @@ export async function getLoggedInUser() {
         filter: { email: { eq: "kanyanat.i@ku.th" } },
       })
     );
-    console.log(user);
     return user;
   } catch (error) {
     return;
