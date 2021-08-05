@@ -15,6 +15,7 @@ import {
 } from "@material-ui/icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCommentDots, faNewspaper } from "@fortawesome/free-solid-svg-icons";
+import { Auth, Hub } from "aws-amplify";
 
 import useStyles from "../Style/DashboardStyle";
 import ChatDashboard from "../Components/ChatDashboard";
@@ -25,7 +26,19 @@ const Dashboard = () => {
 
   useEffect(() => {
     setComponent("chats");
-  });
+    checkUserCurrent();
+  }, []);
+
+  const checkUserCurrent = async () => {
+    try {
+      const user = await Auth.currentAuthenticatedUser();
+      console.log("user: ", user);
+      // updateUser(user);
+      // updateFormState(() => ({ ...formState, formType: "signedIn" }));
+    } catch (err) {
+      // updateUser(null)
+    }
+  };
 
   const changeComponent = (key) => {
     switch (key) {
