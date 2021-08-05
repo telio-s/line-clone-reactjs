@@ -35,7 +35,7 @@ const useStyles = makeStyles((theme) => ({
   },
   logInPhone: {
     textDecoration: "none",
-    marginTop: "50px",
+    marginTop: "10px",
     display: "flex",
     textTransform: "capitalize !important",
     color: "#000000",
@@ -50,12 +50,18 @@ const useStyles = makeStyles((theme) => ({
     marginBottom: "30px",
   },
   textHead: {
-    fontWeight: "bold",
+    display: "flex",
     alignItems: "center",
+    fontWeight: "bold",
+    justifyContent: "center",
   },
   textDescript: {
     color: "#858585",
     margin: "20px 40px 10px 40px",
+    display: "flex",
+    alignItems: "center",
+
+    justifyContent: "center",
   },
   eyeIcon: {
     color: "#bababa",
