@@ -15,7 +15,6 @@ const Dashboard = () => {
   const [user, setUser] = useState();
   const [sideBar, setSideBar] = useState(null);
   const [chat, setChat] = useState(null);
-  const [add, setAdd] = useState(false);
   const [groups, setGroups] = useState([]);
   const [friends, setFriends] = useState([]);
 
@@ -30,7 +29,7 @@ const Dashboard = () => {
     }
     getUser();
     sideBar ? setSideBar(sideBar) : setSideBar(<AllChats />);
-  }, [add]);
+  }, []);
 
   return (
     <DashboardContext.Provider
@@ -40,8 +39,6 @@ const Dashboard = () => {
         setSideBar,
         chat,
         setChat,
-        add,
-        setAdd,
         groups,
         friends,
       }}

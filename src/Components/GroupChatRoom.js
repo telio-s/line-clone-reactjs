@@ -7,33 +7,43 @@ import {
   Divider,
   InputBase,
   Button,
+  Dialog,
+  ListItem,
 } from "@material-ui/core";
 import { EventNote, MoreVert, Attachment } from "@material-ui/icons";
 
 import useStyles from "../Style/ChatRoomStyle";
 
-import { getMessageByDateInGroup } from "./../api/queries";
+import { getMessageByDateInGroup, getTheGroup } from "./../api/queries";
 import { createMessageInGroup } from "./../api/mutations";
 
 import MyMessageBubble from "./MyMessageBubble";
 import TheirMessageBubble from "./TheirMessageBubble";
 
 import { DashboardContext } from "./../Page/Dashboard";
+import AddFriendsToGroup from "./AddFriendsToGroup";
 
 const GroupChatRoom = (props) => {
   const { group } = props;
   const classes = useStyles();
   const [messages, setMessages] = useState([]);
   const [currMessage, setCurrMessage] = useState("");
+  const [addMember, setAddMember] = useState(false);
+  const [members, setMembers] = useState([]);
+  const [showMember, setShowMember] = useState(false);
   const { user } = useContext(DashboardContext);
 
   useEffect(() => {
     async function getMessages() {
-      console.log(group);
       const data = await getMessageByDateInGroup(group.id);
       setMessages(data);
     }
+    async function getGroup() {
+      const data = await getTheGroup(group.id);
+      setMembers(data.users.items);
+    }
     getMessages();
+    getGroup();
   }, [group]);
 
   function handleSendMessage(e) {
@@ -56,6 +66,16 @@ const GroupChatRoom = (props) => {
       console.log("Can't send Message", error);
     }
   }
+
+  // but not for add friends to chat
+  function handleAddMemberToGroup() {
+    setAddMember(!addMember);
+  }
+
+  function handleAllMembers() {
+    setShowMember(!showMember);
+  }
+
   return (
     <div className={classes.root}>
       <Divider orientation="vertical" flexItem />
@@ -70,7 +90,13 @@ const GroupChatRoom = (props) => {
           <IconButton className={classes.iconButton}>
             <EventNote className={classes.iconSection} />
           </IconButton>
-          <IconButton className={classes.iconButton}>
+          <IconButton
+            className={classes.iconButton}
+            onClick={handleAddMemberToGroup}
+          >
+            <MoreVert className={classes.iconSection} />
+          </IconButton>
+          <IconButton className={classes.iconButton} onClick={handleAllMembers}>
             <MoreVert className={classes.iconSection} />
           </IconButton>
         </Toolbar>
@@ -110,6 +136,18 @@ const GroupChatRoom = (props) => {
           </Button>
         </div>
       </form>
+      <AddFriendsToGroup
+        open={addMember}
+        onClose={handleAddMemberToGroup}
+        group={group}
+      />
+      <Dialog open={showMember} onClose={handleAllMembers}>
+        <div style={{ width: "500px" }}>
+          {members.map((member, index) => (
+            <ListItem key={index}>{member.user.username}</ListItem>
+          ))}
+        </div>
+      </Dialog>
     </div>
   );
 };

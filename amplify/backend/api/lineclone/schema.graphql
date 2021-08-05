@@ -2,7 +2,7 @@ type User
   @model
   @auth(
     rules: [
-      {allow: private, provider: userPools}
+      { allow: private, provider: userPools }
       { allow: groups, groups: ["Admin"] }
       {
         allow: owner
@@ -43,20 +43,24 @@ type Group @model {
   albums: [Album]
 }
 
-type UserGroups @model(queries: null)  {
+type UserGroups @model(queries: null) {
   id: ID!
   user: User @connection(name: "UserGroups")
   group: Group @connection(name: "GroupUsers")
+  # isPending: Boolean!
 }
 
-type UserFriends @model(queries: null) @key(name: "byUser", fields:["userId", "friendId"]) {
+type UserFriends
+  @model(queries: null)
+  @key(name: "byUser", fields: ["userId", "friendId"]) {
   id: ID!
   # user: User @connection(name: "UserFriends")
   # friendUser: FriendUser @connection(name: "FriendUser")
   userId: ID
   friendId: ID
-  user: User @connection (fields: ["userId"])
-  friend: User @connection (fields: ["friendId"])
+  user: User @connection(fields: ["userId"])
+  friend: User @connection(fields: ["friendId"])
+  # isFriend: Boolean!
   displayName: String
 }
 

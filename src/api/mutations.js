@@ -27,8 +27,9 @@ export async function createNewGroup(group, users) {
 
 export async function createUsersGroup(users, groupId) {
   try {
-    users.map((id) => {
-      const data = API.graphql(
+    users.map(async (id) => {
+      console.log("loop");
+      await API.graphql(
         graphqlOperation(createUserGroups, {
           input: {
             userGroupsUserId: id,
@@ -36,10 +37,8 @@ export async function createUsersGroup(users, groupId) {
           },
         })
       );
-      console.log(data);
-      return data;
     });
-    console.log("success add people into group");
+    return "success add people into group";
   } catch (error) {
     console.log("can't add user into group", error);
     return "failed add member to groups";

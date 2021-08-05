@@ -176,6 +176,14 @@ export const listUsers = /* GraphQL */ `
               id
               name
               isDirect
+              users {
+                items {
+                  user {
+                    id
+                    username
+                  }
+                }
+              }
             }
           }
         }
@@ -199,9 +207,10 @@ export const getGroup = /* GraphQL */ `
       name
       users {
         items {
-          id
-          createdAt
-          updatedAt
+          user {
+            id
+            username
+          }
         }
         nextToken
       }
@@ -221,33 +230,6 @@ export const getGroup = /* GraphQL */ `
         nextToken
       }
       isDirect
-      announce {
-        items {
-          id
-          type
-          message
-          createdAt
-          isBlock
-          updatedAt
-        }
-        nextToken
-      }
-      files {
-        bucket
-        region
-        key
-      }
-      albums {
-        id
-        albumName
-        file {
-          bucket
-          region
-          key
-        }
-        createdAt
-        updatedAt
-      }
       createdAt
       updatedAt
     }
