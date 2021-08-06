@@ -4,8 +4,8 @@ import { ListItem } from "@material-ui/core";
 import GroupChatRoom from "./GroupChatRoom";
 
 function Groups(props) {
-  const { user, showGroups } = props;
-  const { setChat } = useContext(DashboardContext);
+  const { showGroups } = props;
+  const { setChat, groups } = useContext(DashboardContext);
 
   function handleGroupChatRoom(group) {
     setChat(<GroupChatRoom group={group} />);
@@ -13,7 +13,7 @@ function Groups(props) {
 
   return (
     <div style={{ display: showGroups ? "" : "none" }}>
-      {user.groups.items.map(
+      {groups.map(
         (group, index) =>
           !group.group.isDirect && (
             <ListItem

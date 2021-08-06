@@ -35,7 +35,7 @@ const DirectChatRoom = (props) => {
       setMessages(data);
     }
     getMessages();
-  }, []);
+  }, [friend]);
 
   function handleSendMessage(e) {
     e.preventDefault();

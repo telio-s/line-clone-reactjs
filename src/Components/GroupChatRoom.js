@@ -29,11 +29,12 @@ const GroupChatRoom = (props) => {
 
   useEffect(() => {
     async function getMessages() {
+      console.log(group);
       const data = await getMessageByDateInGroup(group.id);
       setMessages(data);
     }
     getMessages();
-  }, []);
+  }, [group]);
 
   function handleSendMessage(e) {
     e.preventDefault();
@@ -45,14 +46,11 @@ const GroupChatRoom = (props) => {
       isBlock: false,
     };
     async function createMessage() {
-      console.log(message);
       const data = await createMessageInGroup(message);
-      console.log(data);
       setMessages([...messages, data.data.createMessage]);
     }
     try {
       createMessage();
-      console.log("send message!", message);
       setCurrMessage("");
     } catch (error) {
       console.log("Can't send Message", error);

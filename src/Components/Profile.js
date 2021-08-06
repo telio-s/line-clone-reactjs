@@ -1,9 +1,10 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { ExpandLess, ExpandMore } from "@material-ui/icons";
 import { ListItem, Collapse } from "@material-ui/core";
 import useStyles from "../Style/ChatRoomListStyle";
 import Groups from "./Groups";
 import Friends from "./Friends";
+import { getLoggedInUser } from "../api/queries";
 
 function Profile(props) {
   const { user } = props;
@@ -35,7 +36,7 @@ function Profile(props) {
           </div>
         </ListItem>
         <Collapse in={showGroups} timeout="auto" unmountOnExit>
-          <Groups showGroups={showGroups} user={user} />
+          <Groups showGroups={showGroups} />
         </Collapse>
         <ListItem
           button
@@ -48,7 +49,7 @@ function Profile(props) {
           </div>
         </ListItem>
         <Collapse in={showFriends} timeout="auto" unmountOnExit>
-          <Friends showFriends={showFriends} user={user} />
+          <Friends showFriends={showFriends} />
         </Collapse>
       </main>
     </div>
