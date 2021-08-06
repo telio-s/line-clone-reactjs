@@ -35,6 +35,8 @@ export const createUser = /* GraphQL */ `
       friends {
         items {
           id
+          userId
+          friendId
           displayName
           createdAt
           updatedAt
@@ -194,6 +196,8 @@ export const updateUser = /* GraphQL */ `
       friends {
         items {
           id
+          userId
+          friendId
           displayName
           createdAt
           updatedAt
@@ -353,6 +357,8 @@ export const deleteUser = /* GraphQL */ `
       friends {
         items {
           id
+          userId
+          friendId
           displayName
           createdAt
           updatedAt
@@ -938,6 +944,8 @@ export const createUserFriends = /* GraphQL */ `
   ) {
     createUserFriends(input: $input, condition: $condition) {
       id
+      userId
+      friendId
       user {
         id
         username
@@ -990,7 +998,7 @@ export const createUserFriends = /* GraphQL */ `
         createdAt
         updatedAt
       }
-      friendUser {
+      friend {
         id
         username
         email
@@ -1055,6 +1063,8 @@ export const updateUserFriends = /* GraphQL */ `
   ) {
     updateUserFriends(input: $input, condition: $condition) {
       id
+      userId
+      friendId
       user {
         id
         username
@@ -1107,7 +1117,7 @@ export const updateUserFriends = /* GraphQL */ `
         createdAt
         updatedAt
       }
-      friendUser {
+      friend {
         id
         username
         email
@@ -1172,6 +1182,8 @@ export const deleteUserFriends = /* GraphQL */ `
   ) {
     deleteUserFriends(input: $input, condition: $condition) {
       id
+      userId
+      friendId
       user {
         id
         username
@@ -1224,7 +1236,7 @@ export const deleteUserFriends = /* GraphQL */ `
         createdAt
         updatedAt
       }
-      friendUser {
+      friend {
         id
         username
         email
@@ -1282,6 +1294,102 @@ export const deleteUserFriends = /* GraphQL */ `
     }
   }
 `;
+
+export const createMessage = /* GraphQL */ `
+  mutation CreateMessage(
+    $input: CreateMessageInput!
+    $condition: ModelMessageConditionInput
+  ) {
+    createMessage(input: $input, condition: $condition) {
+      id
+      user {
+        id
+        username
+        email
+        lineID
+        displayName
+        statusMessage
+        profilePhoto {
+          bucket
+          region
+          key
+        }
+        coverPhoto {
+          bucket
+          region
+          key
+        }
+        phoneNumber
+        groups {
+          nextToken
+        }
+        friends {
+          nextToken
+        }
+        blocked {
+          id
+          username
+          email
+          lineID
+          displayName
+          statusMessage
+          phoneNumber
+          createdAt
+          updatedAt
+        }
+        favourites {
+          id
+          username
+          email
+          lineID
+          displayName
+          statusMessage
+          phoneNumber
+          createdAt
+          updatedAt
+        }
+        posts {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      group {
+        id
+        name
+        users {
+          nextToken
+        }
+        messages {
+          nextToken
+        }
+        isDirect
+        announce {
+          nextToken
+        }
+        files {
+          bucket
+          region
+          key
+        }
+        albums {
+          id
+          albumName
+          createdAt
+          updatedAt
+        }
+        createdAt
+        updatedAt
+      }
+      type
+      message
+      createdAt
+      isBlock
+      updatedAt
+    }
+  }
+`;
+
 export const updateMessage = /* GraphQL */ `
   mutation UpdateMessage(
     $input: UpdateMessageInput!
@@ -1702,43 +1810,6 @@ export const deleteAlbum = /* GraphQL */ `
         region
         key
       }
-      createdAt
-      updatedAt
-    }
-  }
-`;
-
-export const createMessage = /* GraphQL */ `
-  mutation CreateMessage(
-    $input: CreateMessageInput!
-    $condition: ModelMessageConditionInput
-  ) {
-    createMessage(input: $input, condition: $condition) {
-      id
-      user {
-        id
-        username
-        groups {
-          nextToken
-        }
-        createdAt
-        updatedAt
-      }
-      group {
-        id
-        name
-        users {
-          nextToken
-        }
-        messages {
-          nextToken
-        }
-        isDirect
-        createdAt
-        updatedAt
-      }
-      type
-      message
       createdAt
       updatedAt
     }

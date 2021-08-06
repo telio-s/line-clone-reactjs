@@ -32,6 +32,8 @@ export const onCreateUser = /* GraphQL */ `
       friends {
         items {
           id
+          userId
+          friendId
           displayName
           createdAt
           updatedAt
@@ -188,6 +190,8 @@ export const onUpdateUser = /* GraphQL */ `
       friends {
         items {
           id
+          userId
+          friendId
           displayName
           createdAt
           updatedAt
@@ -344,6 +348,8 @@ export const onDeleteUser = /* GraphQL */ `
       friends {
         items {
           id
+          userId
+          friendId
           displayName
           createdAt
           updatedAt
@@ -908,6 +914,8 @@ export const onCreateUserFriends = /* GraphQL */ `
   subscription OnCreateUserFriends {
     onCreateUserFriends {
       id
+      userId
+      friendId
       user {
         id
         username
@@ -960,7 +968,7 @@ export const onCreateUserFriends = /* GraphQL */ `
         createdAt
         updatedAt
       }
-      friendUser {
+      friend {
         id
         username
         email
@@ -1022,6 +1030,8 @@ export const onUpdateUserFriends = /* GraphQL */ `
   subscription OnUpdateUserFriends {
     onUpdateUserFriends {
       id
+      userId
+      friendId
       user {
         id
         username
@@ -1074,7 +1084,7 @@ export const onUpdateUserFriends = /* GraphQL */ `
         createdAt
         updatedAt
       }
-      friendUser {
+      friend {
         id
         username
         email
@@ -1136,6 +1146,8 @@ export const onDeleteUserFriends = /* GraphQL */ `
   subscription OnDeleteUserFriends {
     onDeleteUserFriends {
       id
+      userId
+      friendId
       user {
         id
         username
@@ -1188,7 +1200,7 @@ export const onDeleteUserFriends = /* GraphQL */ `
         createdAt
         updatedAt
       }
-      friendUser {
+      friend {
         id
         username
         email

@@ -13,10 +13,9 @@ import { VisibilityOutlined } from "@material-ui/icons";
 import LineButton from "../Style/LineButton";
 import useStyles from "../Style/LoginStyle";
 
-const FormLoginEmail = () => {
+const FormLoginEmail = (props) => {
+  const { updateFormState, formState, onChange, onClick } = props;
   const classes = useStyles();
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
   const [show, setShow] = useState(false);
 
   return (
@@ -28,39 +27,38 @@ const FormLoginEmail = () => {
             className={classes.textField}
             placeholder="Email address"
             fullWidth
-            value={email}
-            onChange={(event) => {
-              setEmail(event.target.value);
-            }}
+            name="email"
+            onChange={onChange}
           />
           <Divider />
           <InputBase
             className={classes.textField}
             placeholder="Password"
             fullWidth
+            name="password"
             type={show ? "text" : "password"}
-            value={password}
-            onChange={(event) => {
-              setPassword(event.target.value);
-            }}
+            onChange={onChange}
             endAdornment={
               <InputAdornment position="end" variant="filled">
                 <IconButton
-                  disableRipple="true"
+                  disableRipple={true}
                   className={classes.eyeIcon}
                   onClick={() => {
                     !show ? setShow(true) : setShow(false);
                   }}
                 >
-                  {password !== "" ? <VisibilityOutlined /> : null}
+                  {formState.password !== "" ? <VisibilityOutlined /> : null}
                 </IconButton>
               </InputAdornment>
             }
           />
         </div>
         <LineButton
+          onClick={onClick}
           fullWidth
-          disabled={email === "" || password === "" ? true : false}
+          disabled={
+            formState.email === "" || formState.password === "" ? true : false
+          }
         >
           Log in
         </LineButton>
@@ -69,9 +67,26 @@ const FormLoginEmail = () => {
             <Button className={classes.resetPassword}>Reset password</Button>
           </Grid>
         </Grid>
-        <Link to="/login-smartphone" className={classes.logInPhone}>
+        {/* <Button
+          className={classes.logInPhone}
+          style={{ marginTop: "50px" }}
+          onClick={() => {
+            updateFormState(() => ({
+              ...formState,
+              formType: "confirmSignUp",
+            }));
+          }}
+        >
           Log in with my smartphone {">"}
-        </Link>
+        </Button> */}
+        <Button
+          className={classes.logInPhone}
+          onClick={() => {
+            updateFormState(() => ({ ...formState, formType: "signUp" }));
+          }}
+        >
+          Register {">"}
+        </Button>
       </form>
     </Grid>
   );
