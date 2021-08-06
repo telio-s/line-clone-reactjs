@@ -17,6 +17,7 @@ const ChatRoom = () => {
   const classes = useStyles();
   return (
     <div className={classes.root}>
+      <Divider orientation="vertical" flexItem />
       <AppBar elevation={0} position="static" className={classes.appbar}>
         <Toolbar className={classes.Toolbar}>
           <Typography
@@ -35,6 +36,7 @@ const ChatRoom = () => {
       </AppBar>
       <div className={classes.chatArea}>
         <MyMessageBubble />
+        <TheirMessageBubble />
         <TheirMessageBubble />
         <MyMessageBubble />
       </div>
