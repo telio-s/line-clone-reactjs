@@ -1294,6 +1294,7 @@ export const deleteUserFriends = /* GraphQL */ `
     }
   }
 `;
+
 export const createMessage = /* GraphQL */ `
   mutation CreateMessage(
     $input: CreateMessageInput!
@@ -1388,6 +1389,7 @@ export const createMessage = /* GraphQL */ `
     }
   }
 `;
+
 export const updateMessage = /* GraphQL */ `
   mutation UpdateMessage(
     $input: UpdateMessageInput!
