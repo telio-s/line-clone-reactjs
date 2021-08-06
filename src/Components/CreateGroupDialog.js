@@ -14,16 +14,22 @@ import React, { useContext, useEffect, useRef, useState } from "react";
 import { createNewGroup } from "../api/mutations";
 import { DashboardContext } from "../Page/Dashboard";
 import useStyles from "../Style/ChatRoomListStyle";
+import Friend from "./Friend";
 import GroupChatRoom from "./GroupChatRoom";
 
 function CreateGroupDialog(props) {
   const hiddenCreateGroupBtn = useRef(null);
   const { open, onClose } = props;
-  const { user, setChat, add, setAdd } = useContext(DashboardContext);
+  const { user, setChat } = useContext(DashboardContext);
   const [selectedUser, setSelectedUser] = useState([]);
-  const [check, setCheck] = useState(false);
   const [name, setName] = useState("");
   const classes = useStyles();
+
+  function handleOnClose() {
+    setSelectedUser([]);
+    setName("");
+    onClose();
+  }
 
   function handleCreateGroup(e) {
     e.preventDefault();
@@ -41,10 +47,8 @@ function CreateGroupDialog(props) {
     async function createGroupAndAddUsers() {
       const data = await createNewGroup(group, usersId);
       setSelectedUser([]);
-      setCheck(false);
       setName("");
       setChat(<GroupChatRoom group={data} />);
-      setAdd(!add);
       onClose();
     }
     createGroupAndAddUsers();
@@ -68,14 +72,13 @@ function CreateGroupDialog(props) {
     console.log("unselected");
   }
 
-  function handleClick(friend) {
-    setCheck(!check);
-    !check ? handleSelectedUser(friend) : handleUnselectedUser(friend);
+  function handleClick(friend, add) {
+    !add ? handleSelectedUser(friend) : handleUnselectedUser(friend);
   }
 
   return (
     <div>
-      <Dialog open={open} onClose={onClose}>
+      <Dialog open={open} onClose={handleOnClose}>
         <h1>CreateGroup</h1>
         <div style={{ width: "500px" }}>
           <form onSubmit={handleCreateGroup}>
@@ -109,27 +112,17 @@ function CreateGroupDialog(props) {
                 <main className={classes.main}>
                   {user
                     ? user.friends.items.map((friend, index) => (
-                        <ListItem
+                        <Friend
                           key={index}
-                          button
-                          onClick={() => handleClick(friend)}
-                        >
-                          {friend.friend.username}
-                          <Checkbox
-                            checked={check}
-                            size="small"
-                            inputProps={{
-                              "aria-label": "checkbox with small size",
-                            }}
-                            onClick={() => handleClick(friend)}
-                          />
-                        </ListItem>
+                          friend={friend}
+                          handleSelection={handleClick}
+                        />
                       ))
                     : null}
                 </main>
               </Box>
             </Grid>
-            <Grid items xs={6}>
+            <Grid item xs={6}>
               <Paper elevation={0}>
                 {selectedUser.length
                   ? selectedUser.map((user) => (
