@@ -36,6 +36,7 @@ const Login = () => {
 
   const [formState, updateFormState] = useState(initialFormState);
   const [user, updateUser] = useState(null);
+  console.log(formState);
 
   useEffect(() => {
     checkUserCurrent();
@@ -84,7 +85,9 @@ const Login = () => {
     const { email, password } = formState;
     await Auth.signIn(email, password);
     updateFormState(() => ({ ...formState, formType: "signedIn" }));
-    history.push("/dashboard");
+    history.push("/dashboard", {
+      params: updateFormState(() => ({ ...formState, formType: "signIn" })),
+    });
   };
 
   const { formType } = formState;

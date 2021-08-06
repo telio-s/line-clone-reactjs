@@ -37,7 +37,7 @@ function Selection() {
         <Toolbar>
           {chatTypeSection.map((obj, index) => (
             <Button
-              disableRipple="true"
+              disableRipple={true}
               key={index}
               className={classes.chatSection}
               value={obj.title}
