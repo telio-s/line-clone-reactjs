@@ -7,6 +7,7 @@ import {
   Typography,
   InputAdornment,
   IconButton,
+  Button,
 } from "@material-ui/core";
 import { VisibilityOutlined } from "@material-ui/icons";
 import LineButton from "../Style/LineButton";
@@ -73,8 +74,7 @@ const FormRegister = (props) => {
         >
           Register
         </LineButton>
-        <Link
-          to="/login"
+        <Button
           className={classes.logInPhone}
           style={{ marginTop: "30px" }}
           onClick={() => {
@@ -82,7 +82,7 @@ const FormRegister = (props) => {
           }}
         >
           Log in with email {">"}
-        </Link>
+        </Button>
       </form>
     </Grid>
   );

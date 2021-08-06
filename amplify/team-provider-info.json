@@ -19,7 +19,8 @@
         }
       },
       "auth": {
-        "lineclone7ec4df0d7ec4df0d": {}
+        "lineclone7ec4df0d7ec4df0d": {},
+        "userPoolGroups": {}
       }
     }
   }

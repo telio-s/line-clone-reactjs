@@ -32,7 +32,6 @@ const Dashboard = () => {
   const classes = useStyles();
 
   useEffect(() => {
-    setComponent("chats");
     checkUserCurrent();
     async function getUser() {
       const data = await getLoggedInUser();

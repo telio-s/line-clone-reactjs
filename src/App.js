@@ -11,13 +11,12 @@ function App() {
     <div>
       <Router>
         <div className="App">
-          <Route path="/login" exact component={Login} />
+          <Route path="/" exact component={Login} />
           <Route path="/dashboard" exact component={Dashboard} />
         </div>
       </Router>
-      <AmplifySignOut />
     </div>
   );
 }
 
-export default withAuthenticator(App);
+export default App;
