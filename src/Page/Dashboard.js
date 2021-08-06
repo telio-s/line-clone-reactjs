@@ -29,8 +29,15 @@ const Dashboard = () => {
   const classes = useStyles();
 
   useEffect(() => {
-    setComponent("chats");
     checkUserCurrent();
+    async function getUser() {
+      const data = await getLoggedInUser();
+      console.log(data);
+      setUser(data.data.listUsers.items[0]);
+    }
+    getUser();
+    console.log("Hello World");
+    setSideBar(<AllChats />);
   }, []);
 
   const checkUserCurrent = async () => {
@@ -43,15 +50,6 @@ const Dashboard = () => {
       // updateUser(null)
     }
   };
-    async function getUser() {
-      const data = await getLoggedInUser();
-      console.log(data);
-      setUser(data.data.listUsers.items[0]);
-    }
-    getUser();
-    console.log("Hello World");
-    setSideBar(<AllChats />);
-  }, []);
 
   return (
     <DashboardContext.Provider
