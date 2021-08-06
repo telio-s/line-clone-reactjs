@@ -6,7 +6,6 @@ import useStyles from "../Style/TheirMessageBubbleStyle";
 const TheirMessageBubble = (props) => {
   const { message } = props;
   const classes = useStyles();
-  console.log(message);
 
   return (
     <div className={classes.root}>

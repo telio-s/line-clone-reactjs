@@ -170,50 +170,184 @@ export const listUsers = /* GraphQL */ `
         id
         username
         email
-        lineID
-        displayName
-        statusMessage
-        profilePhoto {
-          bucket
-          region
-          key
-        }
-        coverPhoto {
-          bucket
-          region
-          key
-        }
-        phoneNumber
+        createdAt
+        updatedAt
         groups {
-          nextToken
+          items {
+            group {
+              id
+              name
+              isDirect
+              users {
+                items {
+                  user {
+                    id
+                    username
+                    createdAt
+                    updatedAt
+                  }
+                }
+                nextToken
+              }
+            }
+          }
         }
         friends {
-          nextToken
+          items {
+            friend {
+              id
+              username
+            }
+          }
         }
-        blocked {
+      }
+      nextToken
+    }
+  }
+`;
+export const getPost = /* GraphQL */ `
+  query GetPost($id: ID!) {
+    getPost(id: $id) {
+      id
+      name
+      description
+      comments {
+        items {
           id
-          username
-          email
-          lineID
-          displayName
-          statusMessage
-          phoneNumber
+          comment
           createdAt
           updatedAt
         }
-        favourites {
+        nextToken
+      }
+      likes {
+        items {
           id
-          username
-          email
-          lineID
-          displayName
-          statusMessage
-          phoneNumber
           createdAt
           updatedAt
         }
-        posts {
+        nextToken
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const listPosts = /* GraphQL */ `
+  query ListPosts(
+    $filter: ModelPostFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listPosts(filter: $filter, limit: $limit, nextToken: $nextToken) {
+      items {
+        id
+        name
+        description
+        comments {
           nextToken
+        }
+        likes {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      nextToken
+    }
+  }
+`;
+export const getComment = /* GraphQL */ `
+  query GetComment($id: ID!) {
+    getComment(id: $id) {
+      id
+      comment
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const listComments = /* GraphQL */ `
+  query ListComments(
+    $filter: ModelCommentFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listComments(filter: $filter, limit: $limit, nextToken: $nextToken) {
+      items {
+        id
+        comment
+        createdAt
+        updatedAt
+      }
+      nextToken
+    }
+  }
+`;
+export const getLike = /* GraphQL */ `
+  query GetLike($id: ID!) {
+    getLike(id: $id) {
+      id
+      emoji {
+        bucket
+        region
+        key
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const listLikes = /* GraphQL */ `
+  query ListLikes(
+    $filter: ModelLikeFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listLikes(filter: $filter, limit: $limit, nextToken: $nextToken) {
+      items {
+        id
+        emoji {
+          bucket
+          region
+          key
+        }
+        createdAt
+        updatedAt
+      }
+      nextToken
+    }
+  }
+`;
+export const getAlbum = /* GraphQL */ `
+  query GetAlbum($id: ID!) {
+    getAlbum(id: $id) {
+      id
+      albumName
+      file {
+        bucket
+        region
+        key
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const listAlbums = /* GraphQL */ `
+  query ListAlbums(
+    $filter: ModelAlbumFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listAlbums(filter: $filter, limit: $limit, nextToken: $nextToken) {
+      items {
+        id
+        albumName
+        file {
+          bucket
+          region
+          key
         }
         createdAt
         updatedAt
@@ -229,9 +363,12 @@ export const getGroup = /* GraphQL */ `
       name
       users {
         items {
-          id
-          createdAt
-          updatedAt
+          user {
+            id
+            username
+            createdAt
+            updatedAt
+          }
         }
         nextToken
       }
@@ -243,6 +380,10 @@ export const getGroup = /* GraphQL */ `
           createdAt
           isBlock
           updatedAt
+          user {
+            id
+            username
+          }
         }
         nextToken
       }
@@ -445,157 +586,6 @@ export const listMessages = /* GraphQL */ `
     }
   }
 `;
-export const getPost = /* GraphQL */ `
-  query GetPost($id: ID!) {
-    getPost(id: $id) {
-      id
-      name
-      description
-      comments {
-        items {
-          id
-          comment
-          createdAt
-          updatedAt
-        }
-        nextToken
-      }
-      likes {
-        items {
-          id
-          createdAt
-          updatedAt
-        }
-        nextToken
-      }
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const listPosts = /* GraphQL */ `
-  query ListPosts(
-    $filter: ModelPostFilterInput
-    $limit: Int
-    $nextToken: String
-  ) {
-    listPosts(filter: $filter, limit: $limit, nextToken: $nextToken) {
-      items {
-        id
-        name
-        description
-        comments {
-          nextToken
-        }
-        likes {
-          nextToken
-        }
-        createdAt
-        updatedAt
-      }
-      nextToken
-    }
-  }
-`;
-export const getComment = /* GraphQL */ `
-  query GetComment($id: ID!) {
-    getComment(id: $id) {
-      id
-      comment
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const listComments = /* GraphQL */ `
-  query ListComments(
-    $filter: ModelCommentFilterInput
-    $limit: Int
-    $nextToken: String
-  ) {
-    listComments(filter: $filter, limit: $limit, nextToken: $nextToken) {
-      items {
-        id
-        comment
-        createdAt
-        updatedAt
-      }
-      nextToken
-    }
-  }
-`;
-export const getLike = /* GraphQL */ `
-  query GetLike($id: ID!) {
-    getLike(id: $id) {
-      id
-      emoji {
-        bucket
-        region
-        key
-      }
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const listLikes = /* GraphQL */ `
-  query ListLikes(
-    $filter: ModelLikeFilterInput
-    $limit: Int
-    $nextToken: String
-  ) {
-    listLikes(filter: $filter, limit: $limit, nextToken: $nextToken) {
-      items {
-        id
-        emoji {
-          bucket
-          region
-          key
-        }
-        createdAt
-        updatedAt
-      }
-      nextToken
-    }
-  }
-`;
-export const getAlbum = /* GraphQL */ `
-  query GetAlbum($id: ID!) {
-    getAlbum(id: $id) {
-      id
-      albumName
-      file {
-        bucket
-        region
-        key
-      }
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const listAlbums = /* GraphQL */ `
-  query ListAlbums(
-    $filter: ModelAlbumFilterInput
-    $limit: Int
-    $nextToken: String
-  ) {
-    listAlbums(filter: $filter, limit: $limit, nextToken: $nextToken) {
-      items {
-        id
-        albumName
-        file {
-          bucket
-          region
-          key
-        }
-        createdAt
-        updatedAt
-      }
-      nextToken
-    }
-  }
-`;
 export const messageByDate = /* GraphQL */ `
   query MessageByDate(
     $type: String
@@ -619,10 +609,6 @@ export const messageByDate = /* GraphQL */ `
           id
           username
           email
-          lineID
-          displayName
-          statusMessage
-          phoneNumber
           createdAt
           updatedAt
         }
@@ -636,25 +622,7 @@ export const messageByDate = /* GraphQL */ `
         type
         message
         createdAt
-        isBlock
         updatedAt
-        groups {
-          items {
-            group {
-              id
-              name
-              isDirect
-            }
-          }
-        }
-        friends {
-          items {
-            friend {
-              id
-              username
-            }
-          }
-        }
       }
       nextToken
     }

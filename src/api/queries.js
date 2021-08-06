@@ -9,7 +9,6 @@ export async function getLoggedInUser() {
         filter: { email: { eq: "kanyanat.i@ku.th" } },
       })
     );
-    console.log(user);
     return user;
   } catch (error) {
     return;
@@ -34,7 +33,6 @@ export async function getUserByUsername(username) {
 }
 
 export async function getTheGroup(id) {
-  console.log(id);
   const data = await API.graphql(graphqlOperation(getGroup, { id }));
   return data.data.getGroup;
 }

@@ -25,6 +25,9 @@ const Dashboard = () => {
   const [user, setUser] = useState();
   const [sideBar, setSideBar] = useState(null);
   const [chat, setChat] = useState(null);
+  const [groups, setGroups] = useState([]);
+  const [friends, setFriends] = useState([]);
+  const [component, setComponent] = useState(null);
 
   const classes = useStyles();
 
@@ -32,12 +35,12 @@ const Dashboard = () => {
     checkUserCurrent();
     async function getUser() {
       const data = await getLoggedInUser();
-      console.log(data);
       setUser(data.data.listUsers.items[0]);
+      setGroups(data.data.listUsers.items[0].groups.items);
+      setFriends(data.data.listUsers.items[0].friends.items);
     }
     getUser();
-    console.log("Hello World");
-    setSideBar(<AllChats />);
+    sideBar ? setSideBar(sideBar) : setSideBar(<AllChats />);
   }, []);
 
   const checkUserCurrent = async () => {
@@ -53,7 +56,15 @@ const Dashboard = () => {
 
   return (
     <DashboardContext.Provider
-      value={{ user, sideBar, setSideBar, chat, setChat }}
+      value={{
+        user,
+        sideBar,
+        setSideBar,
+        chat,
+        setChat,
+        groups,
+        friends,
+      }}
     >
       <div className={classes.root}>
         <Selection />
