@@ -168,53 +168,25 @@ export const listUsers = /* GraphQL */ `
         id
         username
         email
-        lineID
-        displayName
-        statusMessage
-        profilePhoto {
-          bucket
-          region
-          key
-        }
-        coverPhoto {
-          bucket
-          region
-          key
-        }
-        phoneNumber
-        groups {
-          nextToken
-        }
-        friends {
-          nextToken
-        }
-        blocked {
-          id
-          username
-          email
-          lineID
-          displayName
-          statusMessage
-          phoneNumber
-          createdAt
-          updatedAt
-        }
-        favourites {
-          id
-          username
-          email
-          lineID
-          displayName
-          statusMessage
-          phoneNumber
-          createdAt
-          updatedAt
-        }
-        posts {
-          nextToken
-        }
         createdAt
         updatedAt
+        groups {
+          items {
+            group {
+              id
+              name
+              isDirect
+            }
+          }
+        }
+        friends {
+          items {
+            friend {
+              id
+              username
+            }
+          }
+        }
       }
       nextToken
     }
@@ -241,6 +213,10 @@ export const getGroup = /* GraphQL */ `
           createdAt
           isBlock
           updatedAt
+          user {
+            id
+            username
+          }
         }
         nextToken
       }
@@ -594,6 +570,7 @@ export const listAlbums = /* GraphQL */ `
     }
   }
 `;
+
 export const messageByDate = /* GraphQL */ `
   query MessageByDate(
     $type: String
@@ -617,10 +594,6 @@ export const messageByDate = /* GraphQL */ `
           id
           username
           email
-          lineID
-          displayName
-          statusMessage
-          phoneNumber
           createdAt
           updatedAt
         }
@@ -634,7 +607,6 @@ export const messageByDate = /* GraphQL */ `
         type
         message
         createdAt
-        isBlock
         updatedAt
       }
       nextToken

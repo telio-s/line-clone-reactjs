@@ -1,26 +1,25 @@
 {
   "dev": {
     "awscloudformation": {
-      "AuthRoleName": "amplify-lineclone-dev-140430-authRole",
-      "UnauthRoleArn": "arn:aws:iam::189003960216:role/amplify-lineclone-dev-140430-unauthRole",
-      "AuthRoleArn": "arn:aws:iam::189003960216:role/amplify-lineclone-dev-140430-authRole",
+      "AuthRoleName": "amplify-lineclone-dev-152718-authRole",
+      "UnauthRoleArn": "arn:aws:iam::804496066645:role/amplify-lineclone-dev-152718-unauthRole",
+      "AuthRoleArn": "arn:aws:iam::804496066645:role/amplify-lineclone-dev-152718-authRole",
       "Region": "ap-southeast-1",
-      "DeploymentBucketName": "amplify-lineclone-dev-140430-deployment",
-      "UnauthRoleName": "amplify-lineclone-dev-140430-unauthRole",
-      "StackName": "amplify-lineclone-dev-140430",
-      "StackId": "arn:aws:cloudformation:ap-southeast-1:189003960216:stack/amplify-lineclone-dev-140430/6695f940-f104-11eb-af05-0ad54029fc4e",
-      "AmplifyAppId": "d2vnf35bwvwg7d"
+      "DeploymentBucketName": "amplify-lineclone-dev-152718-deployment",
+      "UnauthRoleName": "amplify-lineclone-dev-152718-unauthRole",
+      "StackName": "amplify-lineclone-dev-152718",
+      "StackId": "arn:aws:cloudformation:ap-southeast-1:804496066645:stack/amplify-lineclone-dev-152718/cda18530-f4fd-11eb-99e9-06c22f93d630",
+      "AmplifyAppId": "d2btm0hwj8nguw"
     },
     "categories": {
       "function": {
-        "lineclone72af9dd372af9dd3PostConfirmation": {
-          "deploymentBucketName": "amplify-lineclone-dev-140430-deployment",
-          "s3Key": "amplify-builds/lineclone72af9dd372af9dd3PostConfirmation-713130574c2f5276786c-build.zip"
+        "lineclone7ec4df0d7ec4df0dPostConfirmation": {
+          "deploymentBucketName": "amplify-lineclone-dev-152718-deployment",
+          "s3Key": "amplify-builds/lineclone7ec4df0d7ec4df0dPostConfirmation-4950515958756738546a-build.zip"
         }
       },
       "auth": {
-        "lineclone72af9dd372af9dd3": {},
-        "userPoolGroups": {}
+        "lineclone7ec4df0d7ec4df0d": {}
       }
     }
   }

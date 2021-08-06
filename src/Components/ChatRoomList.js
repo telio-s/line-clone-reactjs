@@ -1,19 +1,26 @@
-import React from "react";
+import React, { useContext } from "react";
 import {
   Typography,
   AppBar,
   Toolbar,
   InputBase,
   InputAdornment,
-  Box,
   Button,
 } from "@material-ui/core";
 import { SearchOutlined, AccountCircle } from "@material-ui/icons";
 
 import useStyles from "../Style/ChatRoomListStyle";
+import ChatRoom from "./ChatRoom";
+import { DashboardContext } from "../Page/Dashboard";
 
 const ChatRoomList = () => {
   const classes = useStyles();
+  const { user, setChat } = useContext(DashboardContext);
+
+  function handleChatRoom() {
+    setChat(<ChatRoom />);
+  }
+
   return (
     <div className={classes.root}>
       <AppBar elevation={0} position="static" className={classes.appbar}>
@@ -30,7 +37,12 @@ const ChatRoomList = () => {
           />
         </Toolbar>
       </AppBar>
-      <Button disableRipple={true} className={classes.chatRoom}>
+
+      <Button
+        disableRipple={true}
+        className={classes.chatRoom}
+        onClick={handleChatRoom}
+      >
         <AccountCircle style={{ fontSize: "60px" }} />
         <div className={classes.chatDesc}>
           <Typography className={classes.nameChat}>Name Chat</Typography>
