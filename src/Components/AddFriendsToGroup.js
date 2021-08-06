@@ -16,18 +16,17 @@ import Friend from "./Friend";
 function AddFriendsToGroup(props) {
   const { open, onClose, group } = props;
   const [search, setSearch] = useState("");
-  const { friends } = useContext(DashboardContext);
-  const [alreadyIn, setAlreadyIn] = useState([]);
+  const { friends, alreadyIn, setAlreadyIn } = useContext(DashboardContext);
   const [selected, setSelectedUser] = useState([]);
   //   const [pending, setPending] = useState([]);
 
-  useEffect(async () => {
-    let aIn = [];
-    group.users.items.map((user) => {
-      aIn.push(user.user.id);
-    });
-    setAlreadyIn([...aIn]);
-  }, []);
+  // useEffect(async () => {
+  //   let aIn = [];
+  //   group.users.items.map((user) => {
+  //     aIn.push(user.user.id);
+  //   });
+  //   setAlreadyIn([...aIn]);
+  // }, []);
   function handleOnClose() {
     setSelectedUser([]);
     onClose();

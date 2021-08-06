@@ -31,7 +31,7 @@ const GroupChatRoom = (props) => {
   const [addMember, setAddMember] = useState(false);
   const [members, setMembers] = useState([]);
   const [showMember, setShowMember] = useState(false);
-  const { user } = useContext(DashboardContext);
+  const { user, setAlreadyIn } = useContext(DashboardContext);
 
   useEffect(() => {
     async function getMessages() {
@@ -41,6 +41,11 @@ const GroupChatRoom = (props) => {
     async function getGroup() {
       const data = await getTheGroup(group.id);
       setMembers(data.users.items);
+      let aIn = [];
+      data.users.items.map((user) => {
+        aIn.push(user.user.id);
+      });
+      setAlreadyIn([...aIn]);
     }
     getMessages();
     getGroup();
@@ -107,7 +112,7 @@ const GroupChatRoom = (props) => {
               message.user.id === user.id ? (
                 <MyMessageBubble key={index} message={message} />
               ) : (
-                <TheirMessageBubble key={index} message />
+                <TheirMessageBubble key={index} message={message} />
               )
             )
           : null}

@@ -17,6 +17,7 @@ const Dashboard = () => {
   const [chat, setChat] = useState(null);
   const [groups, setGroups] = useState([]);
   const [friends, setFriends] = useState([]);
+  const [alreadyIn, setAlreadyIn] = useState([]);
 
   const classes = useStyles();
 
@@ -41,6 +42,8 @@ const Dashboard = () => {
         setChat,
         groups,
         friends,
+        setAlreadyIn,
+        alreadyIn,
       }}
     >
       <div className={classes.root}>
