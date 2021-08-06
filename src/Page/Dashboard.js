@@ -19,6 +19,7 @@ import { Auth, Hub } from "aws-amplify";
 
 import useStyles from "../Style/DashboardStyle";
 import ChatDashboard from "../Components/ChatDashboard";
+import ChatRoomList from "../Components/ChatRoomList";
 
 const Dashboard = () => {
   const classes = useStyles();
@@ -43,10 +44,11 @@ const Dashboard = () => {
   const changeComponent = (key) => {
     switch (key) {
       case "chats":
-        return <ChatDashboard />;
+        console.log(key);
+        return <ChatDashboard key={key} />;
       case "friends":
         console.log(key);
-        break;
+        return <ChatDashboard key={key} />;
       case "addFriend":
         console.log(key);
         break;
@@ -176,7 +178,10 @@ const Dashboard = () => {
             </List>
           </Drawer>
 
-          <main className={classes.main}>{changeComponent(component)}</main>
+          <main className={classes.main}>
+            {/* {changeComponent(component)} */}
+            <ChatDashboard component={component} />
+          </main>
         </div>
       </div>
     </Router>
