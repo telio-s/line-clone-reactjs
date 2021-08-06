@@ -27,12 +27,21 @@ const Dashboard = () => {
   const [chat, setChat] = useState(null);
   const [groups, setGroups] = useState([]);
   const [friends, setFriends] = useState([]);
+  const [component, setComponent] = useState(null);
 
   const classes = useStyles();
 
   useEffect(() => {
     setComponent("chats");
     checkUserCurrent();
+    async function getUser() {
+      const data = await getLoggedInUser();
+      setUser(data.data.listUsers.items[0]);
+      setGroups(data.data.listUsers.items[0].groups.items);
+      setFriends(data.data.listUsers.items[0].friends.items);
+    }
+    getUser();
+    sideBar ? setSideBar(sideBar) : setSideBar(<AllChats />);
   }, []);
 
   const checkUserCurrent = async () => {
@@ -45,15 +54,6 @@ const Dashboard = () => {
       // updateUser(null)
     }
   };
-    async function getUser() {
-      const data = await getLoggedInUser();
-      setUser(data.data.listUsers.items[0]);
-      setGroups(data.data.listUsers.items[0].groups.items);
-      setFriends(data.data.listUsers.items[0].friends.items);
-    }
-    getUser();
-    sideBar ? setSideBar(sideBar) : setSideBar(<AllChats />);
-  }, []);
 
   return (
     <DashboardContext.Provider

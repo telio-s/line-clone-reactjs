@@ -1230,50 +1230,7 @@ export const createMessage = /* GraphQL */ `
       user {
         id
         username
-        email
-        lineID
-        displayName
-        statusMessage
-        profilePhoto {
-          bucket
-          region
-          key
-        }
-        coverPhoto {
-          bucket
-          region
-          key
-        }
-        phoneNumber
         groups {
-          nextToken
-        }
-        friends {
-          nextToken
-        }
-        blocked {
-          id
-          username
-          email
-          lineID
-          displayName
-          statusMessage
-          phoneNumber
-          createdAt
-          updatedAt
-        }
-        favourites {
-          id
-          username
-          email
-          lineID
-          displayName
-          statusMessage
-          phoneNumber
-          createdAt
-          updatedAt
-        }
-        posts {
           nextToken
         }
         createdAt
@@ -1289,32 +1246,16 @@ export const createMessage = /* GraphQL */ `
           nextToken
         }
         isDirect
-        announce {
-          nextToken
-        }
-        files {
-          bucket
-          region
-          key
-        }
-        albums {
-          id
-          albumName
-          createdAt
-          updatedAt
-        }
         createdAt
         updatedAt
       }
       type
       message
       createdAt
-      isBlock
       updatedAt
     }
   }
 `;
-
 export const updateMessage = /* GraphQL */ `
   mutation UpdateMessage(
     $input: UpdateMessageInput!

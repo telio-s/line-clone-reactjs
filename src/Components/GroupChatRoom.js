@@ -44,7 +44,7 @@ const GroupChatRoom = (props) => {
     }
     getMessages();
     getGroup();
-  }, [group]);
+  }, []);
 
   function handleSendMessage(e) {
     e.preventDefault();
@@ -55,6 +55,7 @@ const GroupChatRoom = (props) => {
       messageGroupId: group.id,
       isBlock: false,
     };
+    console.log(message);
     async function createMessage() {
       const data = await createMessageInGroup(message);
       setMessages([...messages, data.data.createMessage]);
@@ -107,7 +108,7 @@ const GroupChatRoom = (props) => {
               message.user.id === user.id ? (
                 <MyMessageBubble key={index} message={message} />
               ) : (
-                <TheirMessageBubble key={index} message />
+                <TheirMessageBubble key={index} message={message} />
               )
             )
           : null}

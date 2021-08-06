@@ -20,7 +20,6 @@ function AddFriendsToGroup(props) {
   const [alreadyIn, setAlreadyIn] = useState([]);
   const [selected, setSelectedUser] = useState([]);
   //   const [pending, setPending] = useState([]);
-
   useEffect(async () => {
     let aIn = [];
     group.users.items.map((user) => {
