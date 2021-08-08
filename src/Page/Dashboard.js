@@ -179,7 +179,7 @@ const Dashboard = () => {
           </Drawer>
 
           <main className={classes.main}>
-            {/* {changeComponent(component)} */}
+            {changeComponent(component)}
             <ChatDashboard component={component} />
           </main>
         </div>
