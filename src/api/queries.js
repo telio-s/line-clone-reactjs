@@ -41,8 +41,10 @@ export async function getDirect(userUsername, friendUsername) {
   const _user = await getUserByUsername(userUsername);
   const _friend = await getUserByUsername(friendUsername);
   console.log(_user);
+  console.log(_friend);
   let userGroup = [];
   let directId = "";
+  let groupInfo = [];
   _user.groups.items.map((group) => {
     if (group.group.isDirect) {
       // keep all direct chats
@@ -52,9 +54,18 @@ export async function getDirect(userUsername, friendUsername) {
   _friend.groups.items.map((group) => {
     if (userGroup.includes(group.group.id)) {
       directId = group.group.id;
+      groupInfo = group;
+      console.log(groupInfo);
       return;
     }
   });
-  const _direct = await getMessageByDateInGroup(directId);
-  return [_direct, directId];
+  try {
+    console.log(directId);
+    const _direct = await getMessageByDateInGroup(directId);
+    console.log("get message in direct success");
+    return [_direct, directId, groupInfo];
+  } catch (error) {
+    console.log("can't get message from direct");
+    return;
+  }
 }

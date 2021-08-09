@@ -6,27 +6,21 @@ import {
   Paper,
   TextField,
   Button,
-  ListItem,
 } from "@material-ui/core";
-import React, { useContext, useEffect, useState } from "react";
-import { createUsersGroup } from "../api/mutations";
+import React, { useContext, useState } from "react";
+import { createNewGroup, createUsersGroup } from "../api/mutations";
+import { getTheGroup } from "../api/queries";
 import { DashboardContext } from "../Page/Dashboard";
+import { DirectContext } from "./DirectChatRoom";
 import Friend from "./Friend";
+import GroupChatRoom from "./GroupChatRoom";
 
 function AddFriendsToGroup(props) {
-  const { open, onClose, group } = props;
+  const { open, onClose, group, alreadyIn, setAlreadyIn, isGroup } = props;
   const [search, setSearch] = useState("");
-  const { friends } = useContext(DashboardContext);
-  const [alreadyIn, setAlreadyIn] = useState([]);
+  const { user, setChat, friend } = useContext(DashboardContext);
   const [selected, setSelectedUser] = useState([]);
   //   const [pending, setPending] = useState([]);
-  useEffect(async () => {
-    let aIn = [];
-    group.users.items.map((user) => {
-      aIn.push(user.user.id);
-    });
-    setAlreadyIn([...aIn]);
-  }, []);
   function handleOnClose() {
     setSelectedUser([]);
     onClose();
@@ -50,15 +44,36 @@ function AddFriendsToGroup(props) {
   function handleSubmit() {
     async function createUserToGroup(users) {
       const data = await createUsersGroup(users, group.id);
+      // have to check is it temporary group if its you have to update group name
+    }
+
+    async function createGroup(group, users) {
+      let _users = [...users, friend.id];
+      _users.push(user.id);
+      const data = await createNewGroup(group, _users);
       console.log(data);
+      const _data = await getTheGroup(data.id);
+      console.log(_data);
+      // setChat(null);
+      setChat(<GroupChatRoom group={_data} />);
     }
     let users = [];
+    let name = "";
     selected.map((friend) => {
       users.push(friend.friend.id);
       //   setPending([...pending, friend]);
+      name += friend.friend.username + ",";
       setAlreadyIn([...alreadyIn, friend.friend.id]);
     });
-    createUserToGroup(users);
+    if (isGroup) {
+      createUserToGroup(users);
+    } else {
+      const group = {
+        isDirect: false,
+        name: user.username + "," + friend.username + "," + name,
+      };
+      createGroup(group, users);
+    }
     handleOnClose();
     // console.log(alreadyIn);
   }
@@ -84,7 +99,7 @@ function AddFriendsToGroup(props) {
                   onChange={(e) => setSearch(e.target.value)}
                 />
                 <Divider />
-                {friends.map((friend, index) =>
+                {user.friends.items.map((friend, index) =>
                   alreadyIn.includes(friend.friend.id) ? null : (
                     <Friend
                       key={index}
@@ -120,14 +135,6 @@ function AddFriendsToGroup(props) {
             </Button>
           </div>
           <Divider />
-          <h4>Member</h4>
-          {group.users.items.map((user, index) => (
-            <ListItem key={index}>{user.user.username}</ListItem>
-          ))}
-          {/* <h4>Pending</h4>
-          {pending.map((p, index) => (
-            <ListItem key={index}>{p.friend.username}</ListItem>
-          ))} */}
         </div>
       </Dialog>
     </div>

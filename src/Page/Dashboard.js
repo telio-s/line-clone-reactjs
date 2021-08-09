@@ -25,8 +25,7 @@ const Dashboard = () => {
   const [user, setUser] = useState();
   const [sideBar, setSideBar] = useState(null);
   const [chat, setChat] = useState(null);
-  const [groups, setGroups] = useState([]);
-  const [friends, setFriends] = useState([]);
+  const [friend, setFriend] = useState([]);
 
   const classes = useStyles();
 
@@ -35,8 +34,6 @@ const Dashboard = () => {
     async function getUser() {
       const data = await getLoggedInUser();
       setUser(data.data.listUsers.items[0]);
-      setGroups(data.data.listUsers.items[0].groups.items);
-      setFriends(data.data.listUsers.items[0].friends.items);
     }
     getUser();
     sideBar ? setSideBar(sideBar) : setSideBar(<AllChats />);
@@ -61,8 +58,8 @@ const Dashboard = () => {
         setSideBar,
         chat,
         setChat,
-        groups,
-        friends,
+        friend,
+        setFriend,
       }}
     >
       <div className={classes.root}>

@@ -18,7 +18,7 @@ export async function createNewGroup(group, users) {
       graphqlOperation(createGroup, { input: group })
     );
     const usersGroup = await createUsersGroup(users, data.data.createGroup.id);
-    console.log("success createing group", data, usersGroup);
+    console.log("success creating group", data, usersGroup);
     return data.data.createGroup;
   } catch (error) {
     console.log("can't create group", error);
