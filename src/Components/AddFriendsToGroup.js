@@ -8,25 +8,20 @@ import {
   Button,
   ListItem,
 } from "@material-ui/core";
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useState } from "react";
 import { createUsersGroup } from "../api/mutations";
 import { DashboardContext } from "../Page/Dashboard";
 import Friend from "./Friend";
+import { getTheGroup } from "./../api/queries";
 
 function AddFriendsToGroup(props) {
-  const { open, onClose, group } = props;
+  const { open, onClose, group, members, setMembers, alreadyIn, setAlreadyIn } =
+    props;
   const [search, setSearch] = useState("");
-  const { friends, alreadyIn, setAlreadyIn } = useContext(DashboardContext);
+  const { user } = useContext(DashboardContext);
   const [selected, setSelectedUser] = useState([]);
   //   const [pending, setPending] = useState([]);
 
-  // useEffect(async () => {
-  //   let aIn = [];
-  //   group.users.items.map((user) => {
-  //     aIn.push(user.user.id);
-  //   });
-  //   setAlreadyIn([...aIn]);
-  // }, []);
   function handleOnClose() {
     setSelectedUser([]);
     onClose();
@@ -52,6 +47,10 @@ function AddFriendsToGroup(props) {
       const data = await createUsersGroup(users, group.id);
       console.log(data);
     }
+    async function getGroup() {
+      const data = await getTheGroup(group.id);
+      setMembers(data.users.items);
+    }
     let users = [];
     selected.map((friend) => {
       users.push(friend.friend.id);
@@ -59,8 +58,8 @@ function AddFriendsToGroup(props) {
       setAlreadyIn([...alreadyIn, friend.friend.id]);
     });
     createUserToGroup(users);
+    getGroup();
     handleOnClose();
-    // console.log(alreadyIn);
   }
 
   return (
@@ -84,7 +83,7 @@ function AddFriendsToGroup(props) {
                   onChange={(e) => setSearch(e.target.value)}
                 />
                 <Divider />
-                {friends.map((friend, index) =>
+                {user.friends.items.map((friend, index) =>
                   alreadyIn.includes(friend.friend.id) ? null : (
                     <Friend
                       key={index}
@@ -120,14 +119,10 @@ function AddFriendsToGroup(props) {
             </Button>
           </div>
           <Divider />
-          <h4>Member</h4>
-          {group.users.items.map((user, index) => (
+          <h4>Members</h4>
+          {members.map((user, index) => (
             <ListItem key={index}>{user.user.username}</ListItem>
           ))}
-          {/* <h4>Pending</h4>
-          {pending.map((p, index) => (
-            <ListItem key={index}>{p.friend.username}</ListItem>
-          ))} */}
         </div>
       </Dialog>
     </div>

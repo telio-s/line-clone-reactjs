@@ -5,7 +5,7 @@ import DirectChatRoom from "./DirectChatRoom";
 
 function Groups(props) {
   const { showFriends } = props;
-  const { setChat, friends } = useContext(DashboardContext);
+  const { setChat, user } = useContext(DashboardContext);
 
   function handleDirectChatRoom(friend) {
     setChat(<DirectChatRoom friend={friend} />);
@@ -13,7 +13,7 @@ function Groups(props) {
 
   return (
     <div style={{ display: showFriends ? "" : "none" }}>
-      {friends.map((friend, index) => (
+      {user.friends.items.map((friend, index) => (
         <ListItem
           key={index}
           button

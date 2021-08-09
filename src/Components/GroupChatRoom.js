@@ -31,7 +31,8 @@ const GroupChatRoom = (props) => {
   const [addMember, setAddMember] = useState(false);
   const [members, setMembers] = useState([]);
   const [showMember, setShowMember] = useState(false);
-  const { user, setAlreadyIn } = useContext(DashboardContext);
+  const [alreadyIn, setAlreadyIn] = useState([]);
+  const { user } = useContext(DashboardContext);
 
   useEffect(() => {
     async function getMessages() {
@@ -145,6 +146,10 @@ const GroupChatRoom = (props) => {
         open={addMember}
         onClose={handleAddMemberToGroup}
         group={group}
+        members={members}
+        setMembers={setMembers}
+        alreadyIn={alreadyIn}
+        setAlreadyIn={setAlreadyIn}
       />
       <Dialog open={showMember} onClose={handleAllMembers}>
         <div style={{ width: "500px" }}>
