@@ -5,29 +5,41 @@ import {
   Link,
   useHistory,
 } from "react-router-dom";
-import { Drawer, ListItem, ListItemIcon, List } from "@material-ui/core";
-import {
-  Person,
-  PersonAdd,
-  WatchLater,
-  MoreHoriz,
-  VolumeDownOutlined,
-} from "@material-ui/icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faCommentDots, faNewspaper } from "@fortawesome/free-solid-svg-icons";
 import { Auth, Hub } from "aws-amplify";
 
 import useStyles from "../Style/DashboardStyle";
 import ChatDashboard from "../Components/ChatDashboard";
 import ChatRoomList from "../Components/ChatRoomList";
+import { Divider } from "@material-ui/core";
+import Selection from "./../Components/Selection";
+import MenuBar from "../Components/MenuBar";
+import AllChats from "../Components/AllChats";
+
+import { getLoggedInUser } from "./../api/queries";
+import SideBar from "../Components/SideBar";
+import Chat from "./../Components/Chat";
+
+export const DashboardContext = React.createContext();
 
 const Dashboard = () => {
+  const [user, setUser] = useState();
+  const [sideBar, setSideBar] = useState(null);
+  const [chat, setChat] = useState(null);
+  const [groups, setGroups] = useState([]);
+  const [friends, setFriends] = useState([]);
+
   const classes = useStyles();
-  const [component, setComponent] = useState(null);
 
   useEffect(() => {
-    setComponent("chats");
     checkUserCurrent();
+    async function getUser() {
+      const data = await getLoggedInUser();
+      setUser(data.data.listUsers.items[0]);
+      setGroups(data.data.listUsers.items[0].groups.items);
+      setFriends(data.data.listUsers.items[0].friends.items);
+    }
+    getUser();
+    sideBar ? setSideBar(sideBar) : setSideBar(<AllChats />);
   }, []);
 
   const checkUserCurrent = async () => {
@@ -41,150 +53,28 @@ const Dashboard = () => {
     }
   };
 
-  const changeComponent = (key) => {
-    switch (key) {
-      case "chats":
-        console.log(key);
-        return <ChatDashboard key={key} />;
-      case "friends":
-        console.log(key);
-        return <ChatDashboard key={key} />;
-      case "addFriend":
-        console.log(key);
-        break;
-      case "timeline":
-        console.log(key);
-        break;
-      case "news":
-        console.log(key);
-        break;
-      case "mute":
-        console.log(key);
-        break;
-      case "settings":
-        console.log(key);
-        break;
-      default:
-        return <ChatDashboard />;
-    }
-  };
   return (
-    <Router>
+    <DashboardContext.Provider
+      value={{
+        user,
+        sideBar,
+        setSideBar,
+        chat,
+        setChat,
+        groups,
+        friends,
+      }}
+    >
       <div className={classes.root}>
+        <Selection />
+        <Divider />
         <div className={classes.mainDrawerRoot}>
-          <Drawer
-            variant="permanent"
-            anchor="left"
-            className={classes.drawer}
-            classes={{ paper: classes.drawerPaper }}
-          >
-            <List>
-              <ListItem
-                button
-                disableRipple={true}
-                className={classes.iconButton}
-                onClick={() => {
-                  setComponent("friends");
-                }}
-              >
-                <ListItemIcon>
-                  <Person
-                    className={classes.iconMtDrawer}
-                    style={{ marginTop: "30px" }}
-                  />
-                </ListItemIcon>
-              </ListItem>
-              <ListItem
-                button
-                disableRipple={true}
-                className={classes.iconButton}
-                onClick={() => {
-                  setComponent("chats");
-                }}
-              >
-                <ListItemIcon style={{ paddingLeft: "5px" }}>
-                  <FontAwesomeIcon
-                    className={classes.iconAweDrawer}
-                    icon={faCommentDots}
-                  />
-                </ListItemIcon>
-              </ListItem>
-              <ListItem
-                button
-                disableRipple={true}
-                className={classes.iconButton}
-                onClick={() => {
-                  setComponent("addFriend");
-                }}
-              >
-                <ListItemIcon>
-                  <PersonAdd className={classes.iconMtDrawer} />
-                </ListItemIcon>
-              </ListItem>
-              <ListItem
-                button
-                disableRipple={true}
-                className={classes.iconButton}
-                onClick={() => {
-                  setComponent("timeline");
-                }}
-              >
-                <ListItemIcon>
-                  <WatchLater className={classes.iconMtDrawer} />
-                </ListItemIcon>
-              </ListItem>
-              <ListItem
-                button
-                disableRipple={true}
-                className={classes.iconButton}
-                onClick={() => {
-                  setComponent("news");
-                }}
-              >
-                <ListItemIcon>
-                  <FontAwesomeIcon
-                    className={classes.iconAweDrawer}
-                    icon={faNewspaper}
-                  />
-                </ListItemIcon>
-              </ListItem>
-
-              <div className={classes.drawerIconBottom}>
-                <ListItem
-                  button
-                  disableRipple={true}
-                  className={classes.iconButton}
-                  onClick={() => {
-                    setComponent("mute");
-                  }}
-                >
-                  <ListItemIcon>
-                    <VolumeDownOutlined className={classes.iconMtDrawer} />
-                  </ListItemIcon>
-                </ListItem>
-                <ListItem
-                  button
-                  disableRipple={true}
-                  className={classes.iconButton}
-                  onClick={() => {
-                    setComponent("settings");
-                  }}
-                >
-                  <ListItemIcon>
-                    <MoreHoriz className={classes.iconMtDrawer} />
-                  </ListItemIcon>
-                </ListItem>
-              </div>
-            </List>
-          </Drawer>
-
-          <main className={classes.main}>
-            {changeComponent(component)}
-            <ChatDashboard component={component} />
-          </main>
+          <MenuBar />
+          <SideBar />
+          <Chat />
         </div>
       </div>
-    </Router>
+    </DashboardContext.Provider>
   );
 };
 

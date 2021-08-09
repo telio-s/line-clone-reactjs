@@ -2,8 +2,13 @@ type User
   @model
   @auth(
     rules: [
-      { allow: groups, groups: ["admin"] }
-      { allow: owner, ownerField: "username", operations: [read] }
+      { allow: private, provider: userPools }
+      { allow: groups, groups: ["Admin"] }
+      {
+        allow: owner
+        ownerField: "username"
+        operations: [read, create, update, delete]
+      }
     ]
   ) {
   id: ID!
@@ -12,16 +17,20 @@ type User
   lineID: String
   displayName: String!
   statusMessage: String
-  password: String!
   profilePhoto: S3Object
   coverPhoto: S3Object
   phoneNumber: String!
   groups: [UserGroups] @connection(name: "UserGroups")
-  friends: [UserFriends] @connection(name: "UserFriends")
+  # friends: [UserFriends] @connection(name: "UserFriends")
+  friends: [UserFriends] @connection(keyName: "byUser", fields: ["id"])
   blocked: [User]
   favourites: [User]
   posts: [Post] @connection(keyName: "UserPosts")
 }
+
+# type FriendUser @model @connection(name: "FriendUser") {
+#   user: User @connection(name: )
+# }
 
 type Group @model {
   id: ID!
@@ -38,11 +47,20 @@ type UserGroups @model(queries: null) {
   id: ID!
   user: User @connection(name: "UserGroups")
   group: Group @connection(name: "GroupUsers")
+  # isPending: Boolean!
 }
 
-type UserFriends @model(queries: null) {
+type UserFriends
+  @model(queries: null)
+  @key(name: "byUser", fields: ["userId", "friendId"]) {
   id: ID!
-  friendUser: User @connection(name: "UserFriends")
+  # user: User @connection(name: "UserFriends")
+  # friendUser: FriendUser @connection(name: "FriendUser")
+  userId: ID
+  friendId: ID
+  user: User @connection(fields: ["userId"])
+  friend: User @connection(fields: ["friendId"])
+  # isFriend: Boolean!
   displayName: String
 }
 
