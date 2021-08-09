@@ -15,16 +15,15 @@ import Friend from "./Friend";
 import { getTheGroup } from "./../api/queries";
 
 function AddFriendsToGroup(props) {
-  const { open, onClose, group, members, setMembers, alreadyIn, setAlreadyIn } =
-    props;
+  const { open, onClose, group, members, alreadyIn, setAlreadyIn } = props;
   const [search, setSearch] = useState("");
   const { user } = useContext(DashboardContext);
   const [selected, setSelectedUser] = useState([]);
   //   const [pending, setPending] = useState([]);
 
-  function handleOnClose() {
+  function handleOnClose(change) {
     setSelectedUser([]);
-    onClose();
+    onClose(change);
   }
 
   function handleSelectedUser(friend) {
@@ -47,10 +46,6 @@ function AddFriendsToGroup(props) {
       const data = await createUsersGroup(users, group.id);
       console.log(data);
     }
-    async function getGroup() {
-      const data = await getTheGroup(group.id);
-      setMembers(data.users.items);
-    }
     let users = [];
     selected.map((friend) => {
       users.push(friend.friend.id);
@@ -58,9 +53,9 @@ function AddFriendsToGroup(props) {
       setAlreadyIn([...alreadyIn, friend.friend.id]);
     });
     createUserToGroup(users);
-    getGroup();
-    handleOnClose();
+    handleOnClose(1);
   }
+  console.log(members);
 
   return (
     <div>
@@ -113,7 +108,7 @@ function AddFriendsToGroup(props) {
             </Button>
             <Button
               style={{ backgroundColor: "whitesmoke" }}
-              onClick={handleOnClose}
+              onClick={() => handleOnClose(0)}
             >
               cancle
             </Button>

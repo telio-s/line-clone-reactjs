@@ -74,8 +74,15 @@ const GroupChatRoom = (props) => {
   }
 
   // but not for add friends to chat
-  function handleAddMemberToGroup() {
+  function handleAddMemberToGroup(change) {
     setAddMember(!addMember);
+    async function getGroup() {
+      const data = await getTheGroup(group.id);
+      setMembers(data.users.items);
+    }
+    if (change) {
+      getGroup();
+    }
   }
 
   function handleAllMembers() {
@@ -147,7 +154,6 @@ const GroupChatRoom = (props) => {
         onClose={handleAddMemberToGroup}
         group={group}
         members={members}
-        setMembers={setMembers}
         alreadyIn={alreadyIn}
         setAlreadyIn={setAlreadyIn}
       />
