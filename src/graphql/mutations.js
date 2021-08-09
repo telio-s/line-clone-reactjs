@@ -35,6 +35,8 @@ export const createUser = /* GraphQL */ `
       friends {
         items {
           id
+          userId
+          friendId
           displayName
           createdAt
           updatedAt
@@ -194,6 +196,8 @@ export const updateUser = /* GraphQL */ `
       friends {
         items {
           id
+          userId
+          friendId
           displayName
           createdAt
           updatedAt
@@ -353,6 +357,8 @@ export const deleteUser = /* GraphQL */ `
       friends {
         items {
           id
+          userId
+          friendId
           displayName
           createdAt
           updatedAt
@@ -863,6 +869,8 @@ export const createUserFriends = /* GraphQL */ `
   ) {
     createUserFriends(input: $input, condition: $condition) {
       id
+      userId
+      friendId
       user {
         id
         username
@@ -915,7 +923,7 @@ export const createUserFriends = /* GraphQL */ `
         createdAt
         updatedAt
       }
-      friendUser {
+      friend {
         id
         username
         email
@@ -980,6 +988,8 @@ export const updateUserFriends = /* GraphQL */ `
   ) {
     updateUserFriends(input: $input, condition: $condition) {
       id
+      userId
+      friendId
       user {
         id
         username
@@ -1032,7 +1042,7 @@ export const updateUserFriends = /* GraphQL */ `
         createdAt
         updatedAt
       }
-      friendUser {
+      friend {
         id
         username
         email
@@ -1097,6 +1107,8 @@ export const deleteUserFriends = /* GraphQL */ `
   ) {
     deleteUserFriends(input: $input, condition: $condition) {
       id
+      userId
+      friendId
       user {
         id
         username
@@ -1149,7 +1161,7 @@ export const deleteUserFriends = /* GraphQL */ `
         createdAt
         updatedAt
       }
-      friendUser {
+      friend {
         id
         username
         email
@@ -1202,6 +1214,43 @@ export const deleteUserFriends = /* GraphQL */ `
         updatedAt
       }
       displayName
+      createdAt
+      updatedAt
+    }
+  }
+`;
+
+export const createMessage = /* GraphQL */ `
+  mutation CreateMessage(
+    $input: CreateMessageInput!
+    $condition: ModelMessageConditionInput
+  ) {
+    createMessage(input: $input, condition: $condition) {
+      id
+      user {
+        id
+        username
+        groups {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      group {
+        id
+        name
+        users {
+          nextToken
+        }
+        messages {
+          nextToken
+        }
+        isDirect
+        createdAt
+        updatedAt
+      }
+      type
+      message
       createdAt
       updatedAt
     }
@@ -1627,43 +1676,6 @@ export const deleteAlbum = /* GraphQL */ `
         region
         key
       }
-      createdAt
-      updatedAt
-    }
-  }
-`;
-
-export const createMessage = /* GraphQL */ `
-  mutation CreateMessage(
-    $input: CreateMessageInput!
-    $condition: ModelMessageConditionInput
-  ) {
-    createMessage(input: $input, condition: $condition) {
-      id
-      user {
-        id
-        username
-        groups {
-          nextToken
-        }
-        createdAt
-        updatedAt
-      }
-      group {
-        id
-        name
-        users {
-          nextToken
-        }
-        messages {
-          nextToken
-        }
-        isDirect
-        createdAt
-        updatedAt
-      }
-      type
-      message
       createdAt
       updatedAt
     }

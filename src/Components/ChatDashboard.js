@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { BrowserRouter as Router, Route, Link } from "react-router-dom";
 import {
   AppBar,
@@ -22,14 +22,47 @@ import { faCommentDots, faNewspaper } from "@fortawesome/free-solid-svg-icons";
 import useStyles from "../Style/DashboardStyle";
 import ChatRoomList from "../Components/ChatRoomList";
 import ChatRoom from "../Components/ChatRoom";
+import AddFriends from "./AddFriends";
 
-const ChatDashboard = () => {
+const changeComponent = (key) => {
+  switch (key) {
+    case "chats":
+      return <ChatRoomList />;
+    case "friends":
+      console.log(key);
+      break;
+    case "addFriend":
+      return <AddFriends />;
+    case "timeline":
+      console.log(key);
+      break;
+    case "news":
+      console.log(key);
+      break;
+    case "mute":
+      console.log(key);
+      break;
+    case "settings":
+      console.log(key);
+      break;
+    default:
+      return <ChatRoomList />;
+  }
+};
+
+const ChatDashboard = (props) => {
+  const { component } = props;
   const classes = useStyles();
   const chatTypeSection = [
     { title: "All" },
     { title: "Friends" },
     { title: "Groups" },
   ];
+
+  // useEffect(() => {
+  //   // setComponent(key);
+  //   console.log(props.component);
+  // }, []);
   return (
     <>
       <AppBar className={classes.appbar} elevation={0} position="static">
@@ -47,7 +80,7 @@ const ChatDashboard = () => {
       </AppBar>
       <Divider />
       <div className={classes.rootmain}>
-        <ChatRoomList />
+        {changeComponent(component)}
         <Divider orientation="vertical" flexItem />
         <ChatRoom />
       </div>

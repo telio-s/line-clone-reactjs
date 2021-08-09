@@ -3,7 +3,7 @@ import { AppBar, Toolbar, Button } from "@material-ui/core";
 import AllChats from "./AllChats";
 import { useContext } from "react";
 import { DashboardContext } from "../Page/Dashboard";
-
+import SignOut from "../Model/SignOut";
 const chatTypeSection = [
   { title: "All" },
   { title: "Friends" },
@@ -37,7 +37,7 @@ function Selection() {
         <Toolbar>
           {chatTypeSection.map((obj, index) => (
             <Button
-              disableRipple="true"
+              disableRipple={true}
               key={index}
               className={classes.chatSection}
               value={obj.title}
@@ -46,6 +46,7 @@ function Selection() {
               {obj.title}
             </Button>
           ))}
+          <SignOut />
         </Toolbar>
       </AppBar>
     </div>

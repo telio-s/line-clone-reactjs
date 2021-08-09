@@ -1,6 +1,16 @@
 import React, { useState, useEffect } from "react";
-import { Divider } from "@material-ui/core";
+import {
+  BrowserRouter as Router,
+  Route,
+  Link,
+  useHistory,
+} from "react-router-dom";
+import { Auth, Hub } from "aws-amplify";
+
 import useStyles from "../Style/DashboardStyle";
+import ChatDashboard from "../Components/ChatDashboard";
+import ChatRoomList from "../Components/ChatRoomList";
+import { Divider } from "@material-ui/core";
 import Selection from "./../Components/Selection";
 import MenuBar from "../Components/MenuBar";
 import AllChats from "../Components/AllChats";
@@ -19,6 +29,7 @@ const Dashboard = () => {
   const classes = useStyles();
 
   useEffect(() => {
+    checkUserCurrent();
     async function getUser() {
       const data = await getLoggedInUser();
       setUser(data.data.listUsers.items[0]);
@@ -27,6 +38,17 @@ const Dashboard = () => {
     console.log("Dashboard called");
     sideBar ? setSideBar(sideBar) : setSideBar(<AllChats />);
   }, []);
+
+  const checkUserCurrent = async () => {
+    try {
+      const user = await Auth.currentAuthenticatedUser();
+      console.log("user: ", user);
+      // updateUser(user);
+      // updateFormState(() => ({ ...formState, formType: "signedIn" }));
+    } catch (err) {
+      // updateUser(null)
+    }
+  };
 
   return (
     <DashboardContext.Provider
