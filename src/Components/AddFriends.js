@@ -8,13 +8,21 @@ const AddFriends = () => {
   const classes = useStyles();
   const [open, setOpen] = useState(false);
 
-  const Dialog = () => {
+  const openDialog = () => {
     setOpen(true);
+  };
+
+  const closeDialog = () => {
+    setOpen(false);
   };
 
   return (
     <div className={classes.root}>
-      <Button disableRipple={true} className={classes.feature} onClick={Dialog}>
+      <Button
+        disableRipple={true}
+        className={classes.feature}
+        onClick={openDialog}
+      >
         <PersonAdd className={classes.icon} />
         <Typography
           style={{
@@ -25,7 +33,7 @@ const AddFriends = () => {
           Search for friends
         </Typography>
       </Button>
-      <DialogAddFriends open={open} />
+      <DialogAddFriends open={open} onClose={closeDialog} />
       <Button disableRipple={true} className={classes.feature}>
         <PeopleAlt className={classes.icon} />
         <Typography style={{ marginLeft: "20px", fontWeight: "600" }}>

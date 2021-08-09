@@ -13,7 +13,7 @@ import { faCommentDots, faNewspaper } from "@fortawesome/free-solid-svg-icons";
 import CreateGroupDialog from "./CreateGroupDialog";
 import Profile from "./Profile";
 import { DashboardContext } from "../Page/Dashboard";
-
+import AddFriends from "./AddFriends";
 function MenuBar() {
   const classes = useStyles();
   const [createGroup, setCreateGroup] = useState(false);
@@ -25,6 +25,10 @@ function MenuBar() {
 
   function handleProfileBar() {
     setSideBar(<Profile user={user} />);
+  }
+
+  function handleAddFriends() {
+    setSideBar(<AddFriends user={user} />);
   }
 
   return (
@@ -51,7 +55,7 @@ function MenuBar() {
         <IconButton
           disableRipple={true}
           className={classes.iconButton}
-          onClick={handleCreateGroupDialog}
+          onClick={handleAddFriends}
         >
           <PersonAdd className={classes.iconMtDrawer} />
         </IconButton>

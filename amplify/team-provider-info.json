@@ -15,7 +15,7 @@
       "function": {
         "lineclone7ec4df0d7ec4df0dPostConfirmation": {
           "deploymentBucketName": "amplify-lineclone-dev-152718-deployment",
-          "s3Key": "amplify-builds/lineclone7ec4df0d7ec4df0dPostConfirmation-4950515958756738546a-build.zip"
+          "s3Key": "amplify-builds/lineclone7ec4df0d7ec4df0dPostConfirmation-376c306d732f4b7a6d31-build.zip"
         }
       },
       "auth": {
