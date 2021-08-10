@@ -28,7 +28,6 @@ export async function createNewGroup(group, users) {
 export async function createUsersGroup(users, groupId) {
   try {
     users.map(async (id) => {
-      console.log("loop");
       await API.graphql(
         graphqlOperation(createUserGroups, {
           input: {

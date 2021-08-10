@@ -31,6 +31,7 @@ const GroupChatRoom = (props) => {
   const [addMember, setAddMember] = useState(false);
   const [members, setMembers] = useState([]);
   const [showMember, setShowMember] = useState(false);
+  const [alreadyIn, setAlreadyIn] = useState([]);
   const { user } = useContext(DashboardContext);
 
   useEffect(() => {
@@ -41,6 +42,11 @@ const GroupChatRoom = (props) => {
     async function getGroup() {
       const data = await getTheGroup(group.id);
       setMembers(data.users.items);
+      let aIn = [];
+      data.users.items.map((user) => {
+        aIn.push(user.user.id);
+      });
+      setAlreadyIn([...aIn]);
     }
     getMessages();
     getGroup();
@@ -69,8 +75,15 @@ const GroupChatRoom = (props) => {
   }
 
   // but not for add friends to chat
-  function handleAddMemberToGroup() {
+  function handleAddMemberToGroup(change) {
     setAddMember(!addMember);
+    async function getGroup() {
+      const data = await getTheGroup(group.id);
+      setMembers(data.users.items);
+    }
+    if (change) {
+      getGroup();
+    }
   }
 
   function handleAllMembers() {
@@ -141,6 +154,9 @@ const GroupChatRoom = (props) => {
         open={addMember}
         onClose={handleAddMemberToGroup}
         group={group}
+        members={members}
+        alreadyIn={alreadyIn}
+        setAlreadyIn={setAlreadyIn}
       />
       <Dialog open={showMember} onClose={handleAllMembers}>
         <div style={{ width: "500px" }}>

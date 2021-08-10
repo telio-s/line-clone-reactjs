@@ -8,28 +8,22 @@ import {
   Button,
   ListItem,
 } from "@material-ui/core";
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useState } from "react";
 import { createUsersGroup } from "../api/mutations";
 import { DashboardContext } from "../Page/Dashboard";
 import Friend from "./Friend";
+import { getTheGroup } from "./../api/queries";
 
 function AddFriendsToGroup(props) {
-  const { open, onClose, group } = props;
+  const { open, onClose, group, members, alreadyIn, setAlreadyIn } = props;
   const [search, setSearch] = useState("");
-  const { friends } = useContext(DashboardContext);
-  const [alreadyIn, setAlreadyIn] = useState([]);
+  const { user } = useContext(DashboardContext);
   const [selected, setSelectedUser] = useState([]);
   //   const [pending, setPending] = useState([]);
-  useEffect(async () => {
-    let aIn = [];
-    group.users.items.map((user) => {
-      aIn.push(user.user.id);
-    });
-    setAlreadyIn([...aIn]);
-  }, []);
-  function handleOnClose() {
+
+  function handleOnClose(change) {
     setSelectedUser([]);
-    onClose();
+    onClose(change);
   }
 
   function handleSelectedUser(friend) {
@@ -59,9 +53,9 @@ function AddFriendsToGroup(props) {
       setAlreadyIn([...alreadyIn, friend.friend.id]);
     });
     createUserToGroup(users);
-    handleOnClose();
-    // console.log(alreadyIn);
+    handleOnClose(1);
   }
+  console.log(members);
 
   return (
     <div>
@@ -84,7 +78,7 @@ function AddFriendsToGroup(props) {
                   onChange={(e) => setSearch(e.target.value)}
                 />
                 <Divider />
-                {friends.map((friend, index) =>
+                {user.friends.items.map((friend, index) =>
                   alreadyIn.includes(friend.friend.id) ? null : (
                     <Friend
                       key={index}
@@ -114,20 +108,16 @@ function AddFriendsToGroup(props) {
             </Button>
             <Button
               style={{ backgroundColor: "whitesmoke" }}
-              onClick={handleOnClose}
+              onClick={() => handleOnClose(0)}
             >
               cancle
             </Button>
           </div>
           <Divider />
-          <h4>Member</h4>
-          {group.users.items.map((user, index) => (
+          <h4>Members</h4>
+          {members.map((user, index) => (
             <ListItem key={index}>{user.user.username}</ListItem>
           ))}
-          {/* <h4>Pending</h4>
-          {pending.map((p, index) => (
-            <ListItem key={index}>{p.friend.username}</ListItem>
-          ))} */}
         </div>
       </Dialog>
     </div>

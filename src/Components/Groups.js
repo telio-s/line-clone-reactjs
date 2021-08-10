@@ -5,7 +5,7 @@ import GroupChatRoom from "./GroupChatRoom";
 
 function Groups(props) {
   const { showGroups } = props;
-  const { setChat, groups } = useContext(DashboardContext);
+  const { setChat, user } = useContext(DashboardContext);
 
   function handleGroupChatRoom(group) {
     setChat(<GroupChatRoom group={group} />);
@@ -13,7 +13,7 @@ function Groups(props) {
 
   return (
     <div style={{ display: showGroups ? "" : "none" }}>
-      {groups.map(
+      {user.groups.items.map(
         (group, index) =>
           !group.group.isDirect && (
             <ListItem
