@@ -10,7 +10,9 @@ const TheirMessageBubble = (props) => {
   return (
     <div className={classes.root}>
       <AccountCircle style={{ fontSize: "40px" }} />
-      <Typography className={classes.bubble}>{message.message}</Typography>
+      <Typography className={classes.buble}>
+        {message.message === "" ? "photo" : message.message}
+      </Typography>
     </div>
   );
 };

@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect, useRef, useState } from "react";
 import {
   AppBar,
   Toolbar,
@@ -9,13 +9,14 @@ import {
   Button,
 } from "@material-ui/core";
 import { EventNote, MoreVert, Attachment } from "@material-ui/icons";
-
+import { Storage } from "aws-amplify";
 import MyMessageBubble from "./MyMessageBubble";
 import TheirMessageBubble from "./TheirMessageBubble";
 import { DashboardContext } from "../Page/Dashboard";
 import { getDirect } from "../api/queries";
 import { createMessageInGroup } from "./../api/mutations";
 import AddFriendsToGroup from "./AddFriendsToGroup";
+import awsExports from "./../aws-exports";
 import useStyles from "../Style/ChatRoomStyle";
 
 export const DirectContext = React.createContext();
@@ -30,6 +31,9 @@ const DirectChatRoom = (props) => {
   const [openInvite, setOpenInvite] = useState(false);
   const [direct, setDirect] = useState([]);
   const [alreadyIn, setAlreadyIn] = useState([]);
+  const hiddenFileUpload = useRef(null);
+  const [photo, setPhoto] = useState(null);
+  const [file, setFile] = useState(null);
 
   // after add friend we have to create group after that
   // so first when we get to direct message withe other user we have to find the group
@@ -54,6 +58,53 @@ const DirectChatRoom = (props) => {
 
   function handleSendMessage(e) {
     e.preventDefault();
+    async function createMessage(message) {
+      console.log(message);
+      const data = await createMessageInGroup(message);
+      console.log(data);
+      setMessages([...messages, data.data.createMessage]);
+    }
+    if (!file && currMessage === "") {
+      console.log("nothing to upload");
+      return;
+    }
+
+    if (file) {
+      console.log("uploading file...");
+
+      async function storagePut() {
+        try {
+          await Storage.put(file.name, file, {
+            contentType: file.type,
+          });
+          console.log("storage file successfully");
+        } catch (error) {
+          console.log("Error uploading file: ", error);
+        }
+      }
+      storagePut();
+      const image = {
+        bucket: awsExports.aws_user_files_s3_bucket,
+        region: awsExports.aws_user_files_s3_bucket_region,
+        key: "public/" + file.name,
+      };
+      const message = {
+        type: directId,
+        message: currMessage,
+        messageUserId: user.id,
+        messageGroupId: directId,
+        isBlock: false,
+        media: image,
+      };
+      try {
+        createMessage(message);
+        console.log("send message!", message);
+        setCurrMessage("");
+        return;
+      } catch (error) {
+        console.log("Can't send Message", error);
+      }
+    }
     const message = {
       type: directId,
       message: currMessage,
@@ -61,16 +112,12 @@ const DirectChatRoom = (props) => {
       messageGroupId: directId,
       isBlock: false,
     };
-    async function createMessage() {
-      console.log(message);
-      const data = await createMessageInGroup(message);
-      console.log(data);
-      setMessages([...messages, data.data.createMessage]);
-    }
     try {
-      createMessage();
+      console.log("uploading message...");
+      createMessage(message);
       console.log("send message!", message);
       setCurrMessage("");
+      return;
     } catch (error) {
       console.log("Can't send Message", error);
     }
@@ -79,6 +126,18 @@ const DirectChatRoom = (props) => {
   function handleInviteFriends() {
     setOpenInvite(!openInvite);
     console.log("handle invite friends");
+  }
+
+  function handleUploadPhoto(e) {
+    console.log("upload photo");
+    const _file = e.target.files[0];
+    console.log(_file);
+    setFile(_file);
+    setPhoto(URL.createObjectURL(_file));
+  }
+
+  function handleTriggerUploadPhoto() {
+    hiddenFileUpload.current.click();
   }
 
   return (
@@ -128,12 +187,25 @@ const DirectChatRoom = (props) => {
             value={currMessage}
             onChange={(e) => setCurrMessage(e.target.value)}
           ></InputBase>
+          <img src={photo} />
           <div className={classes.iconButtTextArea}>
-            <IconButton className={classes.iconButton}>
+            <input
+              type="file"
+              ref={hiddenFileUpload}
+              onChange={(e) => handleUploadPhoto(e)}
+              style={{ display: "none" }}
+            />
+            <IconButton
+              className={classes.iconButton}
+              onClick={() => handleTriggerUploadPhoto()}
+            >
               <Attachment />
             </IconButton>
             <Button
-              style={{ display: currMessage ? "" : "none", marginLeft: "auto" }}
+              style={{
+                display: currMessage || file ? "" : "none",
+                marginLeft: "auto",
+              }}
               type="submit"
             >
               Send
