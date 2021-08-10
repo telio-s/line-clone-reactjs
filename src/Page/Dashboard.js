@@ -25,6 +25,7 @@ const Dashboard = () => {
   const [user, setUser] = useState();
   const [sideBar, setSideBar] = useState(null);
   const [chat, setChat] = useState(null);
+  const [friend, setFriend] = useState([]);
 
   const classes = useStyles();
 
@@ -58,6 +59,8 @@ const Dashboard = () => {
         setSideBar,
         chat,
         setChat,
+        friend,
+        setFriend,
       }}
     >
       <div className={classes.root}>

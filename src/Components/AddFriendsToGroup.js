@@ -6,22 +6,22 @@ import {
   Paper,
   TextField,
   Button,
-  ListItem,
 } from "@material-ui/core";
 import React, { useContext, useState } from "react";
-import { createUsersGroup } from "../api/mutations";
+import { createNewGroup, createUsersGroup } from "../api/mutations";
+import { getTheGroup } from "../api/queries";
 import { DashboardContext } from "../Page/Dashboard";
+import { DirectContext } from "./DirectChatRoom";
 import Friend from "./Friend";
-import { getTheGroup } from "./../api/queries";
+import GroupChatRoom from "./GroupChatRoom";
 
 function AddFriendsToGroup(props) {
-  const { open, onClose, group, members, alreadyIn, setAlreadyIn } = props;
+  const { open, onClose, group, alreadyIn, setAlreadyIn, isGroup } = props;
   const [search, setSearch] = useState("");
-  const { user } = useContext(DashboardContext);
+  const { user, setChat, friend } = useContext(DashboardContext);
   const [selected, setSelectedUser] = useState([]);
   //   const [pending, setPending] = useState([]);
-
-  function handleOnClose(change) {
+  function handleOnClose() {
     setSelectedUser([]);
     onClose(change);
   }
@@ -44,16 +44,38 @@ function AddFriendsToGroup(props) {
   function handleSubmit() {
     async function createUserToGroup(users) {
       const data = await createUsersGroup(users, group.id);
+      // have to check is it temporary group if its you have to update group name
+    }
+
+    async function createGroup(group, users) {
+      let _users = [...users, friend.id];
+      _users.push(user.id);
+      const data = await createNewGroup(group, _users);
       console.log(data);
+      const _data = await getTheGroup(data.id);
+      console.log(_data);
+      // setChat(null);
+      setChat(<GroupChatRoom group={_data} />);
     }
     let users = [];
+    let name = "";
     selected.map((friend) => {
       users.push(friend.friend.id);
       //   setPending([...pending, friend]);
+      name += friend.friend.username + ",";
       setAlreadyIn([...alreadyIn, friend.friend.id]);
     });
-    createUserToGroup(users);
-    handleOnClose(1);
+    if (isGroup) {
+      createUserToGroup(users);
+    } else {
+      const group = {
+        isDirect: false,
+        name: user.username + "," + friend.username + "," + name,
+      };
+      createGroup(group, users);
+    }
+    handleOnClose();
+    // console.log(alreadyIn);
   }
   console.log(members);
 
@@ -114,10 +136,6 @@ function AddFriendsToGroup(props) {
             </Button>
           </div>
           <Divider />
-          <h4>Members</h4>
-          {members.map((user, index) => (
-            <ListItem key={index}>{user.user.username}</ListItem>
-          ))}
         </div>
       </Dialog>
     </div>
