@@ -31,6 +31,7 @@ const GroupChatRoom = (props) => {
   const [addMember, setAddMember] = useState(false);
   const [members, setMembers] = useState([]);
   const [showMember, setShowMember] = useState(false);
+  const [alreadyIn, setAlreadyIn] = useState([]);
   const { user } = useContext(DashboardContext);
   const [alreadyIn, setAlreadyIn] = useState([]);
 
@@ -42,6 +43,11 @@ const GroupChatRoom = (props) => {
     async function getGroup() {
       const data = await getTheGroup(group.id);
       setMembers(data.users.items);
+      let aIn = [];
+      data.users.items.map((user) => {
+        aIn.push(user.user.id);
+      });
+      setAlreadyIn([...aIn]);
     }
     let aIn = [];
     group.users.items.map((user) => {
@@ -75,8 +81,15 @@ const GroupChatRoom = (props) => {
   }
 
   // but not for add friends to chat
-  function handleAddMemberToGroup() {
+  function handleAddMemberToGroup(change) {
     setAddMember(!addMember);
+    async function getGroup() {
+      const data = await getTheGroup(group.id);
+      setMembers(data.users.items);
+    }
+    if (change) {
+      getGroup();
+    }
   }
 
   function handleAllMembers() {

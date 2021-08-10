@@ -36,6 +36,7 @@ const Dashboard = () => {
       setUser(data.data.listUsers.items[0]);
     }
     getUser();
+    console.log("Dashboard called");
     sideBar ? setSideBar(sideBar) : setSideBar(<AllChats />);
   }, []);
 

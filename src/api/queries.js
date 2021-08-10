@@ -40,8 +40,6 @@ export async function getTheGroup(id) {
 export async function getDirect(userUsername, friendUsername) {
   const _user = await getUserByUsername(userUsername);
   const _friend = await getUserByUsername(friendUsername);
-  console.log(_user);
-  console.log(_friend);
   let userGroup = [];
   let directId = "";
   let groupInfo = [];

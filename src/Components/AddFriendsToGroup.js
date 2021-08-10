@@ -23,7 +23,7 @@ function AddFriendsToGroup(props) {
   //   const [pending, setPending] = useState([]);
   function handleOnClose() {
     setSelectedUser([]);
-    onClose();
+    onClose(change);
   }
 
   function handleSelectedUser(friend) {
@@ -77,6 +77,7 @@ function AddFriendsToGroup(props) {
     handleOnClose();
     // console.log(alreadyIn);
   }
+  console.log(members);
 
   return (
     <div>
@@ -129,7 +130,7 @@ function AddFriendsToGroup(props) {
             </Button>
             <Button
               style={{ backgroundColor: "whitesmoke" }}
-              onClick={handleOnClose}
+              onClick={() => handleOnClose(0)}
             >
               cancle
             </Button>
