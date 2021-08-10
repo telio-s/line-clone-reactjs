@@ -10,13 +10,13 @@ import {
 } from "@material-ui/core";
 import { EventNote, MoreVert, Attachment } from "@material-ui/icons";
 
-import useStyles from "../Style/ChatRoomStyle";
 import MyMessageBubble from "./MyMessageBubble";
 import TheirMessageBubble from "./TheirMessageBubble";
 import { DashboardContext } from "../Page/Dashboard";
 import { getDirect } from "../api/queries";
 import { createMessageInGroup } from "./../api/mutations";
 import AddFriendsToGroup from "./AddFriendsToGroup";
+import useStyles from "../Style/ChatRoomStyle";
 
 export const DirectContext = React.createContext();
 
@@ -84,7 +84,7 @@ const DirectChatRoom = (props) => {
   return (
     <DirectContext.Provider value={{ friend }}>
       <div className={classes.root}>
-        <Divider orientation="vertical" flexItem />
+        {/* <Divider orientation="vertical" flexItem /> */}
         <AppBar elevation={0} position="static" className={classes.appbar}>
           <Toolbar className={classes.Toolbar}>
             <Typography
@@ -98,7 +98,7 @@ const DirectChatRoom = (props) => {
             </IconButton>
             <IconButton
               className={classes.iconButton}
-              onClick={handleInviteFriends}
+              onClick={() => handleInviteFriends()}
             >
               <MoreVert className={classes.iconSection} />
             </IconButton>

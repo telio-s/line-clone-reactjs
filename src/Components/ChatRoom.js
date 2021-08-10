@@ -9,9 +9,9 @@ import {
 } from "@material-ui/core";
 import { EventNote, MoreVert, Attachment } from "@material-ui/icons";
 
-import useStyles from "../Style/ChatRoomStyle";
 import MyMessageBubble from "./MyMessageBubble";
 import TheirMessageBubble from "./TheirMessageBubble";
+import useStyles from "../Style/ChatRoomStyle";
 
 const ChatRoom = () => {
   const classes = useStyles();

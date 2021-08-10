@@ -1,5 +1,5 @@
-import useStyles from "../Style/DashboardStyle";
 import ChatRoomList from "./ChatRoomList";
+import useStyles from "../Style/DashboardStyle";
 
 function AllChats() {
   const classes = useStyles();

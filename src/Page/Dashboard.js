@@ -7,7 +7,6 @@ import {
 } from "react-router-dom";
 import { Auth, Hub } from "aws-amplify";
 
-import useStyles from "../Style/DashboardStyle";
 import ChatDashboard from "../Components/ChatDashboard";
 import ChatRoomList from "../Components/ChatRoomList";
 import { Divider } from "@material-ui/core";
@@ -19,6 +18,7 @@ import { getLoggedInUser } from "./../api/queries";
 import SideBar from "../Components/SideBar";
 import Chat from "./../Components/Chat";
 
+import useStyles from "../Style/DashboardStyle";
 export const DashboardContext = React.createContext();
 
 const Dashboard = () => {
@@ -69,6 +69,7 @@ const Dashboard = () => {
         <div className={classes.mainDrawerRoot}>
           <MenuBar />
           <SideBar />
+          <Divider orientation="vertical" flexItem />
           <Chat />
         </div>
       </div>

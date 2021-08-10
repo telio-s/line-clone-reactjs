@@ -11,7 +11,6 @@ import React, { useContext, useState } from "react";
 import { createNewGroup, createUsersGroup } from "../api/mutations";
 import { getTheGroup } from "../api/queries";
 import { DashboardContext } from "../Page/Dashboard";
-import { DirectContext } from "./DirectChatRoom";
 import Friend from "./Friend";
 import GroupChatRoom from "./GroupChatRoom";
 
@@ -21,7 +20,7 @@ function AddFriendsToGroup(props) {
   const { user, setChat, friend } = useContext(DashboardContext);
   const [selected, setSelectedUser] = useState([]);
   //   const [pending, setPending] = useState([]);
-  function handleOnClose() {
+  function handleOnClose(change) {
     setSelectedUser([]);
     onClose(change);
   }
@@ -74,14 +73,14 @@ function AddFriendsToGroup(props) {
       };
       createGroup(group, users);
     }
-    handleOnClose();
+    handleOnClose(1);
     // console.log(alreadyIn);
   }
-  console.log(members);
 
   return (
+    // <div>dsds</div>
     <div>
-      <Dialog open={open} onClose={handleOnClose}>
+      <Dialog open={open} onClose={() => handleOnClose(0)}>
         <div style={{ width: "500px" }}>
           <h1>Add Friends to Chat</h1>
           <Grid
@@ -105,7 +104,7 @@ function AddFriendsToGroup(props) {
                     <Friend
                       key={index}
                       friend={friend}
-                      handleSelection={handleSelection}
+                      handleSelection={() => handleSelection()}
                     />
                   )
                 )}
@@ -124,7 +123,7 @@ function AddFriendsToGroup(props) {
           <div>
             <Button
               style={{ backgroundColor: "yellowgreen" }}
-              onClick={handleSubmit}
+              onClick={() => handleSubmit()}
             >
               add
             </Button>

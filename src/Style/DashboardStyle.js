@@ -11,7 +11,7 @@ const useStyles = makeStyles((theme) => ({
   },
   appbar: {
     // width: `calc(100% - ${drawerWidth}px)`,
-    backgroundColor: "#ffffff !important",
+    backgroundColor: "#ffffff",
     width: "100%",
   },
   chatSection: {
@@ -33,7 +33,7 @@ const useStyles = makeStyles((theme) => ({
   drawer: {},
   drawerPaper: {
     width: drawerWidth,
-    background: "#1f2b45 !important",
+    background: "#1f2b45",
   },
   iconMtDrawer: {
     color: "#4e5870",

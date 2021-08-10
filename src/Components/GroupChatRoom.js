@@ -12,8 +12,6 @@ import {
 } from "@material-ui/core";
 import { EventNote, MoreVert, Attachment } from "@material-ui/icons";
 
-import useStyles from "../Style/ChatRoomStyle";
-
 import { getMessageByDateInGroup, getTheGroup } from "./../api/queries";
 import { createMessageInGroup } from "./../api/mutations";
 
@@ -22,6 +20,7 @@ import TheirMessageBubble from "./TheirMessageBubble";
 
 import { DashboardContext } from "./../Page/Dashboard";
 import AddFriendsToGroup from "./AddFriendsToGroup";
+import useStyles from "../Style/ChatRoomStyle";
 
 const GroupChatRoom = (props) => {
   const { group } = props;
@@ -33,7 +32,6 @@ const GroupChatRoom = (props) => {
   const [showMember, setShowMember] = useState(false);
   const [alreadyIn, setAlreadyIn] = useState([]);
   const { user } = useContext(DashboardContext);
-  const [alreadyIn, setAlreadyIn] = useState([]);
 
   useEffect(() => {
     async function getMessages() {
@@ -93,12 +91,13 @@ const GroupChatRoom = (props) => {
   }
 
   function handleAllMembers() {
+    console.log("show members");
     setShowMember(!showMember);
   }
 
   return (
     <div className={classes.root}>
-      <Divider orientation="vertical" flexItem />
+      {/* <Divider orientation="vertical" flexItem /> */}
       <AppBar elevation={0} position="static" className={classes.appbar}>
         <Toolbar className={classes.Toolbar}>
           <Typography
@@ -112,11 +111,14 @@ const GroupChatRoom = (props) => {
           </IconButton>
           <IconButton
             className={classes.iconButton}
-            onClick={handleAddMemberToGroup}
+            onClick={() => handleAddMemberToGroup(0)}
           >
             <MoreVert className={classes.iconSection} />
           </IconButton>
-          <IconButton className={classes.iconButton} onClick={handleAllMembers}>
+          <IconButton
+            className={classes.iconButton}
+            onClick={() => handleAllMembers()}
+          >
             <MoreVert className={classes.iconSection} />
           </IconButton>
         </Toolbar>
@@ -164,7 +166,7 @@ const GroupChatRoom = (props) => {
         setAlreadyIn={setAlreadyIn}
         isGroup={1}
       />
-      <Dialog open={showMember} onClose={handleAllMembers}>
+      <Dialog open={showMember} onClose={() => handleAllMembers()}>
         <div style={{ width: "500px" }}>
           {members.map((member, index) => (
             <ListItem key={index}>{member.user.username}</ListItem>
