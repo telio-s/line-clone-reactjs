@@ -8,6 +8,8 @@ const useStyles = makeStyles((theme) => ({
     width: chatListWidth,
     overflowY: "scroll",
     overflow: "hidden",
+    height: `calc(100vh - 64px)`,
+    // backgroundColor: "#000000"
   },
   icon: {
     fontSize: "40px",
