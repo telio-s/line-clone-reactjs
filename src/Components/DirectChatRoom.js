@@ -32,8 +32,8 @@ const DirectChatRoom = (props) => {
   const [direct, setDirect] = useState([]);
   const [alreadyIn, setAlreadyIn] = useState([]);
   const hiddenFileUpload = useRef(null);
-  const [photo, setPhoto] = useState(null);
-  const [file, setFile] = useState(null);
+  const [photos, setPhotos] = useState([]);
+  const [files, setFiles] = useState([]);
 
   // after add friend we have to create group after that
   // so first when we get to direct message withe other user we have to find the group
@@ -61,45 +61,49 @@ const DirectChatRoom = (props) => {
     async function createMessage(message) {
       console.log(message);
       const data = await createMessageInGroup(message);
-      console.log(data);
       setMessages([...messages, data.data.createMessage]);
     }
-    if (!file && currMessage === "") {
+    if (!files.length && currMessage === "") {
       console.log("nothing to upload");
       return;
     }
 
-    if (file) {
+    if (files) {
       console.log("uploading file...");
-
-      async function storagePut() {
+      const images = [];
+      async function storagePut(file) {
         try {
           await Storage.put(file.name, file, {
             contentType: file.type,
           });
-          console.log("storage file successfully");
         } catch (error) {
           console.log("Error uploading file: ", error);
         }
       }
-      storagePut();
-      const image = {
-        bucket: awsExports.aws_user_files_s3_bucket,
-        region: awsExports.aws_user_files_s3_bucket_region,
-        key: "public/" + file.name,
-      };
+      files.map((file) => {
+        storagePut(file);
+        console.log(`store ${file.name} file successfully`);
+        const image = {
+          bucket: awsExports.aws_user_files_s3_bucket,
+          region: awsExports.aws_user_files_s3_bucket_region,
+          key: "public/" + file.name,
+        };
+        images.push(image);
+      });
       const message = {
         type: directId,
         message: currMessage,
         messageUserId: user.id,
         messageGroupId: directId,
         isBlock: false,
-        media: image,
+        media: images,
       };
       try {
         createMessage(message);
         console.log("send message!", message);
         setCurrMessage("");
+        setPhotos([]);
+        setFiles([]);
         return;
       } catch (error) {
         console.log("Can't send Message", error);
@@ -130,10 +134,12 @@ const DirectChatRoom = (props) => {
 
   function handleUploadPhoto(e) {
     console.log("upload photo");
-    const _file = e.target.files[0];
-    console.log(_file);
-    setFile(_file);
-    setPhoto(URL.createObjectURL(_file));
+    for (let i = 0; i < e.target.files.length; i++) {
+      const _file = e.target.files[i];
+      setFiles((prevFiles) => [...prevFiles, _file]);
+      const img = URL.createObjectURL(_file);
+      setPhotos((prevPhotos) => [...prevPhotos, img]);
+    }
   }
 
   function handleTriggerUploadPhoto() {
@@ -187,7 +193,11 @@ const DirectChatRoom = (props) => {
             value={currMessage}
             onChange={(e) => setCurrMessage(e.target.value)}
           ></InputBase>
-          <img src={photo} />
+          {photos
+            ? photos.map((photo, i) => (
+                <img key={i} src={photo} style={{ width: "50px" }} />
+              ))
+            : null}
           <div className={classes.iconButtTextArea}>
             <input
               type="file"
@@ -203,7 +213,7 @@ const DirectChatRoom = (props) => {
             </IconButton>
             <Button
               style={{
-                display: currMessage || file ? "" : "none",
+                display: currMessage || files ? "" : "none",
                 marginLeft: "auto",
               }}
               type="submit"
