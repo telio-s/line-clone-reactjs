@@ -1,6 +1,102 @@
 /* eslint-disable */
 // this is an auto generated file. This will be overwritten
 
+export const newOnCreateMessage = /* GraphQL */ `
+  subscription NewOnCreateMessage {
+    newOnCreateMessage {
+      id
+      user {
+        id
+        username
+        email
+        lineID
+        displayName
+        statusMessage
+        profilePhoto {
+          bucket
+          region
+          key
+        }
+        coverPhoto {
+          bucket
+          region
+          key
+        }
+        phoneNumber
+        groups {
+          nextToken
+        }
+        friends {
+          nextToken
+        }
+        blocked {
+          id
+          username
+          email
+          lineID
+          displayName
+          statusMessage
+          phoneNumber
+          createdAt
+          updatedAt
+        }
+        favourites {
+          id
+          username
+          email
+          lineID
+          displayName
+          statusMessage
+          phoneNumber
+          createdAt
+          updatedAt
+        }
+        posts {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      group {
+        id
+        name
+        users {
+          nextToken
+        }
+        messages {
+          nextToken
+        }
+        isDirect
+        announce {
+          nextToken
+        }
+        files {
+          bucket
+          region
+          key
+        }
+        albums {
+          id
+          albumName
+          createdAt
+          updatedAt
+        }
+        createdAt
+        updatedAt
+      }
+      type
+      message
+      media {
+        bucket
+        region
+        key
+      }
+      createdAt
+      isBlock
+      updatedAt
+    }
+  }
+`;
 export const onCreateUser = /* GraphQL */ `
   subscription OnCreateUser {
     onCreateUser {
@@ -1318,12 +1414,7 @@ export const onCreateMessage = /* GraphQL */ `
         id
         name
         users {
-          items {
-            user {
-              id
-              username
-            }
-          }
+          nextToken
         }
         messages {
           nextToken

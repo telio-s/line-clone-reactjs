@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect, useState, useRef } from "react";
 import {
   AppBar,
   Toolbar,
@@ -15,9 +15,9 @@ import TheirMessageBubble from "./TheirMessageBubble";
 import { DashboardContext } from "../Page/Dashboard";
 import { getDirect } from "../api/queries";
 import { createMessageInGroup } from "./../api/mutations";
+import { newOnCreateMessage } from "../graphql/subscriptions";
 import AddFriendsToGroup from "./AddFriendsToGroup";
 import useStyles from "../Style/ChatRoomStyle";
-import { onCreateMessage, onUpdateMessage } from "../graphql/subscriptions";
 
 const DirectChatRoom = (props) => {
   const { friend } = props;
@@ -29,15 +29,18 @@ const DirectChatRoom = (props) => {
   const [openInvite, setOpenInvite] = useState(false);
   const [direct, setDirect] = useState([]);
   const [alreadyIn, setAlreadyIn] = useState([]);
-
+  const [realTimeData, setRealTimeData] = useState();
+  const dummy = useRef();
   // after add friend we have to create group after that
   // so first when we get to direct message withe other user we have to find the group
   useEffect(() => {
     async function getMessages() {
       const [data, id, group] = await getDirect(user.username, friend.username);
+
       // console.log(data, id, group.group);
       setDirectId(id);
       setMessages(data);
+      console.log(data);
       setDirect(group.group);
       let aIn = [];
       group.group.users.items.map((user) => {
@@ -45,11 +48,32 @@ const DirectChatRoom = (props) => {
       });
       setAlreadyIn([...aIn]);
     }
-
+    scrollToBottom();
     getMessages();
     setFriend(friend);
+
     // console.log(user.username, friend.username);
-  }, [friend]);
+  }, [friend, realTimeData]);
+
+  useEffect(() => {
+    setupSubscriptions();
+
+    return () => {
+      subscriptionOnCreate.unsubscribe();
+    };
+  }, []);
+
+  let subscriptionOnCreate;
+  function setupSubscriptions() {
+    subscriptionOnCreate = API.graphql(
+      graphqlOperation(newOnCreateMessage)
+    ).subscribe({
+      next: (data) => {
+        console.log(data);
+        setRealTimeData(data);
+      },
+    });
+  }
 
   async function handleSendMessage(e) {
     e.preventDefault();
@@ -76,6 +100,13 @@ const DirectChatRoom = (props) => {
     }
   }
 
+  const scrollToBottom = () => {
+    console.log("tongtt");
+    dummy.current.scrollIntoView({
+      behavior: "smooth",
+    });
+  };
+
   function handleInviteFriends() {
     setOpenInvite(!openInvite);
     console.log("handle invite friends");
@@ -83,7 +114,6 @@ const DirectChatRoom = (props) => {
 
   return (
     <div className={classes.root}>
-      {/* <Divider orientation="vertical" flexItem /> */}
       <AppBar elevation={0} position="static" className={classes.appbar}>
         <Toolbar className={classes.Toolbar}>
           <Typography
@@ -113,6 +143,7 @@ const DirectChatRoom = (props) => {
               )
             )
           : null}
+        <div ref={dummy} />
       </div>
       <Divider />
       <form className={classes.textArea} onSubmit={(e) => handleSendMessage(e)}>
@@ -130,14 +161,14 @@ const DirectChatRoom = (props) => {
           <IconButton className={classes.iconButton}>
             <Attachment />
           </IconButton>
-          <Button
-            style={{ display: currMessage ? "" : "none", marginLeft: "auto" }}
+          <Button type="submit">Send</Button>
+          {/* <Button
+            style={{ display: currMessage ? "" : "none" }}
             type="submit"
-          >
-            Send
-          </Button>
+          ></Button> */}
         </div>
       </form>
+
       <AddFriendsToGroup
         open={openInvite}
         onClose={handleInviteFriends}

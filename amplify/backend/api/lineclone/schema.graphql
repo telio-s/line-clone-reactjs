@@ -110,3 +110,7 @@ type S3Object {
   region: String!
   key: String!
 }
+
+type Subscription {
+  newOnCreateMessage: Message @aws_subscribe(mutations: ["createMessage"])
+}
