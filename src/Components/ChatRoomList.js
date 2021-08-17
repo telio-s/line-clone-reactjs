@@ -35,11 +35,11 @@ const ChatRoomList = () => {
       // console.log("userByID", userObj);
       setMyUser(userObj);
       const arrAllChat = userObj.groups.items;
-
+      console.log(arrAllChat);
       // console.log(arrAllChat);
       arrAllChat.map(async (group) => {
         // console.log(group);
-
+        console.log(group);
         // Fetch last message for each group
         const fetchMessage = await getMessageByDate(group.group.id);
         // console.log(fetchMessage);

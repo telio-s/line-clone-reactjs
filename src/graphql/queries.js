@@ -24,6 +24,24 @@ export const getUser = /* GraphQL */ `
       groups {
         items {
           id
+          group {
+            id
+            name
+            isDirect
+            messages {
+              items {
+                message
+              }
+            }
+            users {
+              items {
+                user {
+                  id
+                  username
+                }
+              }
+            }
+          }
           createdAt
           updatedAt
         }
