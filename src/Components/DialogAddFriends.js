@@ -13,7 +13,11 @@ import { SearchOutlined, AccountCircle } from "@material-ui/icons";
 import useStyles from "../Style/DialogStyle";
 import { Auth, Hub } from "aws-amplify";
 import { listUsersByUsername } from "./graphql/queriesapi";
-import { createUserFriendsApi } from "./graphql/mutationapi";
+import {
+  createUserFriendsApi,
+  createGroupApi,
+  createUserGroupApi,
+} from "./graphql/mutationapi";
 import LineButton from "../Style/LineButton";
 
 const DialogAddFriends = (props) => {
@@ -72,11 +76,17 @@ const DialogAddFriends = (props) => {
   };
 
   const clickAdd = async () => {
-    console.log(myUserInfo.id);
-    console.log(objFine.id);
+    console.log(myUserInfo); // my account
+    console.log(objFine); // friend account
     // check objFind not both condition, then set have button for add
     await createUserFriendsApi(myUserInfo.id, objFine.id);
     await createUserFriendsApi(objFine.id, myUserInfo.id);
+    const group = await createGroupApi(
+      `${myUserInfo.username}${objFine.username}`,
+      true
+    );
+    await createUserGroupApi(group.id, myUserInfo.id);
+    await createUserGroupApi(group.id, objFine.id);
     setButton(true);
   };
 

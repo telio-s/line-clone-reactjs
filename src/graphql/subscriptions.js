@@ -1318,7 +1318,12 @@ export const onCreateMessage = /* GraphQL */ `
         id
         name
         users {
-          nextToken
+          items {
+            user {
+              id
+              username
+            }
+          }
         }
         messages {
           nextToken
@@ -1343,6 +1348,11 @@ export const onCreateMessage = /* GraphQL */ `
       }
       type
       message
+      media {
+        bucket
+        region
+        key
+      }
       createdAt
       isBlock
       updatedAt
@@ -1434,6 +1444,11 @@ export const onUpdateMessage = /* GraphQL */ `
       }
       type
       message
+      media {
+        bucket
+        region
+        key
+      }
       createdAt
       isBlock
       updatedAt
@@ -1525,6 +1540,11 @@ export const onDeleteMessage = /* GraphQL */ `
       }
       type
       message
+      media {
+        bucket
+        region
+        key
+      }
       createdAt
       isBlock
       updatedAt

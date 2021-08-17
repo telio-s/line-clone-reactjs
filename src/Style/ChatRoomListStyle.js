@@ -9,6 +9,7 @@ const useStyles = makeStyles((theme) => ({
     overflowY: "scroll",
     overflow: "hidden",
     height: `calc(100vh - 64px)`,
+    marginLeft: "80px",
   },
   appbar: {
     backgroundColor: "#ffffff",
@@ -34,11 +35,13 @@ const useStyles = makeStyles((theme) => ({
       backgroundColor: "#f3f3f3",
     },
     textTransform: "capitalize !important",
-    padding: "10px 20px 10px 10px",
+    padding: "10px 20px 10px 15px",
+    justifyContent: "flex-start",
   },
   chatDesc: {
     textAlign: "left",
     padding: "10px",
+    width: "400px",
   },
   nameChat: {
     fontWeight: "600",

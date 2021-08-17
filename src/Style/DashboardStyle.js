@@ -13,6 +13,7 @@ const useStyles = makeStyles((theme) => ({
     // width: `calc(100% - ${drawerWidth}px)`,
     backgroundColor: "#ffffff",
     width: "100%",
+    marginLeft: drawerWidth,
   },
   chatSection: {
     margin: "0px 10px 0px 0px",
@@ -78,7 +79,6 @@ const useStyles = makeStyles((theme) => ({
   main: {
     width: `calc(100% - ${drawerWidth}px)`,
     height: `100vh`,
-    marginLeft: drawerWidth,
   },
 }));
 

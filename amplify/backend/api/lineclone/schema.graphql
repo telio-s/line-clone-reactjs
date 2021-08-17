@@ -76,6 +76,7 @@ type Message
   group: Group @connection(name: "GroupUsers")
   type: String!
   message: String!
+  media: [S3Object]
   createdAt: String!
   isBlock: Boolean!
 }

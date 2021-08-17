@@ -24,6 +24,7 @@ function Profile(props) {
   return (
     <div className={classes.root} style={{ marginLeft: "80px" }}>
       <main className={classes.main}>
+        {console.log(user.username)}
         <h1>Profile, {user ? user.username : null}</h1>
         <ListItem
           button

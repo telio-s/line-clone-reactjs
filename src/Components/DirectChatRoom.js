@@ -9,7 +9,7 @@ import {
   Button,
 } from "@material-ui/core";
 import { EventNote, MoreVert, Attachment } from "@material-ui/icons";
-
+import { API, graphqlOperation } from "aws-amplify";
 import MyMessageBubble from "./MyMessageBubble";
 import TheirMessageBubble from "./TheirMessageBubble";
 import { DashboardContext } from "../Page/Dashboard";
@@ -17,8 +17,7 @@ import { getDirect } from "../api/queries";
 import { createMessageInGroup } from "./../api/mutations";
 import AddFriendsToGroup from "./AddFriendsToGroup";
 import useStyles from "../Style/ChatRoomStyle";
-
-export const DirectContext = React.createContext();
+import { onCreateMessage, onUpdateMessage } from "../graphql/subscriptions";
 
 const DirectChatRoom = (props) => {
   const { friend } = props;
@@ -36,7 +35,7 @@ const DirectChatRoom = (props) => {
   useEffect(() => {
     async function getMessages() {
       const [data, id, group] = await getDirect(user.username, friend.username);
-      console.log(data, id, group.group);
+      // console.log(data, id, group.group);
       setDirectId(id);
       setMessages(data);
       setDirect(group.group);
@@ -52,8 +51,9 @@ const DirectChatRoom = (props) => {
     // console.log(user.username, friend.username);
   }, [friend]);
 
-  function handleSendMessage(e) {
+  async function handleSendMessage(e) {
     e.preventDefault();
+
     const message = {
       type: directId,
       message: currMessage,
@@ -62,14 +62,14 @@ const DirectChatRoom = (props) => {
       isBlock: false,
     };
     async function createMessage() {
-      console.log(message);
+      // console.log(message);
       const data = await createMessageInGroup(message);
-      console.log(data);
+      // console.log(data);
       setMessages([...messages, data.data.createMessage]);
     }
     try {
       createMessage();
-      console.log("send message!", message);
+      // console.log("send message!", message);
       setCurrMessage("");
     } catch (error) {
       console.log("Can't send Message", error);
@@ -82,28 +82,28 @@ const DirectChatRoom = (props) => {
   }
 
   return (
-    <DirectContext.Provider value={{ friend }}>
-      <div className={classes.root}>
-        {/* <Divider orientation="vertical" flexItem /> */}
-        <AppBar elevation={0} position="static" className={classes.appbar}>
-          <Toolbar className={classes.Toolbar}>
-            <Typography
-              className={classes.nameChat}
-              style={{ flexGrow: 1, textAlign: "left" }}
-            >
-              {friend.username}
-            </Typography>
-            <IconButton className={classes.iconButton}>
-              <EventNote className={classes.iconSection} />
-            </IconButton>
-            <IconButton
-              className={classes.iconButton}
-              onClick={() => handleInviteFriends()}
-            >
-              <MoreVert className={classes.iconSection} />
-            </IconButton>
-          </Toolbar>
-        </AppBar>
+    <div className={classes.root}>
+      {/* <Divider orientation="vertical" flexItem /> */}
+      <AppBar elevation={0} position="static" className={classes.appbar}>
+        <Toolbar className={classes.Toolbar}>
+          <Typography
+            className={classes.nameChat}
+            style={{ flexGrow: 1, textAlign: "left" }}
+          >
+            {friend.username}
+          </Typography>
+          <IconButton className={classes.iconButton}>
+            <EventNote className={classes.iconSection} />
+          </IconButton>
+          <IconButton
+            className={classes.iconButton}
+            onClick={() => handleInviteFriends()}
+          >
+            <MoreVert className={classes.iconSection} />
+          </IconButton>
+        </Toolbar>
+      </AppBar>
+      <div className={classes.chatfeed}>
         {messages
           ? messages.map((message, index) =>
               message.user.id === user.id ? (
@@ -113,43 +113,40 @@ const DirectChatRoom = (props) => {
               )
             )
           : null}
-        <Divider />
-        <form
-          className={classes.textArea}
-          onSubmit={(e) => handleSendMessage(e)}
-        >
-          <InputBase
-            placeholder="Enter a message"
-            fullWidth
-            multiline
-            rowsMin={1}
-            maxRows={5}
-            style={{ height: "70px" }}
-            value={currMessage}
-            onChange={(e) => setCurrMessage(e.target.value)}
-          ></InputBase>
-          <div className={classes.iconButtTextArea}>
-            <IconButton className={classes.iconButton}>
-              <Attachment />
-            </IconButton>
-            <Button
-              style={{ display: currMessage ? "" : "none", marginLeft: "auto" }}
-              type="submit"
-            >
-              Send
-            </Button>
-          </div>
-        </form>
-        <AddFriendsToGroup
-          open={openInvite}
-          onClose={handleInviteFriends}
-          group={direct}
-          alreadyIn={alreadyIn}
-          setAlreadyIn={setAlreadyIn}
-          isGroup={0}
-        />
       </div>
-    </DirectContext.Provider>
+      <Divider />
+      <form className={classes.textArea} onSubmit={(e) => handleSendMessage(e)}>
+        <InputBase
+          placeholder="Enter a message"
+          fullWidth
+          multiline
+          rowsMin={1}
+          maxRows={5}
+          style={{ height: "70px" }}
+          value={currMessage}
+          onChange={(e) => setCurrMessage(e.target.value)}
+        ></InputBase>
+        <div className={classes.iconButtTextArea}>
+          <IconButton className={classes.iconButton}>
+            <Attachment />
+          </IconButton>
+          <Button
+            style={{ display: currMessage ? "" : "none", marginLeft: "auto" }}
+            type="submit"
+          >
+            Send
+          </Button>
+        </div>
+      </form>
+      <AddFriendsToGroup
+        open={openInvite}
+        onClose={handleInviteFriends}
+        group={direct}
+        alreadyIn={alreadyIn}
+        setAlreadyIn={setAlreadyIn}
+        isGroup={0}
+      />
+    </div>
   );
 };
 

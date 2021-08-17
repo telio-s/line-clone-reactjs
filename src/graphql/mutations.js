@@ -674,6 +674,81 @@ export const createUserGroups = /* GraphQL */ `
       user {
         id
         username
+        email
+        lineID
+        displayName
+        statusMessage
+        profilePhoto {
+          bucket
+          region
+          key
+        }
+        coverPhoto {
+          bucket
+          region
+          key
+        }
+        phoneNumber
+        groups {
+          nextToken
+        }
+        friends {
+          nextToken
+        }
+        blocked {
+          id
+          username
+          email
+          lineID
+          displayName
+          statusMessage
+          phoneNumber
+          createdAt
+          updatedAt
+        }
+        favourites {
+          id
+          username
+          email
+          lineID
+          displayName
+          statusMessage
+          phoneNumber
+          createdAt
+          updatedAt
+        }
+        posts {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      group {
+        id
+        name
+        users {
+          nextToken
+        }
+        messages {
+          nextToken
+        }
+        isDirect
+        announce {
+          nextToken
+        }
+        files {
+          bucket
+          region
+          key
+        }
+        albums {
+          id
+          albumName
+          createdAt
+          updatedAt
+        }
+        createdAt
+        updatedAt
       }
       createdAt
       updatedAt
@@ -1219,7 +1294,6 @@ export const deleteUserFriends = /* GraphQL */ `
     }
   }
 `;
-
 export const createMessage = /* GraphQL */ `
   mutation CreateMessage(
     $input: CreateMessageInput!
@@ -1230,7 +1304,50 @@ export const createMessage = /* GraphQL */ `
       user {
         id
         username
+        email
+        lineID
+        displayName
+        statusMessage
+        profilePhoto {
+          bucket
+          region
+          key
+        }
+        coverPhoto {
+          bucket
+          region
+          key
+        }
+        phoneNumber
         groups {
+          nextToken
+        }
+        friends {
+          nextToken
+        }
+        blocked {
+          id
+          username
+          email
+          lineID
+          displayName
+          statusMessage
+          phoneNumber
+          createdAt
+          updatedAt
+        }
+        favourites {
+          id
+          username
+          email
+          lineID
+          displayName
+          statusMessage
+          phoneNumber
+          createdAt
+          updatedAt
+        }
+        posts {
           nextToken
         }
         createdAt
@@ -1240,18 +1357,43 @@ export const createMessage = /* GraphQL */ `
         id
         name
         users {
-          nextToken
+          items {
+            user {
+              id
+              username
+            }
+          }
         }
         messages {
           nextToken
         }
         isDirect
+        announce {
+          nextToken
+        }
+        files {
+          bucket
+          region
+          key
+        }
+        albums {
+          id
+          albumName
+          createdAt
+          updatedAt
+        }
         createdAt
         updatedAt
       }
       type
       message
+      media {
+        bucket
+        region
+        key
+      }
       createdAt
+      isBlock
       updatedAt
     }
   }
@@ -1344,6 +1486,11 @@ export const updateMessage = /* GraphQL */ `
       }
       type
       message
+      media {
+        bucket
+        region
+        key
+      }
       createdAt
       isBlock
       updatedAt
@@ -1438,6 +1585,11 @@ export const deleteMessage = /* GraphQL */ `
       }
       type
       message
+      media {
+        bucket
+        region
+        key
+      }
       createdAt
       isBlock
       updatedAt

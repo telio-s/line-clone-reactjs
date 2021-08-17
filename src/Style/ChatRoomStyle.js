@@ -8,6 +8,7 @@ const useStyles = makeStyles((theme) => ({
   root: {
     backgroundColor: "#ffffff",
     width: `calc(100vw - ${drawerChatListWidth}px)`,
+    height: `calc(100vh - 64px)`,
   },
   appbar: {
     backgroundColor: "#ffffff",
@@ -45,6 +46,11 @@ const useStyles = makeStyles((theme) => ({
     margin: "0px 10px 0px 0px",
     height: "40px",
     display: "flex",
+  },
+  chatfeed: {
+    overflowY: "scroll",
+    overflow: "hidden",
+    height: `calc(100vh - 278px)`,
   },
 }));
 

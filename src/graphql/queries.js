@@ -619,6 +619,11 @@ export const messageByDate = /* GraphQL */ `
           createdAt
           updatedAt
         }
+        media {
+          bucket
+          region
+          key
+        }
         type
         message
         createdAt
