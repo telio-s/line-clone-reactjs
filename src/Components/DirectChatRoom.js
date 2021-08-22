@@ -1,4 +1,10 @@
-import React, { useContext, useEffect, useState, useRef } from "react";
+import React, {
+  useContext,
+  useEffect,
+  useState,
+  useRef,
+  useLayoutEffect,
+} from "react";
 import {
   AppBar,
   Toolbar,
@@ -17,6 +23,8 @@ import { getDirect } from "../api/queries";
 import { createMessageInGroup } from "./../api/mutations";
 import { newOnCreateMessage } from "../graphql/subscriptions";
 import AddFriendsToGroup from "./AddFriendsToGroup";
+import firebase from "../firebase";
+import { getToken, sendRequestPost } from "../firebase/firebase";
 import useStyles from "../Style/ChatRoomStyle";
 
 const DirectChatRoom = (props) => {
@@ -30,28 +38,31 @@ const DirectChatRoom = (props) => {
   const [direct, setDirect] = useState([]);
   const [alreadyIn, setAlreadyIn] = useState([]);
   const [realTimeData, setRealTimeData] = useState();
+
   const dummy = useRef();
+
   // after add friend we have to create group after that
   // so first when we get to direct message withe other user we have to find the group
   useEffect(() => {
     async function getMessages() {
       const [data, id, group] = await getDirect(user.username, friend.username);
 
-      // console.log(data, id, group.group);
+      console.log(data);
       setDirectId(id);
       setMessages(data);
-      console.log(data);
       setDirect(group.group);
       let aIn = [];
       group.group.users.items.map((user) => {
         aIn.push(user.user.id);
       });
       setAlreadyIn([...aIn]);
+      console.log("scroll late");
+      scrollToBottom();
     }
-    scrollToBottom();
+
     getMessages();
     setFriend(friend);
-
+    // scrollToBottom();
     // console.log(user.username, friend.username);
   }, [friend, realTimeData]);
 
@@ -60,6 +71,7 @@ const DirectChatRoom = (props) => {
 
     return () => {
       subscriptionOnCreate.unsubscribe();
+      // unsubscribeFromTopic(token);
     };
   }, []);
 
@@ -68,9 +80,16 @@ const DirectChatRoom = (props) => {
     subscriptionOnCreate = API.graphql(
       graphqlOperation(newOnCreateMessage)
     ).subscribe({
-      next: (data) => {
+      next: async (data) => {
         console.log(data);
         setRealTimeData(data);
+
+        const token = await getToken();
+        sendRequestPost(
+          token,
+          `${data.value.data.newOnCreateMessage.user.username} sent`,
+          data.value.data.newOnCreateMessage.message
+        );
       },
     });
   }
@@ -84,11 +103,10 @@ const DirectChatRoom = (props) => {
       messageUserId: user.id,
       messageGroupId: directId,
       isBlock: false,
+      hasRead: false,
     };
     async function createMessage() {
-      // console.log(message);
       const data = await createMessageInGroup(message);
-      // console.log(data);
       setMessages([...messages, data.data.createMessage]);
     }
     try {
@@ -101,7 +119,7 @@ const DirectChatRoom = (props) => {
   }
 
   const scrollToBottom = () => {
-    console.log("tongtt");
+    console.log("test auto scroll when useeffect");
     dummy.current.scrollIntoView({
       behavior: "smooth",
     });

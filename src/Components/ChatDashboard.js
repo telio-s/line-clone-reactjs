@@ -59,10 +59,6 @@ const ChatDashboard = (props) => {
     { title: "Groups" },
   ];
 
-  // useEffect(() => {
-  //   // setComponent(key);
-  //   console.log(props.component);
-  // }, []);
   return (
     <>
       <AppBar className={classes.appbar} elevation={0} position="static">

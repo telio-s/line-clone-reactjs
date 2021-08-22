@@ -1,4 +1,10 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, {
+  useContext,
+  useEffect,
+  useState,
+  useRef,
+  useLayoutEffect,
+} from "react";
 import {
   Typography,
   AppBar,
@@ -11,9 +17,11 @@ import { API, graphqlOperation } from "aws-amplify";
 import { newOnCreateMessage } from "../graphql/subscriptions";
 import { SearchOutlined, AccountCircle } from "@material-ui/icons";
 import { getUserByID, getMessageByDate } from "./graphql/queriesapi";
+import { updateMessageHasRead } from "./graphql/mutationapi";
 import { DashboardContext } from "../Page/Dashboard";
 import { Auth, Hub } from "aws-amplify";
 import DirectChatRoom from "./DirectChatRoom";
+import firebase from "../firebase";
 import useStyles from "../Style/ChatRoomListStyle";
 
 const ChatRoomList = () => {
@@ -23,10 +31,19 @@ const ChatRoomList = () => {
   const [messageArr, setMessageArr] = useState([]);
   const [messageSorted, setMessageSorted] = useState([]);
   const [realTimeData, setRealTimeData] = useState();
+  const [countNoti, setCountNoti] = useState(0);
+  const [newMessages, setNewMessages] = useState([]);
+  const [lastMessage, setLastMessage] = useState([]);
 
+  const elementRef = useRef([]);
+  const messaging = firebase.messaging();
   useEffect(async () => {
     const user = await checkUserCurrent();
-    console.log("send message 2");
+
+    messaging.onMessage((payload) => {
+      console.log("Message received. ", payload);
+      // ...
+    });
 
     const fetchAllChat = async (user) => {
       const userObj = await getUserByID(user.attributes.sub);
@@ -40,8 +57,9 @@ const ChatRoomList = () => {
 
         // Fetch last message for each group
         const fetchMessage = await getMessageByDate(group.group.id);
-        // console.log(fetchMessage);
+        countHasRead(fetchMessage, userObj);
         if (fetchMessage.messageByDate.items == 0 && group.group.isDirect) {
+          // Be friend but never talk yet
           // console.log("empty arr");
         } else if (group.group.isDirect) {
           // set time zone
@@ -76,36 +94,99 @@ const ChatRoomList = () => {
             ISOtime: fetchMessage.messageByDate.items[0].createdAt,
             friend: friendObj,
           };
+          const lastMsgInFo = {
+            content: fetchMessage.messageByDate.items[0].message,
+            time: onlyTime,
+          };
           setMessageArr((previousState) => [...previousState, groupInfo]);
-          // console.log(messageArr);
+          setLastMessage((previousState) => [...previousState, lastMsgInFo]);
         }
       });
     };
     fetchAllChat(user);
-  }, []);
+
+    return () => {
+      console.log("clean up");
+    };
+  }, [realTimeData]);
 
   useEffect(() => {
     comparetByTime();
-    console.log("send message 1");
 
-    // setupSubscriptions();
+    setupSubscriptions();
 
-    // return () => {
-    //   subscriptionOnCreate.unsubscribe();
-    // };
+    return () => {
+      subscriptionOnCreate.unsubscribe();
+    };
   }, [messageArr, myUser]);
 
-  // let subscriptionOnCreate;
-  // function setupSubscriptions() {
-  //   subscriptionOnCreate = API.graphql(
-  //     graphqlOperation(newOnCreateMessage)
-  //   ).subscribe({
-  //     next: (data) => {
-  //       console.log(data);
-  //       setRealTimeData(data);
-  //     },
-  //   });
-  // }
+  useEffect(() => {
+    setMessageArr([]);
+
+    if (realTimeData) {
+      if (
+        myUser.username !==
+        realTimeData.value.data.newOnCreateMessage.user.username
+      ) {
+        setCountNoti(countNoti + 1);
+      }
+    }
+
+    return () => {
+      console.log("clean up");
+    };
+  }, [realTimeData]);
+
+  useEffect(() => {
+    console.log(countNoti);
+
+    return () => {
+      console.log("clean up");
+    };
+  }, [countNoti]);
+
+  let subscriptionOnCreate;
+  function setupSubscriptions() {
+    subscriptionOnCreate = API.graphql(
+      graphqlOperation(newOnCreateMessage)
+    ).subscribe({
+      next: (data) => {
+        let count = countNoti;
+        console.log(countNoti);
+        console.log(data);
+        setRealTimeData(data);
+        console.log(elementRef);
+        if (
+          myUser.username !== data.value.data.newOnCreateMessage.user.username
+        ) {
+          setNewMessages((pre) => [...pre, data.value.data.newOnCreateMessage]);
+        }
+        // for (let i = 0; i < elementRef.current.length; i++) {
+        //   if (
+        //     data.value.data.newOnCreateMessage.group.id ==
+        //     elementRef.current[i].id
+        //   ) {
+        //     return (elementRef.current[i].innerHTML = "testSomething");
+        //   }
+        // }
+      },
+    });
+  }
+
+  const countHasRead = (allmessages, myuser) => {
+    let messages = allmessages.messageByDate.items;
+    let count = 0;
+
+    messages.map((msg) => {
+      if (myuser.username !== msg.user.username) {
+        if (!msg.hasRead) {
+          count++;
+          setNewMessages((pre) => [...pre, msg]);
+        }
+      }
+    });
+    setCountNoti(count);
+  };
 
   const checkUserCurrent = async () => {
     const user = await Auth.currentAuthenticatedUser();
@@ -117,14 +198,18 @@ const ChatRoomList = () => {
     messageArr.sort(function sort(b, a) {
       return new Date(a.ISOtime).getTime() - new Date(b.ISOtime).getTime();
     });
-    // console.log(messageArr);
     setMessageSorted(messageArr);
   };
 
   async function handleChatRoom(friend) {
-    console.log("chose a chat");
+    console.log(newMessages);
+    newMessages.map(async (data) => {
+      await updateMessageHasRead(data.id, true);
+    });
 
+    setCountNoti(0);
     setChat(<DirectChatRoom friend={friend} />);
+    setNewMessages([]);
   }
 
   return (
@@ -143,7 +228,7 @@ const ChatRoomList = () => {
           />
         </Toolbar>
       </AppBar>
-
+      {console.log(lastMessage)}
       {messageSorted.map((message, index) => (
         <div key={index}>
           <Button
@@ -160,12 +245,24 @@ const ChatRoomList = () => {
                 noWrap={false}
                 gutterBottom
                 className={classes.multiLineEllipsis}
+                id={message.idGroup}
+                // ref={(elm) => {
+                //   elementRef.current[index] = elm;
+                // }}
               >
                 {message.content}
               </Typography>
             </div>
-
-            <Typography className={classes.timeChat}>{message.time}</Typography>
+            <div>
+              <Typography className={classes.timeChat}>
+                {message.time}
+              </Typography>
+              {countNoti ? (
+                <div className={classes.notiBox}>
+                  <Typography className={classes.noti}>{countNoti}</Typography>
+                </div>
+              ) : null}
+            </div>
           </Button>
         </div>
       ))}

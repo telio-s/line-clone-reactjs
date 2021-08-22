@@ -507,6 +507,7 @@ export const createGroup = /* GraphQL */ `
           message
           createdAt
           isBlock
+          hasRead
           updatedAt
         }
         nextToken
@@ -519,6 +520,7 @@ export const createGroup = /* GraphQL */ `
           message
           createdAt
           isBlock
+          hasRead
           updatedAt
         }
         nextToken
@@ -567,6 +569,7 @@ export const updateGroup = /* GraphQL */ `
           message
           createdAt
           isBlock
+          hasRead
           updatedAt
         }
         nextToken
@@ -579,6 +582,7 @@ export const updateGroup = /* GraphQL */ `
           message
           createdAt
           isBlock
+          hasRead
           updatedAt
         }
         nextToken
@@ -627,6 +631,7 @@ export const deleteGroup = /* GraphQL */ `
           message
           createdAt
           isBlock
+          hasRead
           updatedAt
         }
         nextToken
@@ -639,6 +644,7 @@ export const deleteGroup = /* GraphQL */ `
           message
           createdAt
           isBlock
+          hasRead
           updatedAt
         }
         nextToken
@@ -1387,13 +1393,10 @@ export const createMessage = /* GraphQL */ `
       }
       type
       message
-      media {
-        bucket
-        region
-        key
-      }
+      media
       createdAt
       isBlock
+      hasRead
       updatedAt
     }
   }
@@ -1486,13 +1489,10 @@ export const updateMessage = /* GraphQL */ `
       }
       type
       message
-      media {
-        bucket
-        region
-        key
-      }
+      media
       createdAt
       isBlock
+      hasRead
       updatedAt
     }
   }
@@ -1585,13 +1585,10 @@ export const deleteMessage = /* GraphQL */ `
       }
       type
       message
-      media {
-        bucket
-        region
-        key
-      }
+      media
       createdAt
       isBlock
+      hasRead
       updatedAt
     }
   }

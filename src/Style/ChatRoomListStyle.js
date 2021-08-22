@@ -48,8 +48,10 @@ const useStyles = makeStyles((theme) => ({
   },
   timeChat: {
     color: "#b7b7b7",
-    alignSelf: "stretch",
-    paddingTop: "10px",
+    // alignSelf: "stretch",
+    padding: "5px 0px 5px 0px",
+    position: "absolute",
+    top: "2px",
   },
   multiLineEllipsis: {
     color: "#777777",
@@ -58,6 +60,23 @@ const useStyles = makeStyles((theme) => ({
     display: "-webkit-box",
     "-webkit-line-clamp": 2,
     "-webkit-box-orient": "vertical",
+  },
+  notiBox: {
+    width: "25px",
+    height: "25px",
+    backgroundColor: "#5ac463",
+    borderRadius: "50%",
+    justifyContent: "center",
+    display: "flex",
+    margin: "auto",
+    position: "absolute",
+    right: "35px",
+  },
+  noti: {
+    color: "#ffffff",
+    margin: "auto",
+    fontWeight: "bold",
+    fontSize: "14px",
   },
 }));
 

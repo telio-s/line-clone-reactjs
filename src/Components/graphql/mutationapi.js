@@ -3,6 +3,7 @@ import {
   createUserFriends,
   createGroup,
   createUserGroups,
+  updateMessage,
 } from "../../graphql/mutations";
 import { API, graphqlOperation } from "aws-amplify";
 
@@ -39,6 +40,18 @@ export const createUserGroupApi = async (
       input: {
         userGroupsGroupId: userGroupsGroupId,
         userGroupsUserId: userGroupsUserId,
+      },
+    })
+  );
+  return data;
+};
+
+export const updateMessageHasRead = async (id, hasRead) => {
+  const data = await API.graphql(
+    graphqlOperation(updateMessage, {
+      input: {
+        id: id,
+        hasRead: hasRead,
       },
     })
   );

@@ -86,13 +86,10 @@ export const newOnCreateMessage = /* GraphQL */ `
       }
       type
       message
-      media {
-        bucket
-        region
-        key
-      }
+      media
       createdAt
       isBlock
+      hasRead
       updatedAt
     }
   }
@@ -591,6 +588,7 @@ export const onCreateGroup = /* GraphQL */ `
           message
           createdAt
           isBlock
+          hasRead
           updatedAt
         }
         nextToken
@@ -603,6 +601,7 @@ export const onCreateGroup = /* GraphQL */ `
           message
           createdAt
           isBlock
+          hasRead
           updatedAt
         }
         nextToken
@@ -648,6 +647,7 @@ export const onUpdateGroup = /* GraphQL */ `
           message
           createdAt
           isBlock
+          hasRead
           updatedAt
         }
         nextToken
@@ -660,6 +660,7 @@ export const onUpdateGroup = /* GraphQL */ `
           message
           createdAt
           isBlock
+          hasRead
           updatedAt
         }
         nextToken
@@ -705,6 +706,7 @@ export const onDeleteGroup = /* GraphQL */ `
           message
           createdAt
           isBlock
+          hasRead
           updatedAt
         }
         nextToken
@@ -717,6 +719,7 @@ export const onDeleteGroup = /* GraphQL */ `
           message
           createdAt
           isBlock
+          hasRead
           updatedAt
         }
         nextToken
@@ -1439,13 +1442,10 @@ export const onCreateMessage = /* GraphQL */ `
       }
       type
       message
-      media {
-        bucket
-        region
-        key
-      }
+      media
       createdAt
       isBlock
+      hasRead
       updatedAt
     }
   }
@@ -1535,13 +1535,10 @@ export const onUpdateMessage = /* GraphQL */ `
       }
       type
       message
-      media {
-        bucket
-        region
-        key
-      }
+      media
       createdAt
       isBlock
+      hasRead
       updatedAt
     }
   }
@@ -1631,13 +1628,10 @@ export const onDeleteMessage = /* GraphQL */ `
       }
       type
       message
-      media {
-        bucket
-        region
-        key
-      }
+      media
       createdAt
       isBlock
+      hasRead
       updatedAt
     }
   }

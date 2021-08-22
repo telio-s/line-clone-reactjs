@@ -31,6 +31,10 @@ const DialogAddFriends = (props) => {
 
   useEffect(() => {
     checkUserCurrent();
+
+    return () => {
+      console.log("clean up");
+    };
   }, []);
 
   const checkUserCurrent = async () => {

@@ -40,6 +40,10 @@ const Dashboard = () => {
     // getUser();
     console.log("Dashboard called");
     sideBar ? setSideBar(sideBar) : setSideBar(<AllChats />);
+
+    return () => {
+      console.log("clean up");
+    };
   }, []);
 
   const checkUserCurrent = async () => {
