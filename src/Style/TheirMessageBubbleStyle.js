@@ -14,6 +14,7 @@ const useStyles = makeStyles((theme) => ({
     marginLeft: "20px",
     maxWidth: "100%",
     display: "flex",
+    marginTop: "10px",
   },
   head: {
     display: "inline-block",

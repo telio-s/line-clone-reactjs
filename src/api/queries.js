@@ -2,16 +2,17 @@ import { API, graphqlOperation } from "aws-amplify";
 import { getGroup, listUsers, messageByDate } from "./../graphql/queries";
 
 // get logged in user using listUser
-export async function getLoggedInUser() {
+export async function getLoggedInUser(id) {
   try {
+    console.log("tao");
     const user = await API.graphql(
       graphqlOperation(listUsers, {
-        filter: { email: { eq: "kanyanat.i@ku.th" } },
+        filter: { id: { eq: id } },
       })
     );
     return user;
   } catch (error) {
-    return;
+    return error;
   }
 }
 
@@ -53,14 +54,14 @@ export async function getDirect(userUsername, friendUsername) {
     if (userGroup.includes(group.group.id)) {
       directId = group.group.id;
       groupInfo = group;
-      console.log(groupInfo);
+      // console.log(groupInfo);
       return;
     }
   });
   try {
-    console.log(directId);
+    // console.log(directId);
     const _direct = await getMessageByDateInGroup(directId);
-    console.log("get message in direct success");
+    // console.log("get message in direct success");
     return [_direct, directId, groupInfo];
   } catch (error) {
     console.log("can't get message from direct");

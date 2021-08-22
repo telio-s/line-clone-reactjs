@@ -8,7 +8,8 @@ const useStyles = makeStyles((theme) => ({
     width: chatListWidth,
     overflowY: "scroll",
     overflow: "hidden",
-    height: `calc(100vh - 64px)`,
+    height: `calc(98vh - 64px)`,
+    marginLeft: "80px",
   },
   appbar: {
     backgroundColor: "#ffffff",
@@ -34,19 +35,23 @@ const useStyles = makeStyles((theme) => ({
       backgroundColor: "#f3f3f3",
     },
     textTransform: "capitalize !important",
-    padding: "10px 20px 10px 10px",
+    padding: "10px 20px 10px 15px",
+    justifyContent: "flex-start",
   },
   chatDesc: {
     textAlign: "left",
     padding: "10px",
+    width: "400px",
   },
   nameChat: {
     fontWeight: "600",
   },
   timeChat: {
     color: "#b7b7b7",
-    alignSelf: "stretch",
-    paddingTop: "10px",
+    // alignSelf: "stretch",
+    padding: "5px 0px 5px 0px",
+    position: "absolute",
+    top: "2px",
   },
   multiLineEllipsis: {
     color: "#777777",
@@ -55,6 +60,23 @@ const useStyles = makeStyles((theme) => ({
     display: "-webkit-box",
     "-webkit-line-clamp": 2,
     "-webkit-box-orient": "vertical",
+  },
+  notiBox: {
+    width: "25px",
+    height: "25px",
+    backgroundColor: "#5ac463",
+    borderRadius: "50%",
+    justifyContent: "center",
+    display: "flex",
+    margin: "auto",
+    position: "absolute",
+    right: "35px",
+  },
+  noti: {
+    color: "#ffffff",
+    margin: "auto",
+    fontWeight: "bold",
+    fontSize: "14px",
   },
 }));
 

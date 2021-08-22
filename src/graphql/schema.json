@@ -583,13 +583,9 @@
           "description" : null,
           "args" : [ ],
           "type" : {
-            "kind" : "NON_NULL",
-            "name" : null,
-            "ofType" : {
-              "kind" : "SCALAR",
-              "name" : "String",
-              "ofType" : null
-            }
+            "kind" : "SCALAR",
+            "name" : "String",
+            "ofType" : null
           },
           "isDeprecated" : false,
           "deprecationReason" : null
@@ -631,13 +627,9 @@
           "description" : null,
           "args" : [ ],
           "type" : {
-            "kind" : "NON_NULL",
-            "name" : null,
-            "ofType" : {
-              "kind" : "SCALAR",
-              "name" : "String",
-              "ofType" : null
-            }
+            "kind" : "SCALAR",
+            "name" : "String",
+            "ofType" : null
           },
           "isDeprecated" : false,
           "deprecationReason" : null
@@ -700,7 +692,7 @@
               "ofType" : null
             },
             "defaultValue" : null
-          }, 
+          }, {
             "name" : "filter",
             "description" : null,
             "type" : {
@@ -1752,6 +1744,21 @@
           "isDeprecated" : false,
           "deprecationReason" : null
         }, {
+          "name" : "media",
+          "description" : null,
+          "args" : [ ],
+          "type" : {
+            "kind" : "LIST",
+            "name" : null,
+            "ofType" : {
+              "kind" : "OBJECT",
+              "name" : "S3Object",
+              "ofType" : null
+            }
+          },
+          "isDeprecated" : false,
+          "deprecationReason" : null
+        }, {
           "name" : "createdAt",
           "description" : null,
           "args" : [ ],
@@ -1768,6 +1775,21 @@
           "deprecationReason" : null
         }, {
           "name" : "isBlock",
+          "description" : null,
+          "args" : [ ],
+          "type" : {
+            "kind" : "NON_NULL",
+            "name" : null,
+            "ofType" : {
+              "kind" : "SCALAR",
+              "name" : "Boolean",
+              "ofType" : null
+            }
+          },
+          "isDeprecated" : false,
+          "deprecationReason" : null
+        }, {
+          "name" : "hasRead",
           "description" : null,
           "args" : [ ],
           "type" : {
@@ -1853,6 +1875,15 @@
           "defaultValue" : null
         }, {
           "name" : "isBlock",
+          "description" : null,
+          "type" : {
+            "kind" : "INPUT_OBJECT",
+            "name" : "ModelBooleanInput",
+            "ofType" : null
+          },
+          "defaultValue" : null
+        }, {
+          "name" : "hasRead",
           "description" : null,
           "type" : {
             "kind" : "INPUT_OBJECT",
@@ -2384,7 +2415,7 @@
             "ofType" : null
           },
           "defaultValue" : null
-        }, 
+        }, {
           "name" : "userId",
           "description" : null,
           "type" : {
@@ -2402,7 +2433,7 @@
             "ofType" : null
           },
           "defaultValue" : null
-        },
+        }, {
           "name" : "displayName",
           "description" : null,
           "type" : {
@@ -4423,13 +4454,9 @@
           "name" : "displayName",
           "description" : null,
           "type" : {
-            "kind" : "NON_NULL",
-            "name" : null,
-            "ofType" : {
-              "kind" : "SCALAR",
-              "name" : "String",
-              "ofType" : null
-            }
+            "kind" : "SCALAR",
+            "name" : "String",
+            "ofType" : null
           },
           "defaultValue" : null
         }, {
@@ -4463,13 +4490,9 @@
           "name" : "phoneNumber",
           "description" : null,
           "type" : {
-            "kind" : "NON_NULL",
-            "name" : null,
-            "ofType" : {
-              "kind" : "SCALAR",
-              "name" : "String",
-              "ofType" : null
-            }
+            "kind" : "SCALAR",
+            "name" : "String",
+            "ofType" : null
           },
           "defaultValue" : null
         } ],
@@ -5214,7 +5237,7 @@
           "description" : null,
           "type" : {
             "kind" : "SCALAR",
-            "name" : "String"
+            "name" : "String",
             "ofType" : null
           },
           "defaultValue" : null
@@ -5285,6 +5308,19 @@
           },
           "defaultValue" : null
         }, {
+          "name" : "media",
+          "description" : null,
+          "type" : {
+            "kind" : "LIST",
+            "name" : null,
+            "ofType" : {
+              "kind" : "INPUT_OBJECT",
+              "name" : "S3ObjectInput",
+              "ofType" : null
+            }
+          },
+          "defaultValue" : null
+        }, {
           "name" : "createdAt",
           "description" : null,
           "type" : {
@@ -5295,6 +5331,19 @@
           "defaultValue" : null
         }, {
           "name" : "isBlock",
+          "description" : null,
+          "type" : {
+            "kind" : "NON_NULL",
+            "name" : null,
+            "ofType" : {
+              "kind" : "SCALAR",
+              "name" : "Boolean",
+              "ofType" : null
+            }
+          },
+          "defaultValue" : null
+        }, {
+          "name" : "hasRead",
           "description" : null,
           "type" : {
             "kind" : "NON_NULL",
@@ -5362,6 +5411,15 @@
           "defaultValue" : null
         }, {
           "name" : "isBlock",
+          "description" : null,
+          "type" : {
+            "kind" : "INPUT_OBJECT",
+            "name" : "ModelBooleanInput",
+            "ofType" : null
+          },
+          "defaultValue" : null
+        }, {
+          "name" : "hasRead",
           "description" : null,
           "type" : {
             "kind" : "INPUT_OBJECT",
@@ -5445,6 +5503,19 @@
           },
           "defaultValue" : null
         }, {
+          "name" : "media",
+          "description" : null,
+          "type" : {
+            "kind" : "LIST",
+            "name" : null,
+            "ofType" : {
+              "kind" : "INPUT_OBJECT",
+              "name" : "S3ObjectInput",
+              "ofType" : null
+            }
+          },
+          "defaultValue" : null
+        }, {
           "name" : "createdAt",
           "description" : null,
           "type" : {
@@ -5455,6 +5526,15 @@
           "defaultValue" : null
         }, {
           "name" : "isBlock",
+          "description" : null,
+          "type" : {
+            "kind" : "SCALAR",
+            "name" : "Boolean",
+            "ofType" : null
+          },
+          "defaultValue" : null
+        }, {
+          "name" : "hasRead",
           "description" : null,
           "type" : {
             "kind" : "SCALAR",
@@ -6141,6 +6221,17 @@
         "name" : "Subscription",
         "description" : null,
         "fields" : [ {
+          "name" : "newOnCreateMessage",
+          "description" : null,
+          "args" : [ ],
+          "type" : {
+            "kind" : "OBJECT",
+            "name" : "Message",
+            "ofType" : null
+          },
+          "isDeprecated" : false,
+          "deprecationReason" : null
+        }, {
           "name" : "onCreateUser",
           "description" : null,
           "args" : [ ],
@@ -7502,23 +7593,6 @@
         "description" : "Tells the service this field/object has access authorized by a Lambda Authorizer.",
         "locations" : [ "OBJECT", "FIELD_DEFINITION" ],
         "args" : [ ],
-        "onOperation" : false,
-        "onFragment" : false,
-        "onField" : false
-      }, {
-        "name" : "deprecated",
-        "description" : null,
-        "locations" : [ "FIELD_DEFINITION", "ENUM_VALUE" ],
-        "args" : [ {
-          "name" : "reason",
-          "description" : null,
-          "type" : {
-            "kind" : "SCALAR",
-            "name" : "String",
-            "ofType" : null
-          },
-          "defaultValue" : "\"No longer supported\""
-        } ],
         "onOperation" : false,
         "onFragment" : false,
         "onField" : false

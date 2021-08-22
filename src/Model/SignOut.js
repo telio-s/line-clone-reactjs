@@ -8,6 +8,10 @@ const SignOut = (props) => {
   const history = useHistory();
   useEffect(() => {
     setAuthListener();
+
+    return () => {
+      console.log("clean up");
+    };
   }, []);
 
   const setAuthListener = () => {

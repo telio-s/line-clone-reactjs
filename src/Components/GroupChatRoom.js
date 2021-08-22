@@ -54,6 +54,10 @@ const GroupChatRoom = (props) => {
     setAlreadyIn([...aIn]);
     getMessages();
     getGroup();
+
+    return () => {
+      console.log("clean up");
+    };
   }, [group]);
 
   function handleSendMessage(e) {

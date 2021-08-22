@@ -9,7 +9,7 @@ const useStyles = makeStyles((theme) => ({
     overflowY: "scroll",
     overflow: "hidden",
     height: `calc(100vh - 64px)`,
-    // backgroundColor: "#000000"
+    marginLeft: "80px",
   },
   icon: {
     fontSize: "40px",

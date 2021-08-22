@@ -1,6 +1,99 @@
 /* eslint-disable */
 // this is an auto generated file. This will be overwritten
 
+export const newOnCreateMessage = /* GraphQL */ `
+  subscription NewOnCreateMessage {
+    newOnCreateMessage {
+      id
+      user {
+        id
+        username
+        email
+        lineID
+        displayName
+        statusMessage
+        profilePhoto {
+          bucket
+          region
+          key
+        }
+        coverPhoto {
+          bucket
+          region
+          key
+        }
+        phoneNumber
+        groups {
+          nextToken
+        }
+        friends {
+          nextToken
+        }
+        blocked {
+          id
+          username
+          email
+          lineID
+          displayName
+          statusMessage
+          phoneNumber
+          createdAt
+          updatedAt
+        }
+        favourites {
+          id
+          username
+          email
+          lineID
+          displayName
+          statusMessage
+          phoneNumber
+          createdAt
+          updatedAt
+        }
+        posts {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      group {
+        id
+        name
+        users {
+          nextToken
+        }
+        messages {
+          nextToken
+        }
+        isDirect
+        announce {
+          nextToken
+        }
+        files {
+          bucket
+          region
+          key
+        }
+        albums {
+          id
+          albumName
+          createdAt
+          updatedAt
+        }
+        createdAt
+        updatedAt
+      }
+      type
+      message
+      media
+      createdAt
+      isBlock
+      hasRead
+      updatedAt
+    }
+  }
+`;
 export const onCreateUser = /* GraphQL */ `
   subscription OnCreateUser {
     onCreateUser {
@@ -495,6 +588,7 @@ export const onCreateGroup = /* GraphQL */ `
           message
           createdAt
           isBlock
+          hasRead
           updatedAt
         }
         nextToken
@@ -507,6 +601,7 @@ export const onCreateGroup = /* GraphQL */ `
           message
           createdAt
           isBlock
+          hasRead
           updatedAt
         }
         nextToken
@@ -552,6 +647,7 @@ export const onUpdateGroup = /* GraphQL */ `
           message
           createdAt
           isBlock
+          hasRead
           updatedAt
         }
         nextToken
@@ -564,6 +660,7 @@ export const onUpdateGroup = /* GraphQL */ `
           message
           createdAt
           isBlock
+          hasRead
           updatedAt
         }
         nextToken
@@ -609,6 +706,7 @@ export const onDeleteGroup = /* GraphQL */ `
           message
           createdAt
           isBlock
+          hasRead
           updatedAt
         }
         nextToken
@@ -621,6 +719,7 @@ export const onDeleteGroup = /* GraphQL */ `
           message
           createdAt
           isBlock
+          hasRead
           updatedAt
         }
         nextToken
@@ -1343,8 +1442,10 @@ export const onCreateMessage = /* GraphQL */ `
       }
       type
       message
+      media
       createdAt
       isBlock
+      hasRead
       updatedAt
     }
   }
@@ -1434,8 +1535,10 @@ export const onUpdateMessage = /* GraphQL */ `
       }
       type
       message
+      media
       createdAt
       isBlock
+      hasRead
       updatedAt
     }
   }
@@ -1525,8 +1628,10 @@ export const onDeleteMessage = /* GraphQL */ `
       }
       type
       message
+      media
       createdAt
       isBlock
+      hasRead
       updatedAt
     }
   }

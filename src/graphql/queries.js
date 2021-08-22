@@ -24,6 +24,24 @@ export const getUser = /* GraphQL */ `
       groups {
         items {
           id
+          group {
+            id
+            name
+            isDirect
+            messages {
+              items {
+                message
+              }
+            }
+            users {
+              items {
+                user {
+                  id
+                  username
+                }
+              }
+            }
+          }
           createdAt
           updatedAt
         }
@@ -170,8 +188,20 @@ export const listUsers = /* GraphQL */ `
         id
         username
         email
-        createdAt
-        updatedAt
+        lineID
+        displayName
+        statusMessage
+        profilePhoto {
+          bucket
+          region
+          key
+        }
+        coverPhoto {
+          bucket
+          region
+          key
+        }
+        phoneNumber
         groups {
           items {
             group {
@@ -200,6 +230,270 @@ export const listUsers = /* GraphQL */ `
             }
           }
         }
+        blocked {
+          id
+          username
+          email
+          lineID
+          displayName
+          statusMessage
+          phoneNumber
+          createdAt
+          updatedAt
+        }
+        favourites {
+          id
+          username
+          email
+          lineID
+          displayName
+          statusMessage
+          phoneNumber
+          createdAt
+          updatedAt
+        }
+        posts {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      nextToken
+    }
+  }
+`;
+export const getGroup = /* GraphQL */ `
+  query GetGroup($id: ID!) {
+    getGroup(id: $id) {
+      id
+      name
+      users {
+        items {
+          user {
+            id
+            username
+            createdAt
+            updatedAt
+          }
+        }
+        nextToken
+      }
+      messages {
+        items {
+          id
+          type
+          message
+          createdAt
+          isBlock
+          hasRead
+          updatedAt
+          user {
+            id
+            username
+          }
+        }
+        nextToken
+      }
+      isDirect
+      announce {
+        items {
+          id
+          type
+          message
+          createdAt
+          isBlock
+          hasRead
+          updatedAt
+        }
+        nextToken
+      }
+      files {
+        bucket
+        region
+        key
+      }
+      albums {
+        id
+        albumName
+        file {
+          bucket
+          region
+          key
+        }
+        createdAt
+        updatedAt
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const listGroups = /* GraphQL */ `
+  query ListGroups(
+    $filter: ModelGroupFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listGroups(filter: $filter, limit: $limit, nextToken: $nextToken) {
+      items {
+        id
+        name
+        users {
+          nextToken
+        }
+        messages {
+          nextToken
+        }
+        isDirect
+        announce {
+          nextToken
+        }
+        files {
+          bucket
+          region
+          key
+        }
+        albums {
+          id
+          albumName
+          createdAt
+          updatedAt
+        }
+        createdAt
+        updatedAt
+      }
+      nextToken
+    }
+  }
+`;
+export const getMessage = /* GraphQL */ `
+  query GetMessage($id: ID!) {
+    getMessage(id: $id) {
+      id
+      user {
+        id
+        username
+        email
+        lineID
+        displayName
+        statusMessage
+        profilePhoto {
+          bucket
+          region
+          key
+        }
+        coverPhoto {
+          bucket
+          region
+          key
+        }
+        phoneNumber
+        groups {
+          nextToken
+        }
+        friends {
+          nextToken
+        }
+        blocked {
+          id
+          username
+          email
+          lineID
+          displayName
+          statusMessage
+          phoneNumber
+          createdAt
+          updatedAt
+        }
+        favourites {
+          id
+          username
+          email
+          lineID
+          displayName
+          statusMessage
+          phoneNumber
+          createdAt
+          updatedAt
+        }
+        posts {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      group {
+        id
+        name
+        users {
+          nextToken
+        }
+        messages {
+          nextToken
+        }
+        isDirect
+        announce {
+          nextToken
+        }
+        files {
+          bucket
+          region
+          key
+        }
+        albums {
+          id
+          albumName
+          createdAt
+          updatedAt
+        }
+        createdAt
+        updatedAt
+      }
+      type
+      message
+      media
+
+      createdAt
+      isBlock
+      hasRead
+      updatedAt
+    }
+  }
+`;
+export const listMessages = /* GraphQL */ `
+  query ListMessages(
+    $filter: ModelMessageFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listMessages(filter: $filter, limit: $limit, nextToken: $nextToken) {
+      items {
+        id
+        user {
+          id
+          username
+          email
+          lineID
+          displayName
+          statusMessage
+          phoneNumber
+          createdAt
+          updatedAt
+        }
+        group {
+          id
+          name
+          isDirect
+          createdAt
+          updatedAt
+        }
+        type
+        message
+        media
+        createdAt
+        isBlock
+        hasRead
+        updatedAt
       }
       nextToken
     }
@@ -356,236 +650,6 @@ export const listAlbums = /* GraphQL */ `
     }
   }
 `;
-export const getGroup = /* GraphQL */ `
-  query GetGroup($id: ID!) {
-    getGroup(id: $id) {
-      id
-      name
-      users {
-        items {
-          user {
-            id
-            username
-            createdAt
-            updatedAt
-          }
-        }
-        nextToken
-      }
-      messages {
-        items {
-          id
-          type
-          message
-          createdAt
-          isBlock
-          updatedAt
-          user {
-            id
-            username
-          }
-        }
-        nextToken
-      }
-      isDirect
-      announce {
-        items {
-          id
-          type
-          message
-          createdAt
-          isBlock
-          updatedAt
-        }
-        nextToken
-      }
-      files {
-        bucket
-        region
-        key
-      }
-      albums {
-        id
-        albumName
-        file {
-          bucket
-          region
-          key
-        }
-        createdAt
-        updatedAt
-      }
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const listGroups = /* GraphQL */ `
-  query ListGroups(
-    $filter: ModelGroupFilterInput
-    $limit: Int
-    $nextToken: String
-  ) {
-    listGroups(filter: $filter, limit: $limit, nextToken: $nextToken) {
-      items {
-        id
-        name
-        users {
-          nextToken
-        }
-        messages {
-          nextToken
-        }
-        isDirect
-        announce {
-          nextToken
-        }
-        files {
-          bucket
-          region
-          key
-        }
-        albums {
-          id
-          albumName
-          createdAt
-          updatedAt
-        }
-        createdAt
-        updatedAt
-      }
-      nextToken
-    }
-  }
-`;
-export const getMessage = /* GraphQL */ `
-  query GetMessage($id: ID!) {
-    getMessage(id: $id) {
-      id
-      user {
-        id
-        username
-        email
-        lineID
-        displayName
-        statusMessage
-        profilePhoto {
-          bucket
-          region
-          key
-        }
-        coverPhoto {
-          bucket
-          region
-          key
-        }
-        phoneNumber
-        groups {
-          nextToken
-        }
-        friends {
-          nextToken
-        }
-        blocked {
-          id
-          username
-          email
-          lineID
-          displayName
-          statusMessage
-          phoneNumber
-          createdAt
-          updatedAt
-        }
-        favourites {
-          id
-          username
-          email
-          lineID
-          displayName
-          statusMessage
-          phoneNumber
-          createdAt
-          updatedAt
-        }
-        posts {
-          nextToken
-        }
-        createdAt
-        updatedAt
-      }
-      group {
-        id
-        name
-        users {
-          nextToken
-        }
-        messages {
-          nextToken
-        }
-        isDirect
-        announce {
-          nextToken
-        }
-        files {
-          bucket
-          region
-          key
-        }
-        albums {
-          id
-          albumName
-          createdAt
-          updatedAt
-        }
-        createdAt
-        updatedAt
-      }
-      type
-      message
-      createdAt
-      isBlock
-      updatedAt
-    }
-  }
-`;
-export const listMessages = /* GraphQL */ `
-  query ListMessages(
-    $filter: ModelMessageFilterInput
-    $limit: Int
-    $nextToken: String
-  ) {
-    listMessages(filter: $filter, limit: $limit, nextToken: $nextToken) {
-      items {
-        id
-        user {
-          id
-          username
-          email
-          lineID
-          displayName
-          statusMessage
-          phoneNumber
-          createdAt
-          updatedAt
-        }
-        group {
-          id
-          name
-          isDirect
-          createdAt
-          updatedAt
-        }
-        type
-        message
-        createdAt
-        isBlock
-        updatedAt
-      }
-      nextToken
-    }
-  }
-`;
 export const messageByDate = /* GraphQL */ `
   query MessageByDate(
     $type: String
@@ -609,6 +673,10 @@ export const messageByDate = /* GraphQL */ `
           id
           username
           email
+          lineID
+          displayName
+          statusMessage
+          phoneNumber
           createdAt
           updatedAt
         }
@@ -621,7 +689,10 @@ export const messageByDate = /* GraphQL */ `
         }
         type
         message
+        media
         createdAt
+        isBlock
+        hasRead
         updatedAt
       }
       nextToken
