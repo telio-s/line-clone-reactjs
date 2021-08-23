@@ -44,5 +44,5 @@ amplifytools.xcconfig
 .secret-*
 #amplify-do-not-edit-end
 
-line-clone-557b2-firebase-adminsdk-c5wyo-4c3279cbe0.json
-line-clone-557b2-60a3d4293d65.json
+.env
+

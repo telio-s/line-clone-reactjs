@@ -26,7 +26,17 @@ import AddFriendsToGroup from "./AddFriendsToGroup";
 import firebase from "../firebase";
 import { getToken, sendRequestPost } from "../firebase/firebase";
 import useStyles from "../Style/ChatRoomStyle";
+import { resizeImages } from "../utils/resizeImage";
+import S3 from "react-aws-s3";
 
+const config = {
+  bucketName: process.env.REACT_APP_BUCKET_NAME,
+  dirName: process.env.REACT_APP_DIR_NAME,
+  region: process.env.REACT_APP_REGION,
+  accessKeyId: process.env.REACT_APP_ACCESS_ID,
+  secretAccessKey: process.env.REACT_APP_ACCESS_KEY,
+};
+const ReactS3Client = new S3(config);
 const DirectChatRoom = (props) => {
   const { friend } = props;
   const { user, setFriend } = useContext(DashboardContext);
@@ -37,6 +47,9 @@ const DirectChatRoom = (props) => {
   const [openInvite, setOpenInvite] = useState(false);
   const [direct, setDirect] = useState([]);
   const [alreadyIn, setAlreadyIn] = useState([]);
+  const hiddenFileUpload = useRef(null);
+  const [files, setFiles] = useState([]);
+  const [resizedImgs, setResizedImgs] = useState([]);
   const [realTimeData, setRealTimeData] = useState();
 
   const dummy = useRef();
@@ -46,7 +59,6 @@ const DirectChatRoom = (props) => {
   useEffect(() => {
     async function getMessages() {
       const [data, id, group] = await getDirect(user.username, friend.username);
-
       console.log(data);
       setDirectId(id);
       setMessages(data);
@@ -62,8 +74,6 @@ const DirectChatRoom = (props) => {
 
     getMessages();
     setFriend(friend);
-    // scrollToBottom();
-    // console.log(user.username, friend.username);
   }, [friend, realTimeData]);
 
   useEffect(() => {
@@ -96,26 +106,63 @@ const DirectChatRoom = (props) => {
 
   async function handleSendMessage(e) {
     e.preventDefault();
-
-    const message = {
-      type: directId,
-      message: currMessage,
-      messageUserId: user.id,
-      messageGroupId: directId,
-      isBlock: false,
-      hasRead: false,
-    };
-    async function createMessage() {
+    if (!files.length && currMessage === "") {
+      console.log("nothing to upload");
+      return;
+    }
+        async function createMessage(message) {
       const data = await createMessageInGroup(message);
       setMessages([...messages, data.data.createMessage]);
     }
-    try {
-      createMessage();
-      // console.log("send message!", message);
+    if (files) {
+      console.log(files);
+      console.log("uploading file...");
+      const responsePromise = files.map(async (file) => {
+        return ReactS3Client.uploadFile(file.file, file.name)
+          .then((data) => {
+            if (data.status === 204) {
+              console.log("success to upload");
+              return data.location;
+            } else {
+              console.log("failed to upload");
+              return null;
+            }
+          })
+          .catch((error) => console.log("Error: ", error));
+      });
+
+      const responses = await Promise.all(responsePromise)
+        .then((resolve) => [...resolve])
+        .catch((error) => console.log(error));
+      const message = {
+        type: directId,
+        message: currMessage,
+        messageUserId: user.id,
+        messageGroupId: directId,
+        isBlock: false,
+        hasRead: false,
+        media: responses,
+      };
+      createMessage(message);
+      console.log("send message!", message);
       setCurrMessage("");
-    } catch (error) {
-      console.log("Can't send Message", error);
+      setResizedImgs([]);
+      setFiles([]);
+      return;
     }
+    const message = {
+        type: directId,
+        message: currMessage,
+        messageUserId: user.id,
+        messageGroupId: directId,
+        isBlock: false,
+        hasRead: false,        
+      };
+     createMessage(message);
+      console.log("send message!", message);
+      setCurrMessage("");
+      setResizedImgs([]);
+      setFiles([]);
   }
 
   const scrollToBottom = () => {
@@ -128,6 +175,16 @@ const DirectChatRoom = (props) => {
   function handleInviteFriends() {
     setOpenInvite(!openInvite);
     console.log("handle invite friends");
+  }
+
+  function handleOnChangeSelectPhoto(e) {
+    console.log("upload photo");
+    console.log(e.target.files);
+    resizeImages(e.target.files, setResizedImgs, setFiles);
+  }
+
+  function handleTriggerSelectPhoto() {
+    hiddenFileUpload.current.click();
   }
 
   return (
@@ -160,8 +217,9 @@ const DirectChatRoom = (props) => {
                 <TheirMessageBubble key={index} message={message} />
               )
             )
-          : null}
-        <div ref={dummy} />
+          )
+        : null}
+                <div ref={dummy} />
       </div>
       <Divider />
       <form className={classes.textArea} onSubmit={(e) => handleSendMessage(e)}>
@@ -175,18 +233,39 @@ const DirectChatRoom = (props) => {
           value={currMessage}
           onChange={(e) => setCurrMessage(e.target.value)}
         ></InputBase>
+        {resizedImgs
+          ? resizedImgs.map((uri, index) => (
+              <img key={index} src={uri} style={{ width: "50px" }} />
+            ))
+          : null}
         <div className={classes.iconButtTextArea}>
-          <IconButton className={classes.iconButton}>
+          <input
+            type="file"
+            ref={hiddenFileUpload}
+            onChange={(e) => handleOnChangeSelectPhoto(e)}
+            style={{ display: "none" }}
+            multiple="multiple"
+          />
+          <IconButton
+            className={classes.iconButton}
+            onClick={() => handleTriggerSelectPhoto()}
+          >
             <Attachment />
           </IconButton>
-          <Button type="submit">Send</Button>
-          {/* <Button
-            style={{ display: currMessage ? "" : "none" }}
+          <Button
+            style={{
+              display: currMessage || files ? "" : "none",
+              marginLeft: "auto",
+            }}
             type="submit"
-          ></Button> */}
+          >
+            Send
+          </Button>
         </div>
       </form>
 
+      <Divider />
+     
       <AddFriendsToGroup
         open={openInvite}
         onClose={handleInviteFriends}

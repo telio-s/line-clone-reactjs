@@ -452,7 +452,6 @@ export const getMessage = /* GraphQL */ `
       type
       message
       media
-
       createdAt
       isBlock
       hasRead
