@@ -50,9 +50,7 @@ function AddFriendsToGroup(props) {
       let _users = [...users, friend.id];
       _users.push(user.id);
       const data = await createNewGroup(group, _users);
-      console.log(data);
       const _data = await getTheGroup(data.id);
-      console.log(_data);
       // setChat(null);
       setChat(<GroupChatRoom group={_data} />);
     }

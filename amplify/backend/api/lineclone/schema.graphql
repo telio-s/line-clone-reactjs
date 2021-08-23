@@ -76,9 +76,10 @@ type Message
   group: Group @connection(name: "GroupUsers")
   type: String!
   message: String!
-  media: [S3Object]
+  media: [String]
   createdAt: String!
   isBlock: Boolean!
+  hasRead: Boolean!
 }
 
 type Post @model {
@@ -109,4 +110,8 @@ type S3Object {
   bucket: String!
   region: String!
   key: String!
+}
+
+type Subscription {
+  newOnCreateMessage: Message @aws_subscribe(mutations: ["createMessage"])
 }

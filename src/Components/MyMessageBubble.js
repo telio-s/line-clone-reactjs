@@ -1,49 +1,68 @@
 import React, { useState, useEffect } from "react";
-import { Typography } from "@material-ui/core";
+import { Dialog, Typography } from "@material-ui/core";
 import useStyles from "../Style/MyMessageBubbleStyle";
-import { Storage } from "aws-amplify";
+import PicturesBubble from "./PicturesBubble";
 
 const MyMessageBubble = (props) => {
   const { message } = props;
   const classes = useStyles();
   const [photos, setPhotos] = useState([]);
-  //if message.media !== null go find in bucket
+  const [fullView, setFullView] = useState([]);
+  const [open, setOpen] = useState(false);
 
   useEffect(() => {
     function getImage() {
       try {
         console.log("getting image...");
-        message.media.map(async (media) => {
-          console.log(media);
-          const key = media.key.substring(7);
-          const img = await Storage.get(key);
-          // console.log(media.key);
-          // console.log(img);
-          setPhotos((prevPhotos) => [...prevPhotos, img]);
+        message.media.map((media) => {
+          setPhotos((prevPhotos) => [...prevPhotos, media]);
         });
       } catch (error) {
         console.log("image not found", error);
       }
     }
+
     if (photos.length) {
-      // console.log(photos);
+      console.log("already set in photo");
       return;
     }
-    if (message.media) getImage();
+
+    if (message.media) {
+      console.log("have medias");
+      getImage();
+    }
   }, [message]);
+
+  function handleFullView(index) {
+    console.log("click view full view");
+    setOpen(!open);
+    if (!open) {
+      setFullView(photos[index]);
+    }
+  }
 
   return (
     <div className={classes.root}>
-      <Typography className={classes.buble}>
-        {/* {message.media ? "photo" : message.message} */}
-        {message.media
-          ? photos
-            ? photos.map((photo, i) => (
-                <img key={i} style={{ width: "50px" }} src={photo} />
-              ))
-            : null
-          : message.message}
-      </Typography>
+      {message.message && (
+        <Typography className={classes.buble}>{message.message}</Typography>
+      )}
+      {message.media && (
+        <Typography
+          className={classes.buble}
+          style={{ backgroundColor: "transparent" }}
+        >
+          <PicturesBubble photos={photos} handleFullView={handleFullView} />
+        </Typography>
+      )}
+
+      <Dialog
+        open={open}
+        onClose={() => handleFullView()}
+        fullWidth={true}
+        maxWidth="md"
+      >
+        <img src={fullView} />
+      </Dialog>
     </div>
   );
 };

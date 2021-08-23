@@ -15,7 +15,7 @@ function Selection() {
   const { setSideBar } = useContext(DashboardContext);
 
   function handleClick(title) {
-    console.log(title);
+    // console.log(title);
     switch (title) {
       case "All":
         setSideBar(<AllChats />);

@@ -1,10 +1,9 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { ExpandLess, ExpandMore } from "@material-ui/icons";
 import { ListItem, Collapse } from "@material-ui/core";
 import useStyles from "../Style/ChatRoomListStyle";
-import Groups from "./Groups";
+// import Groups from "./Groups";
 import Friends from "./Friends";
-import { getLoggedInUser } from "../api/queries";
 
 function Profile(props) {
   const { user } = props;
@@ -13,9 +12,9 @@ function Profile(props) {
   const [showGroups, setShowGroups] = useState(true);
   const [showFriends, setShowFriends] = useState(true);
 
-  function handleShowGroups() {
-    setShowGroups(!showGroups);
-  }
+  // function handleShowGroups() {
+  //   setShowGroups(!showGroups);
+  // }
 
   function handleShowFriends() {
     setShowFriends(!showFriends);
@@ -25,7 +24,7 @@ function Profile(props) {
     <div className={classes.root} style={{ marginLeft: "80px" }}>
       <main className={classes.main}>
         <h1>Profile, {user ? user.username : null}</h1>
-        <ListItem
+        {/* <ListItem
           button
           onClick={handleShowGroups}
           style={{ color: "rgb(83,86,106)" }}
@@ -37,7 +36,7 @@ function Profile(props) {
         </ListItem>
         <Collapse in={showGroups} timeout="auto" unmountOnExit>
           <Groups showGroups={showGroups} />
-        </Collapse>
+        </Collapse> */}
         <ListItem
           button
           onClick={handleShowFriends}

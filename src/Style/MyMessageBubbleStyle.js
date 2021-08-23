@@ -15,6 +15,17 @@ const useStyles = makeStyles((theme) => ({
     float: "right",
     marginRight: "20px",
   },
+  pictures: {
+    width: "100px",
+    height: "100px",
+    objectFit: "cover",
+    borderColor: "whitesmoke",
+    borderRadius: "2px",
+    borderColor: "whitesmoke",
+    margin: "1px",
+    marginTop: "5px",
+    backgroundPosition: "center",
+  },
 }));
 
 export default useStyles;

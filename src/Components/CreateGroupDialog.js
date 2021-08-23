@@ -38,12 +38,10 @@ function CreateGroupDialog(props) {
       usersId.push(user.friend.id);
     });
     usersId.push(user.id);
-    console.log(usersId);
     const group = {
       isDirect: false,
       name,
     };
-    console.log(group);
     async function createGroupAndAddUsers() {
       const data = await createNewGroup(group, usersId);
       setSelectedUser([]);
@@ -52,24 +50,20 @@ function CreateGroupDialog(props) {
       onClose();
     }
     createGroupAndAddUsers();
-    console.log("create group");
   }
 
   function handleClickSubmit() {
-    console.log("click");
     hiddenCreateGroupBtn.current.click();
   }
 
   function handleSelectedUser(friend) {
     setSelectedUser([...selectedUser, friend]);
-    console.log("selected");
   }
   function handleUnselectedUser(friend) {
     let _remain = selectedUser.filter((user) => {
       return user.friend.id != friend.friend.id;
     });
     setSelectedUser(_remain);
-    console.log("unselected");
   }
 
   function handleClick(friend, add) {
