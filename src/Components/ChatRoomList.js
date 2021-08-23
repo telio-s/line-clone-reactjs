@@ -31,11 +31,11 @@ const ChatRoomList = () => {
   const [messageArr, setMessageArr] = useState([]);
   const [messageSorted, setMessageSorted] = useState([]);
   const [realTimeData, setRealTimeData] = useState();
-  const [countNoti, setCountNoti] = useState(0);
+  const [countNoti, setCountNoti] = useState([]);
   const [newMessages, setNewMessages] = useState([]);
-  const [lastMessage, setLastMessage] = useState([]);
+  // const [lastMessage, setLastMessage] = useState([]);
 
-  const elementRef = useRef([]);
+  // const elementRef = useRef([]);
   const messaging = firebase.messaging();
   useEffect(async () => {
     const user = await checkUserCurrent();
@@ -57,7 +57,7 @@ const ChatRoomList = () => {
 
         // Fetch last message for each group
         const fetchMessage = await getMessageByDate(group.group.id);
-        countHasRead(fetchMessage, userObj);
+        const countUnread = countHasRead(fetchMessage, userObj);
         if (fetchMessage.messageByDate.items == 0 && group.group.isDirect) {
           // Be friend but never talk yet
           // console.log("empty arr");
@@ -93,13 +93,15 @@ const ChatRoomList = () => {
             time: onlyTime,
             ISOtime: fetchMessage.messageByDate.items[0].createdAt,
             friend: friendObj,
+            unread: countUnread,
           };
-          const lastMsgInFo = {
-            content: fetchMessage.messageByDate.items[0].message,
-            time: onlyTime,
-          };
+          // const lastMsgInFo = {
+          //   content: fetchMessage.messageByDate.items[0].message,
+          //   time: onlyTime,
+          // };
+
           setMessageArr((previousState) => [...previousState, groupInfo]);
-          setLastMessage((previousState) => [...previousState, lastMsgInFo]);
+          // setLastMessage((previousState) => [...previousState, lastMsgInFo]);
         }
       });
     };
@@ -123,27 +125,10 @@ const ChatRoomList = () => {
   useEffect(() => {
     setMessageArr([]);
 
-    if (realTimeData) {
-      if (
-        myUser.username !==
-        realTimeData.value.data.newOnCreateMessage.user.username
-      ) {
-        setCountNoti(countNoti + 1);
-      }
-    }
-
     return () => {
       console.log("clean up");
     };
   }, [realTimeData]);
-
-  useEffect(() => {
-    console.log(countNoti);
-
-    return () => {
-      console.log("clean up");
-    };
-  }, [countNoti]);
 
   let subscriptionOnCreate;
   function setupSubscriptions() {
@@ -151,24 +136,18 @@ const ChatRoomList = () => {
       graphqlOperation(newOnCreateMessage)
     ).subscribe({
       next: (data) => {
-        let count = countNoti;
-        console.log(countNoti);
         console.log(data);
         setRealTimeData(data);
-        console.log(elementRef);
-        if (
-          myUser.username !== data.value.data.newOnCreateMessage.user.username
-        ) {
-          setNewMessages((pre) => [...pre, data.value.data.newOnCreateMessage]);
+        if (data.value.data.newOnCreateMessage) {
+          if (
+            myUser.username !== data.value.data.newOnCreateMessage.user.username
+          ) {
+            setNewMessages((pre) => [
+              ...pre,
+              data.value.data.newOnCreateMessage,
+            ]);
+          }
         }
-        // for (let i = 0; i < elementRef.current.length; i++) {
-        //   if (
-        //     data.value.data.newOnCreateMessage.group.id ==
-        //     elementRef.current[i].id
-        //   ) {
-        //     return (elementRef.current[i].innerHTML = "testSomething");
-        //   }
-        // }
       },
     });
   }
@@ -185,7 +164,7 @@ const ChatRoomList = () => {
         }
       }
     });
-    setCountNoti(count);
+    return count;
   };
 
   const checkUserCurrent = async () => {
@@ -201,13 +180,19 @@ const ChatRoomList = () => {
     setMessageSorted(messageArr);
   };
 
-  async function handleChatRoom(friend) {
+  async function handleChatRoom(friend, idGroup) {
     console.log(newMessages);
     newMessages.map(async (data) => {
       await updateMessageHasRead(data.id, true);
     });
 
-    setCountNoti(0);
+    messageSorted.filter((obj) => {
+      console.log(idGroup);
+      console.log(obj.idGroup);
+      if (obj.idGroup == idGroup) {
+        obj.unread = 0;
+      }
+    });
     setChat(<DirectChatRoom friend={friend} />);
     setNewMessages([]);
   }
@@ -228,13 +213,12 @@ const ChatRoomList = () => {
           />
         </Toolbar>
       </AppBar>
-      {console.log(lastMessage)}
       {messageSorted.map((message, index) => (
         <div key={index}>
           <Button
             disableRipple={true}
             className={classes.chatRoom}
-            onClick={() => handleChatRoom(message.friend)}
+            onClick={() => handleChatRoom(message.friend, message.idGroup)}
           >
             <AccountCircle style={{ fontSize: "60px" }} />
             <div className={classes.chatDesc}>
@@ -245,7 +229,7 @@ const ChatRoomList = () => {
                 noWrap={false}
                 gutterBottom
                 className={classes.multiLineEllipsis}
-                id={message.idGroup}
+                // id={message.idGroup}
                 // ref={(elm) => {
                 //   elementRef.current[index] = elm;
                 // }}
@@ -257,11 +241,17 @@ const ChatRoomList = () => {
               <Typography className={classes.timeChat}>
                 {message.time}
               </Typography>
-              {countNoti ? (
-                <div className={classes.notiBox}>
-                  <Typography className={classes.noti}>{countNoti}</Typography>
-                </div>
-              ) : null}
+              <div className={message.unread == 0 ? null : classes.notiBox}>
+                <Typography
+                  // id={message.idGroup}
+                  // ref={(elm) => {
+                  //   elementRef.current[index] = elm;
+                  // }}
+                  className={message.unread == 0 ? null : classes.noti}
+                >
+                  {message.unread == 0 ? null : message.unread}
+                </Typography>
+              </div>
             </div>
           </Button>
         </div>

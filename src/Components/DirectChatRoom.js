@@ -71,7 +71,6 @@ const DirectChatRoom = (props) => {
 
     return () => {
       subscriptionOnCreate.unsubscribe();
-      // unsubscribeFromTopic(token);
     };
   }, []);
 
@@ -83,13 +82,14 @@ const DirectChatRoom = (props) => {
       next: async (data) => {
         console.log(data);
         setRealTimeData(data);
-
-        const token = await getToken();
-        sendRequestPost(
-          token,
-          `${data.value.data.newOnCreateMessage.user.username} sent`,
-          data.value.data.newOnCreateMessage.message
-        );
+        if (data.value.data.newOnCreateMessage) {
+          const token = await getToken();
+          sendRequestPost(
+            token,
+            `${data.value.data.newOnCreateMessage.user.username} sent`,
+            data.value.data.newOnCreateMessage.message
+          );
+        }
       },
     });
   }
