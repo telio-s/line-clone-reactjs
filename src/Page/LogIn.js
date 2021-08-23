@@ -36,7 +36,7 @@ const Login = () => {
 
   const [formState, updateFormState] = useState(initialFormState);
   const [user, updateUser] = useState(null);
-  console.log(formState);
+  // console.log(formState);
 
   useEffect(() => {
     checkUserCurrent();
@@ -82,6 +82,7 @@ const Login = () => {
     updateFormState(() => ({ ...formState, formType: "signIn" }));
   };
   const signIn = async () => {
+    console.log("rree");
     const { email, password } = formState;
     await Auth.signIn(email, password);
     updateFormState(() => ({ ...formState, formType: "signedIn" }));

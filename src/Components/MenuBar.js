@@ -14,6 +14,7 @@ import CreateGroupDialog from "./CreateGroupDialog";
 import Profile from "./Profile";
 import { DashboardContext } from "../Page/Dashboard";
 import AddFriends from "./AddFriends";
+import ChatRoomList from "./ChatRoomList";
 function MenuBar() {
   const classes = useStyles();
   const [createGroup, setCreateGroup] = useState(false);
@@ -24,11 +25,16 @@ function MenuBar() {
   }
 
   function handleProfileBar() {
+    console.log(user);
     setSideBar(<Profile user={user} />);
   }
 
   function handleAddFriends() {
     setSideBar(<AddFriends user={user} />);
+  }
+
+  function handleChats() {
+    setSideBar(<ChatRoomList user={user} />);
   }
 
   return (
@@ -39,14 +45,21 @@ function MenuBar() {
         className={classes.drawer}
         classes={{ paper: classes.drawerPaper }}
       >
-        <IconButton disableRipple={true} className={classes.iconButton}>
+        <IconButton
+          disableRipple={true}
+          className={classes.iconButton}
+          onClick={handleProfileBar}
+        >
           <Person
             className={classes.iconMtDrawer}
             style={{ marginTop: "30px" }}
-            onClick={handleProfileBar}
           />
         </IconButton>
-        <IconButton disableRipple={true} className={classes.iconButton}>
+        <IconButton
+          disableRipple={true}
+          className={classes.iconButton}
+          onClick={handleChats}
+        >
           <FontAwesomeIcon
             className={classes.iconAweDrawer}
             icon={faCommentDots}
@@ -77,10 +90,6 @@ function MenuBar() {
             <MoreHoriz className={classes.iconMtDrawer} />
           </IconButton>
         </div>
-        <CreateGroupDialog
-          open={createGroup}
-          onClose={handleCreateGroupDialog}
-        />
       </Drawer>
     </div>
   );

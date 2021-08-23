@@ -31,21 +31,30 @@ const Dashboard = () => {
 
   useEffect(() => {
     checkUserCurrent();
-    async function getUser() {
-      const data = await getLoggedInUser();
-      setUser(data.data.listUsers.items[0]);
-    }
-    getUser();
+
+    // async function getUser() {
+    //   const data = await getLoggedInUser();
+    //   console.log(data);
+    //   setUser(data.data.listUsers.items[0]);
+    // }
+    // getUser();
     console.log("Dashboard called");
     sideBar ? setSideBar(sideBar) : setSideBar(<AllChats />);
+
+    return () => {
+      console.log("clean up");
+    };
   }, []);
 
   const checkUserCurrent = async () => {
     try {
       const user = await Auth.currentAuthenticatedUser();
       console.log("user: ", user);
-      // updateUser(user);
-      // updateFormState(() => ({ ...formState, formType: "signedIn" }));
+
+      const data = await getLoggedInUser(user.attributes.sub);
+      console.log(data);
+      console.log("ttgg");
+      setUser(data.data.listUsers.items[0]);
     } catch (err) {
       // updateUser(null)
     }
@@ -65,6 +74,7 @@ const Dashboard = () => {
     >
       <div className={classes.root}>
         <Selection />
+        {/* <div style={{ width: "300px", height: "50px" }}>dd</div> */}
         <Divider />
         <div className={classes.mainDrawerRoot}>
           <MenuBar />

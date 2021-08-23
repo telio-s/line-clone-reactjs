@@ -32,4 +32,5 @@
     "s3PermissionsGuestUploads": "DISALLOW",
     "GuestAllowList": "DISALLOW",
     "triggerFunction": "NONE"
+
 }

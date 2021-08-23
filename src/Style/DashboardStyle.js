@@ -6,13 +6,14 @@ const appbarHeight = 64;
 
 const useStyles = makeStyles((theme) => ({
   root: {
-    height: "100vh",
-    overflow: "hidden",
+    height: "98vh",
+    // overflow: "hidden",
   },
   appbar: {
     // width: `calc(100% - ${drawerWidth}px)`,
     backgroundColor: "#ffffff",
     width: "100%",
+    marginLeft: drawerWidth,
   },
   chatSection: {
     margin: "0px 10px 0px 0px",
@@ -62,6 +63,7 @@ const useStyles = makeStyles((theme) => ({
   },
   mainDrawerRoot: {
     display: "flex",
+    height: `800px`,
   },
   rootmain: {
     display: "flex",
@@ -77,8 +79,7 @@ const useStyles = makeStyles((theme) => ({
   },
   main: {
     width: `calc(100% - ${drawerWidth}px)`,
-    height: `100vh`,
-    marginLeft: drawerWidth,
+    height: `calc(98vh - 64px)`,
   },
 }));
 

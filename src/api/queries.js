@@ -2,16 +2,17 @@ import { API, graphqlOperation } from "aws-amplify";
 import { getGroup, listUsers, messageByDate } from "./../graphql/queries";
 
 // get logged in user using listUser
-export async function getLoggedInUser() {
+export async function getLoggedInUser(id) {
   try {
+    console.log("tao");
     const user = await API.graphql(
       graphqlOperation(listUsers, {
-        filter: { email: { eq: "kanyanat.i@ku.th" } },
+        filter: { id: { eq: id } },
       })
     );
     return user;
   } catch (error) {
-    return;
+    return error;
   }
 }
 

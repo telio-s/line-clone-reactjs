@@ -1374,6 +1374,20 @@ export const createMessage = /* GraphQL */ `
           nextToken
         }
         isDirect
+        announce {
+          nextToken
+        }
+        files {
+          bucket
+          region
+          key
+        }
+        albums {
+          id
+          albumName
+          createdAt
+          updatedAt
+        }
         createdAt
         updatedAt
       }
