@@ -110,7 +110,7 @@ const DirectChatRoom = (props) => {
       console.log("nothing to upload");
       return;
     }
-        async function createMessage(message) {
+    async function createMessage(message) {
       const data = await createMessageInGroup(message);
       setMessages([...messages, data.data.createMessage]);
     }
@@ -151,18 +151,18 @@ const DirectChatRoom = (props) => {
       return;
     }
     const message = {
-        type: directId,
-        message: currMessage,
-        messageUserId: user.id,
-        messageGroupId: directId,
-        isBlock: false,
-        hasRead: false,        
-      };
-     createMessage(message);
-      console.log("send message!", message);
-      setCurrMessage("");
-      setResizedImgs([]);
-      setFiles([]);
+      type: directId,
+      message: currMessage,
+      messageUserId: user.id,
+      messageGroupId: directId,
+      isBlock: false,
+      hasRead: false,
+    };
+    createMessage(message);
+    console.log("send message!", message);
+    setCurrMessage("");
+    setResizedImgs([]);
+    setFiles([]);
   }
 
   const scrollToBottom = () => {
@@ -217,9 +217,8 @@ const DirectChatRoom = (props) => {
                 <TheirMessageBubble key={index} message={message} />
               )
             )
-          )
-        : null}
-                <div ref={dummy} />
+          : null}
+        <div ref={dummy} />
       </div>
       <Divider />
       <form className={classes.textArea} onSubmit={(e) => handleSendMessage(e)}>
@@ -233,11 +232,6 @@ const DirectChatRoom = (props) => {
           value={currMessage}
           onChange={(e) => setCurrMessage(e.target.value)}
         ></InputBase>
-        {resizedImgs
-          ? resizedImgs.map((uri, index) => (
-              <img key={index} src={uri} style={{ width: "50px" }} />
-            ))
-          : null}
         <div className={classes.iconButtTextArea}>
           <input
             type="file"
@@ -261,11 +255,16 @@ const DirectChatRoom = (props) => {
           >
             Send
           </Button>
+          {resizedImgs
+            ? resizedImgs.map((uri, index) => (
+                <img key={index} src={uri} style={{ width: "50px" }} />
+              ))
+            : null}
         </div>
       </form>
 
       <Divider />
-     
+
       <AddFriendsToGroup
         open={openInvite}
         onClose={handleInviteFriends}

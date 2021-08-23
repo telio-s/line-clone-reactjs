@@ -9,7 +9,7 @@ function PicturesBubble(props) {
         photos.map((_, index) =>
           photos.length % 2 === 0
             ? index % 2 === 0 && (
-                <div style={{ padding: "0px", margin: "0px" }}>
+                <div key={index} style={{ padding: "0px", margin: "0px" }}>
                   <img
                     className={classes.pictures}
                     src={photos[index]}
@@ -36,7 +36,7 @@ function PicturesBubble(props) {
                 </div>
               )
             : (index === 0 && (
-                <div style={{ padding: "0px", margin: "0px" }}>
+                <div key={index} style={{ padding: "0px", margin: "0px" }}>
                   <img
                     src={_}
                     key={index}
@@ -51,7 +51,7 @@ function PicturesBubble(props) {
                 </div>
               )) ||
               (index % 2 !== 0 && (
-                <div>
+                <div key={index}>
                   <img
                     className={classes.pictures}
                     src={photos[index]}

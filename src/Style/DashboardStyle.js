@@ -10,9 +10,9 @@ const useStyles = makeStyles((theme) => ({
     // overflow: "hidden",
   },
   appbar: {
-    // width: `calc(100% - ${drawerWidth}px)`,
+    width: `calc(100% - ${drawerWidth}px)`,
     backgroundColor: "#ffffff",
-    width: "100%",
+    // width: "100%",
     marginLeft: drawerWidth,
   },
   chatSection: {
