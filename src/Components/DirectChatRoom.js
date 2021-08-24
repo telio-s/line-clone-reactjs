@@ -23,7 +23,6 @@ import { getDirect } from "../api/queries";
 import { createMessageInGroup } from "./../api/mutations";
 import { newOnCreateMessage } from "../graphql/subscriptions";
 import AddFriendsToGroup from "./AddFriendsToGroup";
-import firebase from "../firebase";
 import { getToken, sendRequestPost } from "../firebase/firebase";
 import useStyles from "../Style/ChatRoomStyle";
 import { resizeImages } from "../utils/resizeImage";
@@ -53,7 +52,6 @@ const DirectChatRoom = (props) => {
   const [realTimeData, setRealTimeData] = useState();
 
   const dummy = useRef();
-
   // after add friend we have to create group after that
   // so first when we get to direct message withe other user we have to find the group
   useEffect(() => {
