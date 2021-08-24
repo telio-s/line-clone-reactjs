@@ -53,7 +53,6 @@ const Dashboard = () => {
 
       const data = await getLoggedInUser(user.attributes.sub);
       console.log(data);
-      console.log("ttgg");
       setUser(data.data.listUsers.items[0]);
     } catch (err) {
       // updateUser(null)

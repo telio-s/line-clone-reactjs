@@ -286,6 +286,7 @@ export const getGroup = /* GraphQL */ `
           createdAt
           isBlock
           hasRead
+          isCall
           updatedAt
           user {
             id
@@ -303,6 +304,7 @@ export const getGroup = /* GraphQL */ `
           createdAt
           isBlock
           hasRead
+          isCall
           updatedAt
         }
         nextToken
@@ -455,6 +457,7 @@ export const getMessage = /* GraphQL */ `
       createdAt
       isBlock
       hasRead
+      isCall
       updatedAt
     }
   }
@@ -492,6 +495,7 @@ export const listMessages = /* GraphQL */ `
         createdAt
         isBlock
         hasRead
+        isCall
         updatedAt
       }
       nextToken
@@ -692,6 +696,7 @@ export const messageByDate = /* GraphQL */ `
         createdAt
         isBlock
         hasRead
+        isCall
         updatedAt
       }
       nextToken

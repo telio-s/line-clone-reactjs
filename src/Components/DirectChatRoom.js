@@ -14,7 +14,7 @@ import {
   InputBase,
   Button,
 } from "@material-ui/core";
-import { EventNote, MoreVert, Attachment } from "@material-ui/icons";
+import { EventNote, MoreVert, Attachment, Call } from "@material-ui/icons";
 import { API, graphqlOperation } from "aws-amplify";
 import MyMessageBubble from "./MyMessageBubble";
 import TheirMessageBubble from "./TheirMessageBubble";
@@ -23,9 +23,10 @@ import { getDirect } from "../api/queries";
 import { createMessageInGroup } from "./../api/mutations";
 import { newOnCreateMessage } from "../graphql/subscriptions";
 import AddFriendsToGroup from "./AddFriendsToGroup";
-import firebase from "../firebase";
 import { getToken, sendRequestPost } from "../firebase/firebase";
 import useStyles from "../Style/ChatRoomStyle";
+import DialogCaller from "../webRTC/DialogCaller";
+import DialogCallReceiver from "../webRTC/DialogCallReceiver";
 import { resizeImages } from "../utils/resizeImage";
 import S3 from "react-aws-s3";
 
@@ -51,7 +52,8 @@ const DirectChatRoom = (props) => {
   const [files, setFiles] = useState([]);
   const [resizedImgs, setResizedImgs] = useState([]);
   const [realTimeData, setRealTimeData] = useState();
-
+  const [call, setCall] = useState(false);
+  const [incomingCall, setIncomingCall] = useState(false);
   const dummy = useRef();
 
   // after add friend we have to create group after that
@@ -59,7 +61,7 @@ const DirectChatRoom = (props) => {
   useEffect(() => {
     async function getMessages() {
       const [data, id, group] = await getDirect(user.username, friend.username);
-      console.log(data);
+      // console.log(data);
       setDirectId(id);
       setMessages(data);
       setDirect(group.group);
@@ -68,7 +70,7 @@ const DirectChatRoom = (props) => {
         aIn.push(user.user.id);
       });
       setAlreadyIn([...aIn]);
-      console.log("scroll late");
+      // console.log("scroll late");
       scrollToBottom();
     }
 
@@ -90,7 +92,7 @@ const DirectChatRoom = (props) => {
       graphqlOperation(newOnCreateMessage)
     ).subscribe({
       next: async (data) => {
-        console.log(data);
+        console.log(data.value.data.newOnCreateMessage.isCall);
         setRealTimeData(data);
         if (data.value.data.newOnCreateMessage) {
           const token = await getToken();
@@ -99,6 +101,12 @@ const DirectChatRoom = (props) => {
             `${data.value.data.newOnCreateMessage.user.username} sent`,
             data.value.data.newOnCreateMessage.message
           );
+          if (
+            data.value.data.newOnCreateMessage.isCall &&
+            data.value.data.newOnCreateMessage.user.username !== user.username
+          ) {
+            setIncomingCall(true);
+          }
         }
       },
     });
@@ -141,6 +149,7 @@ const DirectChatRoom = (props) => {
         messageGroupId: directId,
         isBlock: false,
         hasRead: false,
+        isCall: false,
         media: responses,
       };
       createMessage(message);
@@ -157,6 +166,7 @@ const DirectChatRoom = (props) => {
       messageGroupId: directId,
       isBlock: false,
       hasRead: false,
+      isCall: false,
     };
     createMessage(message);
     console.log("send message!", message);
@@ -166,10 +176,29 @@ const DirectChatRoom = (props) => {
   }
 
   const scrollToBottom = () => {
-    console.log("test auto scroll when useeffect");
+    // console.log("test auto scroll when useeffect");
     dummy.current.scrollIntoView({
       behavior: "smooth",
     });
+  };
+
+  const handleCall = () => {
+    setCall(true);
+    const message = {
+      type: directId,
+      message: "Calling someone",
+      messageUserId: user.id,
+      messageGroupId: directId,
+      isBlock: false,
+      isCall: true,
+    };
+    console.log("press call");
+
+    async function createMessage(message) {
+      const data = await createMessageInGroup(message);
+      setMessages([...messages, data.data.createMessage]);
+    }
+    createMessage(message);
   };
 
   function handleInviteFriends() {
@@ -187,6 +216,18 @@ const DirectChatRoom = (props) => {
     hiddenFileUpload.current.click();
   }
 
+  // const openDialogCall = () => {
+  //   setCall(true);
+  // };
+
+  const closeDialogCall = () => {
+    setCall(false);
+  };
+
+  const closeIncomingCall = () => {
+    setIncomingCall(false);
+  };
+
   return (
     <div className={classes.root}>
       <AppBar elevation={0} position="static" className={classes.appbar}>
@@ -199,6 +240,12 @@ const DirectChatRoom = (props) => {
           </Typography>
           <IconButton className={classes.iconButton}>
             <EventNote className={classes.iconSection} />
+          </IconButton>
+          <IconButton
+            onClick={() => handleCall()}
+            className={classes.iconButton}
+          >
+            <Call className={classes.iconSection} />
           </IconButton>
           <IconButton
             className={classes.iconButton}
@@ -273,6 +320,9 @@ const DirectChatRoom = (props) => {
         setAlreadyIn={setAlreadyIn}
         isGroup={0}
       />
+      {/* {console.log(call)}
+      {call ? <DialogCaller open={call} onClose={closeDialogCall} /> : null}
+      <DialogCallReceiver open={incomingCall} onClose={closeIncomingCall} /> */}
     </div>
   );
 };
