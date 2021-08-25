@@ -16,10 +16,13 @@ import useStyle from "../Style/DialogCallStyle";
 const servers = {
   iceServers: [
     {
-      urls: ["stun:stun1.l.google.com:19302", "stun:stun2.l.google.com:19302"],
+      urls: [
+        "stun:stun1.l.google.com:19302",
+        "stun:stun2.l.google.com:19302",
+        "stun:stun.services.mozilla.com",
+      ],
     },
   ],
-  iceCandidatePoolSize: 10,
 };
 
 const DialogCaller = (props) => {
@@ -41,6 +44,10 @@ const DialogCaller = (props) => {
     };
   }, []);
 
+  // useEffect(() => {
+  //   getUsermedia();
+  // }, []);
+
   const getUsermedia = async () => {
     if (open) {
       // Get remoteStream
@@ -48,8 +55,11 @@ const DialogCaller = (props) => {
       localVideo.current.srcObject = localStream;
       remoteVideo.current.srcObject = remoteStream;
       console.log(idCall);
-      createCall(peerConnection, remoteVideo, idCall);
       console.log(remoteStream);
+      console.log(localStream);
+      createCall(peerConnection, remoteStream, localStream, idCall);
+      console.log(remoteStream);
+      console.log(localStream);
     }
   };
 

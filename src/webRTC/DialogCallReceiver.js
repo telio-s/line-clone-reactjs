@@ -16,10 +16,13 @@ import useStyle from "../Style/DialogCallStyle";
 const servers = {
   iceServers: [
     {
-      urls: ["stun:stun1.l.google.com:19302", "stun:stun2.l.google.com:19302"],
+      urls: [
+        "stun:stun1.l.google.com:19302",
+        "stun:stun2.l.google.com:19302",
+        "stun:stun.services.mozilla.com",
+      ],
     },
   ],
-  iceCandidatePoolSize: 10,
 };
 
 const DialogCallReceiver = (props) => {
@@ -52,6 +55,7 @@ const DialogCallReceiver = (props) => {
       const [localStream, remoteStream] = await openMediaDevice(peerConnection);
       localVideo.current.srcObject = localStream;
       remoteVideo.current.srcObject = remoteStream;
+      console.log(remoteStream.active);
     }
   };
 
@@ -61,8 +65,10 @@ const DialogCallReceiver = (props) => {
       peerConnection,
       //remote stream
       remoteVideo.current.srcObject,
+      localVideo.current.srcObject,
       idCall
     );
+    console.log(remoteVideo.current.srcObject.active);
   };
 
   return (
