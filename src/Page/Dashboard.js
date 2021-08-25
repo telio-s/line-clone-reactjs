@@ -47,7 +47,7 @@ const Dashboard = () => {
   }, []);
 
   useEffect(() => {
-    sideBar ? setSideBar(sideBar) : setSideBar(<Profile user={user} />);
+    // sideBar ? setSideBar(sideBar) : setSideBar(<Profile user={user} />);
     console.log(user);
   }, [user]);
 
@@ -58,6 +58,9 @@ const Dashboard = () => {
 
       const data = await getLoggedInUser(user.attributes.sub);
       setUser(data.data.listUsers.items[0]);
+      sideBar
+        ? setSideBar(sideBar)
+        : setSideBar(<Profile user={data.data.listUsers.items[0]} />);
     } catch (err) {
       // updateUser(null)
     }
