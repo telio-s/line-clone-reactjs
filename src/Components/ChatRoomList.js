@@ -188,8 +188,8 @@ const ChatRoomList = (props) => {
     });
 
     messageSorted.filter((obj) => {
-      console.log(idGroup);
-      console.log(obj.idGroup);
+      // console.log(idGroup);
+      // console.log(obj.idGroup);
       if (obj.idGroup == idGroup) {
         obj.unread = 0;
       }

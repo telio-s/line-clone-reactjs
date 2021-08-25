@@ -57,7 +57,6 @@ const Dashboard = () => {
       console.log("user: ", user);
 
       const data = await getLoggedInUser(user.attributes.sub);
-      // console.log(data);
       setUser(data.data.listUsers.items[0]);
     } catch (err) {
       // updateUser(null)

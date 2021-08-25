@@ -7,6 +7,7 @@ const appbarHeight = 64;
 const useStyles = makeStyles((theme) => ({
   root: {
     height: "98vh",
+    // height: "98%",
     // overflow: "hidden",
   },
   appbar: {
