@@ -54,6 +54,7 @@ const DirectChatRoom = (props) => {
   const [realTimeData, setRealTimeData] = useState();
   const [call, setCall] = useState(false);
   const [incomingCall, setIncomingCall] = useState(false);
+  const [idCall, setIdCall] = useState("");
   const dummy = useRef();
 
   // after add friend we have to create group after that
@@ -106,6 +107,7 @@ const DirectChatRoom = (props) => {
             data.value.data.newOnCreateMessage.user.username !== user.username
           ) {
             setIncomingCall(true);
+            setIdCall(data.value.data.newOnCreateMessage.group.id);
           }
         }
       },
@@ -197,7 +199,10 @@ const DirectChatRoom = (props) => {
     async function createMessage(message) {
       const data = await createMessageInGroup(message);
       setMessages([...messages, data.data.createMessage]);
+      console.log(data.data.createMessage);
+      setIdCall(data.data.createMessage.group.id);
     }
+
     createMessage(message);
   };
 
@@ -320,9 +325,17 @@ const DirectChatRoom = (props) => {
         setAlreadyIn={setAlreadyIn}
         isGroup={0}
       />
-      {/* {console.log(call)}
-      {call ? <DialogCaller open={call} onClose={closeDialogCall} /> : null}
-      <DialogCallReceiver open={incomingCall} onClose={closeIncomingCall} /> */}
+      {console.log(call, incomingCall)}
+      {call ? (
+        <DialogCaller open={call} onClose={closeDialogCall} idCall={idCall} />
+      ) : null}
+      {incomingCall ? (
+        <DialogCallReceiver
+          open={incomingCall}
+          onClose={closeIncomingCall}
+          idCall={idCall}
+        />
+      ) : null}
     </div>
   );
 };

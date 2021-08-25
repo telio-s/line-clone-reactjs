@@ -1,4 +1,4 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import {
   Button,
   Typography,
@@ -9,7 +9,7 @@ import {
   InputAdornment,
   InputBase,
 } from "@material-ui/core";
-import { openMediaDevice } from "./webRTC";
+import { openMediaDevice, createCall, hangUp } from "./webRTC";
 import useStyle from "../Style/DialogCallStyle";
 
 const servers = {
@@ -21,30 +21,56 @@ const servers = {
   iceCandidatePoolSize: 10,
 };
 
-const DialogCaller = async (props) => {
-  //   const { open, onClose } = props;
-  //   console.log(open);
+const DialogCaller = (props) => {
+  const { open, onClose, idCall } = props;
   const localVideo = useRef(null);
+  const remoteVideo = useRef(null);
   const classes = useStyle();
+  const peerConnection = new RTCPeerConnection(servers);
+  useEffect(() => {
+    console.log("tongtong");
+    getUsermedia();
+    callConnection();
 
-  //   let remoteStream;
-  //   if (open) {
-  //     const peerConnection = new RTCPeerConnection(servers);
-  //     // Get remoteStream
-  //     // remoteStream = await openMediaDevice(peerConnection);
-  //     // localVideo.current.srcObject = await remoteStream;
-  //   }
+    return () => {
+      console.log("clean up dialog caller");
+    };
+  }, []);
+
+  const getUsermedia = async () => {
+    if (open) {
+      // Get remoteStream
+      const [localStream, remoteStream] = await openMediaDevice(peerConnection);
+      localVideo.current.srcObject = localStream;
+      remoteVideo.current.srcObject = remoteStream;
+    }
+  };
+
+  const callConnection = async (remoteStream, localStream) => {
+    console.log("calling");
+    await createCall(peerConnection, remoteVideo, localVideo, idCall);
+  };
 
   return (
-    <div>
-      {/* <Dialog open={open} onClose={onClose} classes={{ paper: classes.dialog }}>
+    <Dialog open={open} onClose={onClose} classes={{ paper: classes.dialog }}>
       <DialogTitle>caller</DialogTitle>
       <DialogContent>
-        <video ref={localVideo} autoplay />
-        <Button>X</Button>
+        {open ? (
+          <>
+            <video ref={localVideo} autoPlay />
+            <div>caaller tong</div>
+            <video ref={remoteVideo} autoPlay />
+            <Button
+              onClick={() =>
+                hangUp(peerConnection, remoteVideo, localVideo, idCall)
+              }
+            >
+              X
+            </Button>
+          </>
+        ) : null}
       </DialogContent>
-    </Dialog> */}
-    </div>
+    </Dialog>
   );
 };
 

@@ -11,7 +11,7 @@ const useStyles = makeStyles((theme) => ({
   },
 
   dialog: {
-    width: "400px",
+    width: "700px",
   },
 }));
 
