@@ -79,7 +79,8 @@ type Message
   media: [String]
   createdAt: String!
   isBlock: Boolean!
-  hasRead: Boolean!
+  hasRead: Boolean
+  isCall: Boolean
 }
 
 type Post @model {

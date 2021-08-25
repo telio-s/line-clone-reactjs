@@ -1,10 +1,4 @@
-import React, {
-  useContext,
-  useEffect,
-  useState,
-  useRef,
-  useLayoutEffect,
-} from "react";
+import React, { useContext, useEffect, useState, useRef } from "react";
 import {
   AppBar,
   Toolbar,
@@ -15,6 +9,7 @@ import {
   Button,
 } from "@material-ui/core";
 import { EventNote, MoreVert, Attachment } from "@material-ui/icons";
+import CallIcon from "@material-ui/icons/Call";
 import { API, graphqlOperation } from "aws-amplify";
 import MyMessageBubble from "./MyMessageBubble";
 import TheirMessageBubble from "./TheirMessageBubble";
@@ -23,11 +18,11 @@ import { getDirect } from "../api/queries";
 import { createMessageInGroup } from "./../api/mutations";
 import { newOnCreateMessage } from "../graphql/subscriptions";
 import AddFriendsToGroup from "./AddFriendsToGroup";
-import firebase from "../firebase";
 import { getToken, sendRequestPost } from "../firebase/firebase";
 import useStyles from "../Style/ChatRoomStyle";
 import { resizeImages } from "../utils/resizeImage";
 import S3 from "react-aws-s3";
+import handleCall from "../utils/handleCall";
 
 const config = {
   bucketName: process.env.REACT_APP_BUCKET_NAME,
@@ -245,6 +240,12 @@ const DirectChatRoom = (props) => {
             onClick={() => handleTriggerSelectPhoto()}
           >
             <Attachment />
+          </IconButton>
+          <IconButton
+            className={classes.iconButton}
+            onClick={() => handleCall()}
+          >
+            <CallIcon />
           </IconButton>
           <Button
             style={{
