@@ -508,6 +508,7 @@ export const createGroup = /* GraphQL */ `
           createdAt
           isBlock
           hasRead
+          isCall
           updatedAt
         }
         nextToken
@@ -521,6 +522,7 @@ export const createGroup = /* GraphQL */ `
           createdAt
           isBlock
           hasRead
+          isCall
           updatedAt
         }
         nextToken
@@ -570,6 +572,7 @@ export const updateGroup = /* GraphQL */ `
           createdAt
           isBlock
           hasRead
+          isCall
           updatedAt
         }
         nextToken
@@ -583,6 +586,7 @@ export const updateGroup = /* GraphQL */ `
           createdAt
           isBlock
           hasRead
+          isCall
           updatedAt
         }
         nextToken
@@ -632,6 +636,7 @@ export const deleteGroup = /* GraphQL */ `
           createdAt
           isBlock
           hasRead
+          isCall
           updatedAt
         }
         nextToken
@@ -645,6 +650,7 @@ export const deleteGroup = /* GraphQL */ `
           createdAt
           isBlock
           hasRead
+          isCall
           updatedAt
         }
         nextToken
@@ -1397,6 +1403,7 @@ export const createMessage = /* GraphQL */ `
       createdAt
       isBlock
       hasRead
+      isCall
       updatedAt
     }
   }
@@ -1493,6 +1500,7 @@ export const updateMessage = /* GraphQL */ `
       createdAt
       isBlock
       hasRead
+      isCall
       updatedAt
     }
   }
@@ -1589,6 +1597,7 @@ export const deleteMessage = /* GraphQL */ `
       createdAt
       isBlock
       hasRead
+      isCall
       updatedAt
     }
   }

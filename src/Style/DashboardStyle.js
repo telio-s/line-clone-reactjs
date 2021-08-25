@@ -7,6 +7,7 @@ const appbarHeight = 64;
 const useStyles = makeStyles((theme) => ({
   root: {
     height: "98vh",
+    // height: "98%",
     // overflow: "hidden",
   },
   appbar: {
@@ -80,6 +81,33 @@ const useStyles = makeStyles((theme) => ({
   main: {
     width: `calc(100% - ${drawerWidth}px)`,
     height: `calc(98vh - 64px)`,
+  },
+  notiBox: {
+    width: "20px",
+    height: "20px",
+    backgroundColor: "#ea4851",
+    borderRadius: "50%",
+    justifyContent: "center",
+    display: "flex",
+    margin: "auto",
+    position: "absolute",
+    left: "50px",
+    top: "10px",
+  },
+  noti: {
+    // width: "25px",
+    // height: "25px",
+    // backgroundColor: "#5ac463",
+    // borderRadius: "50%",
+    // justifyContent: "center",
+    // display: "flex",
+    // margin: "auto",
+    // position: "absolute",
+    // right: "35px",
+    color: "#ffffff",
+    margin: "auto",
+    fontWeight: "bold",
+    fontSize: "12px",
   },
 }));
 
