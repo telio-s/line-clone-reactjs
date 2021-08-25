@@ -57,7 +57,6 @@ const DirectChatRoom = (props) => {
   const [incomingCall, setIncomingCall] = useState(false);
   const [idCall, setIdCall] = useState("");
   const dummy = useRef();
-
   // after add friend we have to create group after that
   // so first when we get to direct message withe other user we have to find the group
   useEffect(() => {
