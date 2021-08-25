@@ -24,7 +24,6 @@ import DialogCaller from "../webRTC/DialogCaller";
 import DialogCallReceiver from "../webRTC/DialogCallReceiver";
 import { resizeImages } from "../utils/resizeImage";
 import S3 from "react-aws-s3";
-import handleCall from "../utils/handleCall";
 
 const config = {
   bucketName: process.env.REACT_APP_BUCKET_NAME,
@@ -246,7 +245,7 @@ const DirectChatRoom = (props) => {
             onClick={() => handleCall()}
             className={classes.iconButton}
           >
-            <Call className={classes.iconSection} />
+            <CallIcon className={classes.iconSection} />
           </IconButton>
           <IconButton
             className={classes.iconButton}
@@ -293,12 +292,6 @@ const DirectChatRoom = (props) => {
             onClick={() => handleTriggerSelectPhoto()}
           >
             <Attachment />
-          </IconButton>
-          <IconButton
-            className={classes.iconButton}
-            onClick={() => handleCall()}
-          >
-            <CallIcon />
           </IconButton>
           <Button
             style={{
