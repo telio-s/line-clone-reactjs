@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState, useRef, useEffect, useContext } from "react";
 import {
   Button,
   Typography,
@@ -10,6 +10,7 @@ import {
   InputBase,
 } from "@material-ui/core";
 import { openMediaDevice, createCall, hangUp } from "./webRTC";
+import { DirectChatRoomContext } from "../Components/DirectChatRoom";
 import useStyle from "../Style/DialogCallStyle";
 
 const servers = {
@@ -23,14 +24,17 @@ const servers = {
 
 const DialogCaller = (props) => {
   const { open, onClose, idCall } = props;
+  // const { idCall } = useContext(DirectChatRoomContext);
+  console.log(idCall);
   const localVideo = useRef(null);
   const remoteVideo = useRef(null);
   const classes = useStyle();
   const peerConnection = new RTCPeerConnection(servers);
+
   useEffect(() => {
     console.log("tongtong");
+
     getUsermedia();
-    callConnection();
 
     return () => {
       console.log("clean up dialog caller");
@@ -43,12 +47,10 @@ const DialogCaller = (props) => {
       const [localStream, remoteStream] = await openMediaDevice(peerConnection);
       localVideo.current.srcObject = localStream;
       remoteVideo.current.srcObject = remoteStream;
+      console.log(idCall);
+      createCall(peerConnection, remoteVideo, idCall);
+      console.log(remoteStream);
     }
-  };
-
-  const callConnection = async (remoteStream, localStream) => {
-    console.log("calling");
-    await createCall(peerConnection, remoteVideo, localVideo, idCall);
   };
 
   return (

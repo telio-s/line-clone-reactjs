@@ -27,72 +27,74 @@ export const openMediaDevice = async (peerConnection) => {
   }
 };
 
-export const createCall = (
+export const createCall = async (
   peerConnection,
-  remoteStream,
-  localStream,
+
+  remoteVideo,
   idCall
 ) => {
-  // registerPeerConnectionListeners(peerConnection);
-  // const callDoc = firestore.collection("calls").doc(idCall);
-  // const offerCandidates = callDoc.collection("offerCandidates");
-  // const answerCandidates = callDoc.collection("answerCandidates");
-  // // get tracks to localStream and push to peerConnection
-  // localStream.getTracks().forEach((track) => {
-  //   peerConnection.addTrack(track, localStream);
-  // });
-  // // listen to icecandidate event and add icecandidate (port,ip) to offerCandidates
-  // peerConnection.addEventListener("icecandidate", (event) => {
-  //   event.candidate && offerCandidates.add(event.candidate.toJSON());
-  // });
-  // peerConnection.addEventListener("track", (event) => {
-  //   console.log("Got remote track:", event.streams[0]);
-  //   event.streams[0].getTracks().forEach((track) => {
-  //     console.log("Add a track to the remoteStream:", track);
-  //     remoteStream.addTrack(track, remoteStream);
-  //   });
-  // });
-  // // create offer (sdp: contains video/audio information and negotiate connection info)
-  // // setLocalDesCription with offer
-  // const offerDescription = await peerConnection.createOffer();
-  // await peerConnection.setLocalDescription(offerDescription); // start generating icacandidates
-  // //then trigger icecandidate event (?-?)
-  // const offer = {
-  //   sdp: offerDescription.sdp,
-  //   type: offerDescription.type,
-  // };
-  // await callDoc.set({ offer });
-  // idCall.value = callDoc.id;
-  // //detect change in calls document (listen for remote answer)
-  // callDoc.onSnapshot(async (snapshot) => {
-  //   const data = snapshot.data();
-  //   if (peerConnection.iceConnectionState !== "closed") {
-  //     if (!peerConnection.currentRemoteDescription && data.answer) {
-  //       const answerDescription = new RTCSessionDescription(data.answer);
-  //       await peerConnection.setRemoteDescription(answerDescription);
-  //       //trigger track event
-  //     }
-  //   }
-  // });
-  // // when answered, add icecandidate to peerConnection
-  // answerCandidates.onSnapshot((snapshot) => {
-  //   snapshot.docChanges().forEach((change) => {
-  //     if (change.type === "added") {
-  //       const candidate = new RTCIceCandidate(change.doc.data());
-  //       peerConnection.addIceCandidate(candidate);
-  //       //trigger icecandidate event
-  //     }
-  //   });
-  // });
+  console.log(idCall);
+  registerPeerConnectionListeners(peerConnection);
+  const callDoc = firestore
+    .collection("calls")
+    .doc("574433b4-2a1c-42bf-8342-191d0e92613c");
+  const offerCandidates = callDoc.collection("offerCandidates");
+  const answerCandidates = callDoc.collection("answerCandidates");
+  // get tracks to localStream and push to peerConnection
+  const remoteStream = new MediaStream();
+  // listen to icecandidate event and add icecandidate (port,ip) to offerCandidates
+  peerConnection.addEventListener("icecandidate", (event) => {
+    event.candidate && offerCandidates.add(event.candidate.toJSON());
+  });
+  peerConnection.addEventListener("track", (event) => {
+    console.log("Got remote track:", event.streams[0]);
+    event.streams[0].getTracks().forEach((track) => {
+      console.log("Add a track to the remoteStream:", track);
+      remoteStream.addTrack(track);
+    });
+  });
+
+  remoteVideo.current.srcObject = remoteStream;
+
+  // remoteVideo.current.srcObject = remoteStream;
+  // create offer (sdp: contains video/audio information and negotiate connection info)
+  // setLocalDesCription with offer
+  const offerDescription = await peerConnection.createOffer();
+  await peerConnection.setLocalDescription(offerDescription); // start generating icacandidates
+  //then trigger icecandidate event (?-?)
+  const offer = {
+    sdp: offerDescription.sdp,
+    type: offerDescription.type,
+  };
+  await callDoc.set({ offer });
+
+  //detect change in calls document (listen for remote answer)
+  callDoc.onSnapshot(async (snapshot) => {
+    const data = snapshot.data();
+    if (peerConnection.iceConnectionState !== "closed") {
+      if (!peerConnection.currentRemoteDescription && data.answer) {
+        const answerDescription = new RTCSessionDescription(data.answer);
+        await peerConnection.setRemoteDescription(answerDescription);
+        //trigger track event
+      }
+    }
+  });
+  // when answered, add icecandidate to peerConnection
+  answerCandidates.onSnapshot((snapshot) => {
+    snapshot.docChanges().forEach((change) => {
+      if (change.type === "added") {
+        const candidate = new RTCIceCandidate(change.doc.data());
+        peerConnection.addIceCandidate(candidate);
+        //trigger icecandidate event
+      }
+    });
+  });
 };
 
-export const createAnswer = async (
-  peerConnection,
-  remoteStream,
-  localStream,
-  idCall
-) => {
-  const callDoc = firestore.collection("calls").doc(idCall);
+export const createAnswer = async (peerConnection, remoteStream, idCall) => {
+  const callDoc = firestore
+    .collection("calls")
+    .doc("574433b4-2a1c-42bf-8342-191d0e92613c");
   const callSnapshot = await callDoc.get();
   const offerCandidates = callDoc.collection("offerCandidates");
   const answerCandidates = callDoc.collection("answerCandidates");
@@ -114,6 +116,7 @@ export const createAnswer = async (
         remoteStream.addTrack(track);
       });
     });
+    // remoteVideo = remoteStream;
     // set remote with offer (establish connection ?-?)
     // and createAnswer
     const offerDescription = callSnapshot.data().offer;

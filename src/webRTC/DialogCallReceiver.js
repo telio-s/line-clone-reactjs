@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState, useRef, useEffect, useContext } from "react";
 import {
   Button,
   Typography,
@@ -9,6 +9,7 @@ import {
   InputAdornment,
   InputBase,
 } from "@material-ui/core";
+import { DirectChatRoomContext } from "../Components/DirectChatRoom";
 import { openMediaDevice, createAnswer, hangUp } from "./webRTC";
 import useStyle from "../Style/DialogCallStyle";
 
@@ -24,6 +25,7 @@ const servers = {
 const DialogCallReceiver = (props) => {
   const { open, onClose, idCall } = props;
   const [getCall, setGetCall] = useState(false);
+  // const { idCall } = useContext(DirectChatRoomContext);
 
   const localVideo = useRef(null);
   const remoteVideo = useRef(null);
@@ -57,8 +59,8 @@ const DialogCallReceiver = (props) => {
     console.log("getCall");
     createAnswer(
       peerConnection,
+      //remote stream
       remoteVideo.current.srcObject,
-      localVideo.current.srcObject,
       idCall
     );
   };

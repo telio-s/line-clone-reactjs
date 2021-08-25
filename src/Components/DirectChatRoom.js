@@ -38,6 +38,7 @@ const config = {
   secretAccessKey: process.env.REACT_APP_ACCESS_KEY,
 };
 const ReactS3Client = new S3(config);
+export const DirectChatRoomContext = React.createContext();
 const DirectChatRoom = (props) => {
   const { friend } = props;
   const { user, setFriend } = useContext(DashboardContext);
@@ -325,17 +326,15 @@ const DirectChatRoom = (props) => {
         setAlreadyIn={setAlreadyIn}
         isGroup={0}
       />
-      {console.log(call, incomingCall)}
+      {/* <DirectChatRoomContext.Provider value={{ idCall }}> */}
+      {console.log(idCall)}
       {call ? (
         <DialogCaller open={call} onClose={closeDialogCall} idCall={idCall} />
       ) : null}
       {incomingCall ? (
-        <DialogCallReceiver
-          open={incomingCall}
-          onClose={closeIncomingCall}
-          idCall={idCall}
-        />
+        <DialogCallReceiver open={incomingCall} onClose={closeIncomingCall} />
       ) : null}
+      {/* </DirectChatRoomContext.Provider> */}
     </div>
   );
 };
