@@ -95,9 +95,8 @@ export const createAnswer = async (
   localStream,
   idCall
 ) => {
-  const callDoc = firestore
-    .collection("calls")
-    .doc("574433b4-2a1c-42bf-8342-191d0e92613c");
+  console.log(idCall);
+  const callDoc = firestore.collection("calls").doc(idCall);
   const callSnapshot = await callDoc.get();
   const offerCandidates = callDoc.collection("offerCandidates");
   const answerCandidates = callDoc.collection("answerCandidates");

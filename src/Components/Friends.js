@@ -13,6 +13,7 @@ function Groups(props) {
 
   return (
     <div style={{ display: showFriends ? "" : "none" }}>
+      {console.log(user)}
       {user.friends.items.map((friend, index) => (
         <ListItem
           key={index}
