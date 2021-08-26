@@ -4,7 +4,6 @@ import { getGroup, listUsers, messageByDate } from "./../graphql/queries";
 // get logged in user using listUser
 export async function getLoggedInUser(id) {
   try {
-    console.log("tao");
     const user = await API.graphql(
       graphqlOperation(listUsers, {
         filter: { id: { eq: id } },
@@ -61,7 +60,6 @@ export async function getDirect(userUsername, friendUsername) {
     const _direct = await getMessageByDateInGroup(directId);
     return [_direct, directId, groupInfo];
   } catch (error) {
-    console.log("can't get message from direct");
     return;
   }
 }

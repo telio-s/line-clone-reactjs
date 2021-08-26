@@ -24,6 +24,7 @@ import DialogCaller from "../webRTC/DialogCaller";
 import DialogCallReceiver from "../webRTC/DialogCallReceiver";
 import { resizeImages } from "../utils/resizeImage";
 import S3 from "react-aws-s3";
+import { hangUpByOtherEnd } from "../webRTC/webRTC";
 
 const config = {
   bucketName: process.env.REACT_APP_BUCKET_NAME,
@@ -57,7 +58,6 @@ const DirectChatRoom = (props) => {
   useEffect(() => {
     async function getMessages() {
       const [data, id, group] = await getDirect(user.username, friend.username);
-      // console.log(data);
       setDirectId(id);
       setMessages(data);
       setDirect(group.group);
@@ -66,7 +66,6 @@ const DirectChatRoom = (props) => {
         aIn.push(user.user.id);
       });
       setAlreadyIn([...aIn]);
-      // console.log("scroll late");
       scrollToBottom();
     }
     console.log(idCall);
@@ -322,9 +321,6 @@ const DirectChatRoom = (props) => {
         setAlreadyIn={setAlreadyIn}
         isGroup={0}
       />
-      {/* <DirectChatRoomContext.Provider value={{ idCall }}> */}
-      {console.log(user)}
-      {console.log(friend)}
       {call && idCall ? (
         <DialogCaller
           open={call}
@@ -342,7 +338,6 @@ const DirectChatRoom = (props) => {
           myFriend={friend}
         />
       ) : null}
-      {/* </DirectChatRoomContext.Provider> */}
     </div>
   );
 };

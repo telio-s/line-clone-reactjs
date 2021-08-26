@@ -47,21 +47,14 @@ const ChatRoomList = (props) => {
 
     const fetchAllChat = async (user) => {
       const userObj = await getUserByID(user.attributes.sub);
-      // console.log("userByID", userObj);
       setMyUser(userObj);
       const arrAllChat = userObj.groups.items;
-      // console.log(arrAllChat);
-      // console.log(arrAllChat);
-
       arrAllChat.map(async (group) => {
-        // console.log(group);
-
         // Fetch last message for each group
         const fetchMessage = await getMessageByDate(group.group.id);
         const countUnread = countHasRead(fetchMessage, userObj);
         if (fetchMessage.messageByDate.items == 0 && group.group.isDirect) {
           // Be friend but never talk yet
-          // console.log("empty arr");
         } else if (group.group.isDirect) {
           // set time zone
           let tzoffset = new Date().getTimezoneOffset() * 60000;
@@ -76,16 +69,12 @@ const ChatRoomList = (props) => {
             hour: "2-digit",
             minute: "2-digit",
           });
-          // console.log(fetchMessage.messageByDate.items[0].createdAt);
           let friendObj = {};
           group.group.users.items.map((item) => {
-            // console.log(userObj.id);
-            // console.log(item.user.id);
             if (item.user.id !== userObj.id) {
               friendObj = item.user;
             }
           });
-          // console.log(friendObj);
           const groupInfo = {
             idGroup: group.group.id,
             name: group.group.name,
@@ -115,7 +104,6 @@ const ChatRoomList = (props) => {
 
   useEffect(() => {
     comparetByTime();
-    // console.log(menubarNoti);
     setupSubscriptions();
 
     return () => {
@@ -170,7 +158,6 @@ const ChatRoomList = (props) => {
 
   const checkUserCurrent = async () => {
     const user = await Auth.currentAuthenticatedUser();
-    // console.log("user: ", user);
     return user;
   };
 
@@ -188,8 +175,6 @@ const ChatRoomList = (props) => {
     });
 
     messageSorted.filter((obj) => {
-      // console.log(idGroup);
-      // console.log(obj.idGroup);
       if (obj.idGroup == idGroup) {
         obj.unread = 0;
       }
