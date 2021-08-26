@@ -26,9 +26,7 @@ const servers = {
 };
 
 const DialogCallReceiver = (props) => {
-  const { open, onClose, idCall } = props;
-  const [getCall, setGetCall] = useState(false);
-  // const { idCall } = useContext(DirectChatRoomContext);
+  const { open, onClose, idCall, myUser, myFriend } = props;
 
   const localVideo = useRef(null);
   const remoteVideo = useRef(null);
@@ -38,16 +36,11 @@ const DialogCallReceiver = (props) => {
   useEffect(() => {
     console.log("tongtong");
     getUsermedia();
-    // callConnection();
 
     return () => {
       console.log("clean up dialog caller");
     };
   }, []);
-
-  // useEffect(() => {
-  //   console.log(getCall);
-  // }, [getCall]);
 
   const getUsermedia = async () => {
     if (open) {
@@ -61,14 +54,14 @@ const DialogCallReceiver = (props) => {
 
   const answerConnection = async () => {
     console.log("getCall");
+    console.log(idCall);
     createAnswer(
       peerConnection,
-      //remote stream
-      remoteVideo.current.srcObject,
-      localVideo.current.srcObject,
+
+      remoteVideo.current.srcObject, //remote stream
+      localVideo.current.srcObject, //local stream
       idCall
     );
-    console.log(remoteVideo.current.srcObject.active);
   };
 
   return (

@@ -69,6 +69,7 @@ const DirectChatRoom = (props) => {
       // console.log("scroll late");
       scrollToBottom();
     }
+    console.log(idCall);
 
     getMessages();
     setFriend(friend);
@@ -101,9 +102,10 @@ const DirectChatRoom = (props) => {
             data.value.data.newOnCreateMessage.isCall &&
             data.value.data.newOnCreateMessage.user.username !== user.username
           ) {
+            console.log("recieve if");
             setIncomingCall(true);
-            setIdCall(data.value.data.newOnCreateMessage.group.id);
           }
+          setIdCall(data.value.data.newOnCreateMessage.group.id);
         }
       },
     });
@@ -195,7 +197,7 @@ const DirectChatRoom = (props) => {
       const data = await createMessageInGroup(message);
       setMessages([...messages, data.data.createMessage]);
       console.log(data.data.createMessage);
-      setIdCall(data.data.createMessage.group.id);
+      // setIdCall(data.data.createMessage.group.id);
     }
 
     createMessage(message);
@@ -321,12 +323,24 @@ const DirectChatRoom = (props) => {
         isGroup={0}
       />
       {/* <DirectChatRoomContext.Provider value={{ idCall }}> */}
-      {console.log(idCall)}
-      {call ? (
-        <DialogCaller open={call} onClose={closeDialogCall} idCall={idCall} />
+      {console.log(user)}
+      {console.log(friend)}
+      {call && idCall ? (
+        <DialogCaller
+          open={call}
+          onClose={closeDialogCall}
+          idCall={idCall}
+          myUser={user}
+          myFriend={friend}
+        />
       ) : null}
-      {incomingCall ? (
-        <DialogCallReceiver open={incomingCall} onClose={closeIncomingCall} />
+      {incomingCall && idCall ? (
+        <DialogCallReceiver
+          open={incomingCall}
+          onClose={closeIncomingCall}
+          myUser={user}
+          myFriend={friend}
+        />
       ) : null}
       {/* </DirectChatRoomContext.Provider> */}
     </div>

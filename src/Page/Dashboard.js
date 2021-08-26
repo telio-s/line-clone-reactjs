@@ -22,7 +22,7 @@ import useStyles from "../Style/DashboardStyle";
 export const DashboardContext = React.createContext();
 
 const Dashboard = () => {
-  const [user, setUser] = useState();
+  const [user, setUser] = useState(null);
   const [sideBar, setSideBar] = useState(null);
   const [chat, setChat] = useState(null);
   const [friend, setFriend] = useState([]);
@@ -47,7 +47,6 @@ const Dashboard = () => {
   }, []);
 
   useEffect(() => {
-    // sideBar ? setSideBar(sideBar) : setSideBar(<Profile user={user} />);
     console.log(user);
   }, [user]);
 

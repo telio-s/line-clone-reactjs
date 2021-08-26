@@ -26,9 +26,8 @@ const servers = {
 };
 
 const DialogCaller = (props) => {
-  const { open, onClose, idCall } = props;
-  // const { idCall } = useContext(DirectChatRoomContext);
-  console.log(idCall);
+  const { open, onClose, idCall, myUser, myFriend } = props;
+
   const localVideo = useRef(null);
   const remoteVideo = useRef(null);
   const classes = useStyle();
@@ -44,22 +43,15 @@ const DialogCaller = (props) => {
     };
   }, []);
 
-  // useEffect(() => {
-  //   getUsermedia();
-  // }, []);
-
   const getUsermedia = async () => {
     if (open) {
       // Get remoteStream
       const [localStream, remoteStream] = await openMediaDevice(peerConnection);
       localVideo.current.srcObject = localStream;
       remoteVideo.current.srcObject = remoteStream;
+
       console.log(idCall);
-      console.log(remoteStream);
-      console.log(localStream);
       createCall(peerConnection, remoteStream, localStream, idCall);
-      console.log(remoteStream);
-      console.log(localStream);
     }
   };
 
