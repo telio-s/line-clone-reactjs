@@ -1,10 +1,4 @@
-import React, {
-  useContext,
-  useEffect,
-  useState,
-  useRef,
-  useLayoutEffect,
-} from "react";
+import React, { useContext, useEffect, useState, useRef } from "react";
 import {
   AppBar,
   Toolbar,
@@ -14,7 +8,8 @@ import {
   InputBase,
   Button,
 } from "@material-ui/core";
-import { EventNote, MoreVert, Attachment, Call } from "@material-ui/icons";
+import { EventNote, MoreVert, Attachment } from "@material-ui/icons";
+import CallIcon from "@material-ui/icons/Call";
 import { API, graphqlOperation } from "aws-amplify";
 import MyMessageBubble from "./MyMessageBubble";
 import TheirMessageBubble from "./TheirMessageBubble";
@@ -252,7 +247,7 @@ const DirectChatRoom = (props) => {
             onClick={() => handleCall()}
             className={classes.iconButton}
           >
-            <Call className={classes.iconSection} />
+            <CallIcon className={classes.iconSection} />
           </IconButton>
           <IconButton
             className={classes.iconButton}
