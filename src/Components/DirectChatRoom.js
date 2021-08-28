@@ -1,4 +1,10 @@
-import React, { useContext, useEffect, useRef, useState } from "react";
+import React, {
+  useContext,
+  useEffect,
+  useState,
+  useRef,
+  useLayoutEffect,
+} from "react";
 import {
   AppBar,
   Toolbar,
@@ -9,12 +15,16 @@ import {
   Button,
 } from "@material-ui/core";
 import { EventNote, MoreVert, Attachment } from "@material-ui/icons";
+import { API, graphqlOperation } from "aws-amplify";
 import MyMessageBubble from "./MyMessageBubble";
 import TheirMessageBubble from "./TheirMessageBubble";
 import { DashboardContext } from "../Page/Dashboard";
 import { getDirect } from "../api/queries";
 import { createMessageInGroup } from "./../api/mutations";
+import { newOnCreateMessage } from "../graphql/subscriptions";
 import AddFriendsToGroup from "./AddFriendsToGroup";
+import firebase from "../firebase";
+import { getToken, sendRequestPost } from "../firebase/firebase";
 import useStyles from "../Style/ChatRoomStyle";
 import { resizeImages } from "../utils/resizeImage";
 import S3 from "react-aws-s3";
@@ -27,7 +37,6 @@ const config = {
   secretAccessKey: process.env.REACT_APP_ACCESS_KEY,
 };
 const ReactS3Client = new S3(config);
-
 const DirectChatRoom = (props) => {
   const { friend } = props;
   const { user, setFriend } = useContext(DashboardContext);
@@ -41,13 +50,16 @@ const DirectChatRoom = (props) => {
   const hiddenFileUpload = useRef(null);
   const [files, setFiles] = useState([]);
   const [resizedImgs, setResizedImgs] = useState([]);
+  const [realTimeData, setRealTimeData] = useState();
+
+  const dummy = useRef();
 
   // after add friend we have to create group after that
   // so first when we get to direct message withe other user we have to find the group
   useEffect(() => {
     async function getMessages() {
       const [data, id, group] = await getDirect(user.username, friend.username);
-      // console.log(data, id, group.group);
+      console.log(data);
       setDirectId(id);
       setMessages(data);
       setDirect(group.group);
@@ -56,30 +68,52 @@ const DirectChatRoom = (props) => {
         aIn.push(user.user.id);
       });
       setAlreadyIn([...aIn]);
+      console.log("scroll late");
+      scrollToBottom();
     }
 
     getMessages();
     setFriend(friend);
-  }, [friend]);
+  }, [friend, realTimeData]);
+
+  useEffect(() => {
+    setupSubscriptions();
+
+    return () => {
+      subscriptionOnCreate.unsubscribe();
+    };
+  }, []);
+
+  let subscriptionOnCreate;
+  function setupSubscriptions() {
+    subscriptionOnCreate = API.graphql(
+      graphqlOperation(newOnCreateMessage)
+    ).subscribe({
+      next: async (data) => {
+        console.log(data);
+        setRealTimeData(data);
+        if (data.value.data.newOnCreateMessage) {
+          const token = await getToken();
+          sendRequestPost(
+            token,
+            `${data.value.data.newOnCreateMessage.user.username} sent`,
+            data.value.data.newOnCreateMessage.message
+          );
+        }
+      },
+    });
+  }
 
   async function handleSendMessage(e) {
     e.preventDefault();
-
-    async function createMessage(message) {
-      console.log(message);
-      try {
-        console.log("send message!", message);
-        const data = await createMessageInGroup(message);
-        setMessages([...messages, data.data.createMessage]);
-      } catch (error) {
-        console.log("Can't create message");
-      }
-    }
     if (!files.length && currMessage === "") {
       console.log("nothing to upload");
       return;
     }
-
+        async function createMessage(message) {
+      const data = await createMessageInGroup(message);
+      setMessages([...messages, data.data.createMessage]);
+    }
     if (files) {
       console.log(files);
       console.log("uploading file...");
@@ -114,8 +148,29 @@ const DirectChatRoom = (props) => {
       setCurrMessage("");
       setResizedImgs([]);
       setFiles([]);
+      return;
     }
+    const message = {
+        type: directId,
+        message: currMessage,
+        messageUserId: user.id,
+        messageGroupId: directId,
+        isBlock: false,
+        hasRead: false,        
+      };
+     createMessage(message);
+      console.log("send message!", message);
+      setCurrMessage("");
+      setResizedImgs([]);
+      setFiles([]);
   }
+
+  const scrollToBottom = () => {
+    console.log("test auto scroll when useeffect");
+    dummy.current.scrollIntoView({
+      behavior: "smooth",
+    });
+  };
 
   function handleInviteFriends() {
     setOpenInvite(!openInvite);
@@ -134,7 +189,6 @@ const DirectChatRoom = (props) => {
 
   return (
     <div className={classes.root}>
-      {/* <Divider orientation="vertical" flexItem /> */}
       <AppBar elevation={0} position="static" className={classes.appbar}>
         <Toolbar className={classes.Toolbar}>
           <Typography
@@ -154,15 +208,19 @@ const DirectChatRoom = (props) => {
           </IconButton>
         </Toolbar>
       </AppBar>
-      {messages
-        ? messages.map((message, index) =>
-            message.user.id === user.id ? (
-              <MyMessageBubble key={index} message={message} />
-            ) : (
-              <TheirMessageBubble key={index} message={message} />
+      <div className={classes.chatfeed}>
+        {messages
+          ? messages.map((message, index) =>
+              message.user.id === user.id ? (
+                <MyMessageBubble key={index} message={message} />
+              ) : (
+                <TheirMessageBubble key={index} message={message} />
+              )
             )
           )
         : null}
+                <div ref={dummy} />
+      </div>
       <Divider />
       <form className={classes.textArea} onSubmit={(e) => handleSendMessage(e)}>
         <InputBase
@@ -205,6 +263,9 @@ const DirectChatRoom = (props) => {
           </Button>
         </div>
       </form>
+
+      <Divider />
+     
       <AddFriendsToGroup
         open={openInvite}
         onClose={handleInviteFriends}

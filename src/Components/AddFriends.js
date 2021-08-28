@@ -3,17 +3,26 @@ import useStyles from "../Style/AddFriendsStyle";
 import { PeopleAlt, PersonAdd } from "@material-ui/icons";
 import { Button, Typography, Dialog, DialogTitle } from "@material-ui/core";
 import DialogAddFriends from "./DialogAddFriends";
-
+import CreateGroupDialog from "./CreateGroupDialog";
 const AddFriends = () => {
   const classes = useStyles();
-  const [open, setOpen] = useState(false);
+  const [openFriends, setOpenFriends] = useState(false);
+  const [openGroup, setOpenGroup] = useState(false);
 
-  const openDialog = () => {
-    setOpen(true);
+  const openDialogFriends = () => {
+    setOpenFriends(true);
   };
 
-  const closeDialog = () => {
-    setOpen(false);
+  const closeDialogFriends = () => {
+    setOpenFriends(false);
+  };
+
+  const openDialogGroup = () => {
+    setOpenGroup(true);
+  };
+
+  const closeDialogGroup = () => {
+    setOpenGroup(false);
   };
 
   return (
@@ -21,7 +30,7 @@ const AddFriends = () => {
       <Button
         disableRipple={true}
         className={classes.feature}
-        onClick={openDialog}
+        onClick={openDialogFriends}
       >
         <PersonAdd className={classes.icon} />
         <Typography
@@ -33,13 +42,19 @@ const AddFriends = () => {
           Search for friends
         </Typography>
       </Button>
-      <DialogAddFriends open={open} onClose={closeDialog} />
-      <Button disableRipple={true} className={classes.feature}>
+      <DialogAddFriends open={openFriends} onClose={closeDialogFriends} />
+
+      <Button
+        disableRipple={true}
+        className={classes.feature}
+        onClick={openDialogGroup}
+      >
         <PeopleAlt className={classes.icon} />
         <Typography style={{ marginLeft: "20px", fontWeight: "600" }}>
           Create a group
         </Typography>
       </Button>
+      <CreateGroupDialog open={openGroup} onClose={closeDialogGroup} />
     </div>
   );
 };

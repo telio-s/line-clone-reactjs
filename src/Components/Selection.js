@@ -32,7 +32,7 @@ function Selection() {
   }
 
   return (
-    <div>
+    <>
       <AppBar className={classes.appbar} elevation={0} position="static">
         <Toolbar>
           {chatTypeSection.map((obj, index) => (
@@ -49,7 +49,7 @@ function Selection() {
           <SignOut />
         </Toolbar>
       </AppBar>
-    </div>
+    </>
   );
 }
 

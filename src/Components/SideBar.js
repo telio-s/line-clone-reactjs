@@ -3,7 +3,7 @@ import { DashboardContext } from "./../Page/Dashboard";
 
 function SideBar() {
   const { sideBar } = useContext(DashboardContext);
-  return <div>{sideBar}</div>;
+  return <>{sideBar}</>;
 }
 
 export default SideBar;
