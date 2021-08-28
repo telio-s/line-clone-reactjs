@@ -13,7 +13,7 @@ const TheirMessageBubble = (props) => {
   useEffect(() => {
     function getImage() {
       try {
-        console.log("getting image...");
+        // console.log("getting image...");
         message.media.map((media) => {
           setPhotos((prevPhotos) => [...prevPhotos, media]);
         });
@@ -28,7 +28,7 @@ const TheirMessageBubble = (props) => {
     }
 
     if (message.media) {
-      console.log("have medias");
+      // console.log("have medias");
       getImage();
     }
   }, [message]);

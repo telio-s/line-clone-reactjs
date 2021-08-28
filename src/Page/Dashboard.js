@@ -17,12 +17,12 @@ import AllChats from "../Components/AllChats";
 import { getLoggedInUser } from "./../api/queries";
 import SideBar from "../Components/SideBar";
 import Chat from "./../Components/Chat";
-
+import Profile from "../Components/Profile";
 import useStyles from "../Style/DashboardStyle";
 export const DashboardContext = React.createContext();
 
 const Dashboard = () => {
-  const [user, setUser] = useState();
+  const [user, setUser] = useState(null);
   const [sideBar, setSideBar] = useState(null);
   const [chat, setChat] = useState(null);
   const [friend, setFriend] = useState([]);
@@ -39,12 +39,16 @@ const Dashboard = () => {
     // }
     // getUser();
     console.log("Dashboard called");
-    sideBar ? setSideBar(sideBar) : setSideBar(<AllChats />);
+    // sideBar ? setSideBar(sideBar) : setSideBar(<Profile user={user} />);
 
     return () => {
       console.log("clean up");
     };
   }, []);
+
+  useEffect(() => {
+    console.log(user);
+  }, [user]);
 
   const checkUserCurrent = async () => {
     try {
@@ -52,9 +56,10 @@ const Dashboard = () => {
       console.log("user: ", user);
 
       const data = await getLoggedInUser(user.attributes.sub);
-      console.log(data);
-      console.log("ttgg");
       setUser(data.data.listUsers.items[0]);
+      sideBar
+        ? setSideBar(sideBar)
+        : setSideBar(<Profile user={data.data.listUsers.items[0]} />);
     } catch (err) {
       // updateUser(null)
     }

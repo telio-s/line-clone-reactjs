@@ -24,22 +24,22 @@ import DirectChatRoom from "./DirectChatRoom";
 import firebase from "../firebase";
 import useStyles from "../Style/ChatRoomListStyle";
 
-const ChatRoomList = () => {
+const ChatRoomList = (props) => {
+  const { setNotificationIcon } = props;
   const classes = useStyles();
   const { setChat } = useContext(DashboardContext);
   const [myUser, setMyUser] = useState(null);
   const [messageArr, setMessageArr] = useState([]);
   const [messageSorted, setMessageSorted] = useState([]);
   const [realTimeData, setRealTimeData] = useState();
-  const [countNoti, setCountNoti] = useState([]);
   const [newMessages, setNewMessages] = useState([]);
   // const [lastMessage, setLastMessage] = useState([]);
 
   // const elementRef = useRef([]);
   const messaging = firebase.messaging();
+
   useEffect(async () => {
     const user = await checkUserCurrent();
-
     messaging.onMessage((payload) => {
       console.log("Message received. ", payload);
       // ...
@@ -47,20 +47,14 @@ const ChatRoomList = () => {
 
     const fetchAllChat = async (user) => {
       const userObj = await getUserByID(user.attributes.sub);
-      // console.log("userByID", userObj);
       setMyUser(userObj);
       const arrAllChat = userObj.groups.items;
-      // console.log(arrAllChat);
-      // console.log(arrAllChat);
       arrAllChat.map(async (group) => {
-        // console.log(group);
-
         // Fetch last message for each group
         const fetchMessage = await getMessageByDate(group.group.id);
         const countUnread = countHasRead(fetchMessage, userObj);
         if (fetchMessage.messageByDate.items == 0 && group.group.isDirect) {
           // Be friend but never talk yet
-          // console.log("empty arr");
         } else if (group.group.isDirect) {
           // set time zone
           let tzoffset = new Date().getTimezoneOffset() * 60000;
@@ -75,16 +69,12 @@ const ChatRoomList = () => {
             hour: "2-digit",
             minute: "2-digit",
           });
-          // console.log(fetchMessage.messageByDate.items[0].createdAt);
           let friendObj = {};
           group.group.users.items.map((item) => {
-            // console.log(userObj.id);
-            // console.log(item.user.id);
             if (item.user.id !== userObj.id) {
               friendObj = item.user;
             }
           });
-          // console.log(friendObj);
           const groupInfo = {
             idGroup: group.group.id,
             name: group.group.name,
@@ -99,7 +89,7 @@ const ChatRoomList = () => {
           //   content: fetchMessage.messageByDate.items[0].message,
           //   time: onlyTime,
           // };
-
+          setNotificationIcon(countUnread);
           setMessageArr((previousState) => [...previousState, groupInfo]);
           // setLastMessage((previousState) => [...previousState, lastMsgInFo]);
         }
@@ -114,7 +104,6 @@ const ChatRoomList = () => {
 
   useEffect(() => {
     comparetByTime();
-
     setupSubscriptions();
 
     return () => {
@@ -122,7 +111,7 @@ const ChatRoomList = () => {
     };
   }, [messageArr, myUser]);
 
-  useEffect(() => {
+  useEffect(async () => {
     setMessageArr([]);
 
     return () => {
@@ -169,7 +158,6 @@ const ChatRoomList = () => {
 
   const checkUserCurrent = async () => {
     const user = await Auth.currentAuthenticatedUser();
-    // console.log("user: ", user);
     return user;
   };
 
@@ -187,14 +175,13 @@ const ChatRoomList = () => {
     });
 
     messageSorted.filter((obj) => {
-      console.log(idGroup);
-      console.log(obj.idGroup);
       if (obj.idGroup == idGroup) {
         obj.unread = 0;
       }
     });
     setChat(<DirectChatRoom friend={friend} />);
     setNewMessages([]);
+    setNotificationIcon(0);
   }
 
   return (
