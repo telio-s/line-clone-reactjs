@@ -1,9 +1,10 @@
 import React from "react";
 import firebase from "../firebase";
-
+// import firebase from "firebase/app";
+// import { messaging } from "../firebase-messaging-sw";
 const messaging = firebase.messaging();
 
-export const sendRequestPost = (token, title, body) => {
+export const sendRequestPost = (token, title, body, idGroup) => {
   const apiKey =
     "AAAAPYGtVXI:APA91bEhKY7rh7yjT27dOJESU9GoyYya45_m37ovOxfBLnem_F1xIP5wG0lWwvlfKDXbUR5i6DuM3JFtJewviKaa_g_R8yxaJtXrZEu3VBr2DtP8GJo5MeZXIXilBAFIu2hX6vx4rw_o";
   fetch("https://fcm.googleapis.com/fcm/send", {
@@ -14,9 +15,10 @@ export const sendRequestPost = (token, title, body) => {
     }),
     body: JSON.stringify({
       to: token,
-      notification: {
+      data: {
         title: title,
         body: body,
+        data: "dashboard/chats",
       },
     }),
   })

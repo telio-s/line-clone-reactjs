@@ -4,6 +4,7 @@ import {
   Route,
   Link,
   useHistory,
+  Switch,
 } from "react-router-dom";
 import { Auth, Hub } from "aws-amplify";
 
@@ -19,9 +20,10 @@ import SideBar from "../Components/SideBar";
 import Chat from "./../Components/Chat";
 import Profile from "../Components/Profile";
 import useStyles from "../Style/DashboardStyle";
+// import firebase from "../firebase-messaging-sw";
 export const DashboardContext = React.createContext();
 
-const Dashboard = () => {
+const Dashboard = ({ match }) => {
   const [user, setUser] = useState(null);
   const [sideBar, setSideBar] = useState(null);
   const [chat, setChat] = useState(null);
@@ -30,6 +32,16 @@ const Dashboard = () => {
   const classes = useStyles();
 
   useEffect(() => {
+    if ("serviceWorker" in navigator) {
+      navigator.serviceWorker
+        .register("/firebase-messaging-sw.js")
+        .then(function (registration) {
+          console.log("Registration successful, scope is:", registration.scope);
+        })
+        .catch(function (err) {
+          console.log("Service worker registration failed, error:", err);
+        });
+    }
     checkUserCurrent();
 
     // async function getUser() {
@@ -79,13 +91,12 @@ const Dashboard = () => {
     >
       <div className={classes.root}>
         <Selection />
-        {/* <div style={{ width: "300px", height: "50px" }}>dd</div> */}
         <Divider />
         <div className={classes.mainDrawerRoot}>
-          <MenuBar />
-          <SideBar />
-          <Divider orientation="vertical" flexItem />
-          <Chat />
+          <MenuBar match={match} />
+          {/* <SideBar /> */}
+          {/* <Divider orientation="vertical" flexItem /> */}
+          {/* <Chat /> */}
         </div>
       </div>
     </DashboardContext.Provider>

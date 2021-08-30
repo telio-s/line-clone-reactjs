@@ -91,7 +91,7 @@ const useStyles = makeStyles((theme) => ({
     display: "flex",
     margin: "auto",
     position: "absolute",
-    left: "50px",
+    left: "40px",
     top: "10px",
   },
   noti: {

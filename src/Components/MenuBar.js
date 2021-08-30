@@ -1,5 +1,13 @@
 import React, { useContext, useState } from "react";
-import useStyles from "./../Style/DashboardStyle";
+
+import {
+  BrowserRouter as Router,
+  Route,
+  Link,
+  useHistory,
+  Switch,
+  useRouteMatch,
+} from "react-router-dom";
 import { Drawer, IconButton, Typography } from "@material-ui/core";
 import {
   Person,
@@ -10,13 +18,14 @@ import {
 } from "@material-ui/icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCommentDots, faNewspaper } from "@fortawesome/free-solid-svg-icons";
-import CreateGroupDialog from "./CreateGroupDialog";
+import DirectChatRoom from "./DirectChatRoom";
 import Profile from "./Profile";
 import { DashboardContext } from "../Page/Dashboard";
 import { ChatRoomListContext } from "./ChatRoomList";
 import AddFriends from "./AddFriends";
 import ChatRoomList from "./ChatRoomList";
-function MenuBar() {
+import useStyles from "./../Style/DashboardStyle";
+function MenuBar({ match }) {
   // const { menubarNoti } = useContext(ChatRoomListContext);
   const classes = useStyles();
   const [createGroup, setCreateGroup] = useState(false);
@@ -48,65 +57,88 @@ function MenuBar() {
   };
 
   return (
-    <div>
-      <Drawer
-        variant="permanent"
-        anchor="left"
-        className={classes.drawer}
-        classes={{ paper: classes.drawerPaper }}
-      >
-        <IconButton
-          disableRipple={true}
-          className={classes.iconButton}
-          onClick={handleProfileBar}
+    <Router>
+      <div style={{ width: "680px" }}>
+        <Drawer
+          variant="permanent"
+          anchor="left"
+          className={classes.drawer}
+          classes={{ paper: classes.drawerPaper }}
         >
-          <Person
-            className={classes.iconMtDrawer}
-            style={{ marginTop: "30px" }}
-          />
-        </IconButton>
-        <IconButton
-          disableRipple={true}
-          className={classes.iconButton}
-          onClick={handleChats}
-        >
-          <FontAwesomeIcon
-            className={classes.iconAweDrawer}
-            icon={faCommentDots}
-          />
-          {countNotiIcon ? (
-            <div className={classes.notiBox}>
-              <Typography className={classes.noti}>{countNotiIcon}</Typography>
-            </div>
-          ) : null}
-        </IconButton>
-        <IconButton
-          disableRipple={true}
-          className={classes.iconButton}
-          onClick={handleAddFriends}
-        >
-          <PersonAdd className={classes.iconMtDrawer} />
-        </IconButton>
-        <IconButton disableRipple={true} className={classes.iconButton}>
-          <WatchLater className={classes.iconMtDrawer} />
-        </IconButton>
-        <IconButton disableRipple={true} className={classes.iconButton}>
-          <FontAwesomeIcon
-            className={classes.iconAweDrawer}
-            icon={faNewspaper}
-          />
-        </IconButton>
+          <Link to={`${match.url}/profile`}>
+            <IconButton
+              disableRipple={true}
+              className={classes.iconButton}
+              // onClick={handleProfileBar}
+            >
+              <Person
+                className={classes.iconMtDrawer}
+                style={{ marginTop: "30px" }}
+              />
+            </IconButton>
+          </Link>
+          <Link to={`${match.url}/chats`}>
+            <IconButton
+              disableRipple={true}
+              className={classes.iconButton}
+              style={{ marginLeft: "7px" }}
+              // onClick={handleChats}
+            >
+              <FontAwesomeIcon
+                className={classes.iconAweDrawer}
+                icon={faCommentDots}
+              />
+              {countNotiIcon ? (
+                <div className={classes.notiBox}>
+                  <Typography className={classes.noti}>
+                    {countNotiIcon}
+                  </Typography>
+                </div>
+              ) : null}
+            </IconButton>
+          </Link>
+          <Link to={`${match.url}/addfriends`}>
+            <IconButton
+              disableRipple={true}
+              className={classes.iconButton}
+              // onClick={handleAddFriends}
+            >
+              <PersonAdd className={classes.iconMtDrawer} />
+            </IconButton>
+          </Link>
+          <IconButton disableRipple={true} className={classes.iconButton}>
+            <WatchLater className={classes.iconMtDrawer} />
+          </IconButton>
+          <IconButton disableRipple={true} className={classes.iconButton}>
+            <FontAwesomeIcon
+              className={classes.iconAweDrawer}
+              icon={faNewspaper}
+            />
+          </IconButton>
 
-        <div className={classes.drawerIconBottom}>
-          <IconButton disableRipple={true} className={classes.iconButton}>
-            <VolumeDownOutlined className={classes.iconMtDrawer} />
-          </IconButton>
-          <IconButton disableRipple={true} className={classes.iconButton}>
-            <MoreHoriz className={classes.iconMtDrawer} />
-          </IconButton>
-        </div>
-      </Drawer>
-    </div>
+          <div className={classes.drawerIconBottom}>
+            <IconButton disableRipple={true} className={classes.iconButton}>
+              <VolumeDownOutlined className={classes.iconMtDrawer} />
+            </IconButton>
+            <IconButton disableRipple={true} className={classes.iconButton}>
+              <MoreHoriz className={classes.iconMtDrawer} />
+            </IconButton>
+          </div>
+        </Drawer>
+
+        <Switch>
+          <Route path={`${match.path}/profile`}>
+            <Profile />
+          </Route>
+          <Route path={`${match.path}/chats`}>
+            <ChatRoomList setNotificationIcon={setNotificationIcon} />
+          </Route>
+          <Route path={`${match.path}/addfriends`}>
+            <AddFriends user={user} />
+          </Route>
+        </Switch>
+      </div>
+    </Router>
   );
 }
 

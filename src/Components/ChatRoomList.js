@@ -12,7 +12,16 @@ import {
   InputBase,
   InputAdornment,
   Button,
+  Divider,
 } from "@material-ui/core";
+import {
+  BrowserRouter as Router,
+  Route,
+  Link,
+  useHistory,
+  Switch,
+  useRouteMatch,
+} from "react-router-dom";
 import { API, graphqlOperation } from "aws-amplify";
 import { newOnCreateMessage } from "../graphql/subscriptions";
 import { SearchOutlined, AccountCircle } from "@material-ui/icons";
@@ -20,12 +29,15 @@ import { getUserByID, getMessageByDate } from "./graphql/queriesapi";
 import { updateMessageHasRead } from "./graphql/mutationapi";
 import { DashboardContext } from "../Page/Dashboard";
 import { Auth, Hub } from "aws-amplify";
+import { getToken, sendRequestPost } from "../firebase/firebase";
 import DirectChatRoom from "./DirectChatRoom";
 import firebase from "../firebase";
+// import firebase from "firebase/app";
 import useStyles from "../Style/ChatRoomListStyle";
 
 const ChatRoomList = (props) => {
   const { setNotificationIcon } = props;
+  let match = useRouteMatch();
   const classes = useStyles();
   const { setChat } = useContext(DashboardContext);
   const [myUser, setMyUser] = useState(null);
@@ -33,16 +45,24 @@ const ChatRoomList = (props) => {
   const [messageSorted, setMessageSorted] = useState([]);
   const [realTimeData, setRealTimeData] = useState();
   const [newMessages, setNewMessages] = useState([]);
+  const [changeChatFeed, setChatFeed] = useState();
   // const [lastMessage, setLastMessage] = useState([]);
 
   // const elementRef = useRef([]);
   const messaging = firebase.messaging();
 
   useEffect(async () => {
+    const token = await getToken();
     const user = await checkUserCurrent();
     messaging.onMessage((payload) => {
       console.log("Message received. ", payload);
-      // ...
+      const notificationTitle = payload.data.title;
+      const notificationOptions = {
+        body: payload.data.body,
+        icon: "/firebase-logo.png",
+      };
+
+      new Notification(notificationTitle, notificationOptions);
     });
 
     const fetchAllChat = async (user) => {
@@ -179,71 +199,101 @@ const ChatRoomList = (props) => {
         obj.unread = 0;
       }
     });
-    setChat(<DirectChatRoom friend={friend} />);
+    setChatFeed(idGroup);
+    // setChat(<DirectChatRoom friend={friend} />);
     setNewMessages([]);
     setNotificationIcon(0);
   }
 
   return (
-    <div className={classes.root}>
-      <AppBar elevation={0} position="static" className={classes.appbar}>
-        <Toolbar>
-          <InputBase
-            fullWidth
-            className={classes.searchInput}
-            placeholder="Search for chats and messages"
-            startAdornment={
-              <InputAdornment position="start" variant="filled">
-                <SearchOutlined className={classes.iconSearch} />
-              </InputAdornment>
-            }
-          />
-        </Toolbar>
-      </AppBar>
-      {messageSorted.map((message, index) => (
-        <div key={index}>
-          <Button
-            disableRipple={true}
-            className={classes.chatRoom}
-            onClick={() => handleChatRoom(message.friend, message.idGroup)}
-          >
-            <AccountCircle style={{ fontSize: "60px" }} />
-            <div className={classes.chatDesc}>
-              <Typography className={classes.nameChat}>
-                {message.name}
-              </Typography>
-              <Typography
-                noWrap={false}
-                gutterBottom
-                className={classes.multiLineEllipsis}
-                // id={message.idGroup}
-                // ref={(elm) => {
-                //   elementRef.current[index] = elm;
-                // }}
+    <Router>
+      <div
+        style={{
+          display: "flex",
+          width: `calc(100vw - ${80}px)`,
+          marginLeft: "80px",
+        }}
+      >
+        <div className={classes.root}>
+          <AppBar elevation={0} position="static" className={classes.appbar}>
+            <Toolbar>
+              <InputBase
+                fullWidth
+                className={classes.searchInput}
+                placeholder="Search for chats and messages"
+                startAdornment={
+                  <InputAdornment position="start" variant="filled">
+                    <SearchOutlined className={classes.iconSearch} />
+                  </InputAdornment>
+                }
+              />
+            </Toolbar>
+          </AppBar>
+          {messageSorted.map((message, index) => (
+            <div key={index}>
+              <Link
+                to={`${match.url}/${message.idGroup}`}
+                style={{ textDecoration: "none" }}
               >
-                {message.content}
-              </Typography>
-            </div>
-            <div>
-              <Typography className={classes.timeChat}>
-                {message.time}
-              </Typography>
-              <div className={message.unread == 0 ? null : classes.notiBox}>
-                <Typography
-                  // id={message.idGroup}
-                  // ref={(elm) => {
-                  //   elementRef.current[index] = elm;
-                  // }}
-                  className={message.unread == 0 ? null : classes.noti}
+                <Button
+                  disableRipple={true}
+                  className={classes.chatRoom}
+                  onClick={() =>
+                    handleChatRoom(message.friend, message.idGroup)
+                  }
                 >
-                  {message.unread == 0 ? null : message.unread}
-                </Typography>
-              </div>
+                  <AccountCircle style={{ fontSize: "60px" }} />
+                  <div className={classes.chatDesc}>
+                    <Typography className={classes.nameChat}>
+                      {message.name}
+                    </Typography>
+                    <Typography
+                      noWrap={false}
+                      gutterBottom
+                      className={classes.multiLineEllipsis}
+                      // id={message.idGroup}
+                      // ref={(elm) => {
+                      //   elementRef.current[index] = elm;
+                      // }}
+                    >
+                      {message.content}
+                    </Typography>
+                  </div>
+                  <div>
+                    <Typography className={classes.timeChat}>
+                      {message.time}
+                    </Typography>
+                    <div
+                      className={message.unread == 0 ? null : classes.notiBox}
+                    >
+                      <Typography
+                        // id={message.idGroup}
+                        // ref={(elm) => {
+                        //   elementRef.current[index] = elm;
+                        // }}
+                        className={message.unread == 0 ? null : classes.noti}
+                      >
+                        {message.unread == 0 ? null : message.unread}
+                      </Typography>
+                    </div>
+                  </div>
+                </Button>
+              </Link>
             </div>
-          </Button>
+          ))}
         </div>
-      ))}
-    </div>
+
+        <Divider orientation="vertical" flexItem />
+
+        <Switch>
+          <Route
+            exact
+            path={`${match.path}/:idGroup`}
+            component={DirectChatRoom}
+          />
+        </Switch>
+      </div>
+    </Router>
   );
 };
 

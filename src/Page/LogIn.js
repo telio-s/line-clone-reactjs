@@ -86,7 +86,7 @@ const Login = () => {
     const { email, password } = formState;
     await Auth.signIn(email, password);
     updateFormState(() => ({ ...formState, formType: "signedIn" }));
-    history.push("/dashboard", {
+    history.push("/dashboard/chats", {
       params: updateFormState(() => ({ ...formState, formType: "signIn" })),
     });
   };
