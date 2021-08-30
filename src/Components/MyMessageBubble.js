@@ -61,6 +61,7 @@ const MyMessageBubble = (props) => {
         fullWidth={true}
         maxWidth="md"
       >
+        <div></div>
         <img src={fullView} />
       </Dialog>
     </div>
