@@ -1,17 +1,10 @@
-import React, { useState, useRef, useEffect, useContext } from "react";
-import {
-  Button,
-  Typography,
-  Dialog,
-  DialogTitle,
-  DialogContent,
-  Box,
-  InputAdornment,
-  InputBase,
-} from "@material-ui/core";
-import { DirectChatRoomContext } from "../Components/DirectChatRoom";
+import React, { useRef, useEffect } from "react";
+import { Dialog } from "@material-ui/core";
 import { openMediaDevice, createAnswer, hangUp } from "./webRTC";
 import useStyle from "../Style/DialogCallStyle";
+import { IconButton } from "@material-ui/core";
+import { CallEndRounded, CallRounded } from "@material-ui/icons";
+import mockProfile from "./../in-the-mood-for-love-1.jpeg";
 
 const servers = {
   iceServers: [
@@ -34,7 +27,6 @@ const DialogCallReceiver = (props) => {
   const peerConnection = new RTCPeerConnection(servers);
 
   useEffect(() => {
-    console.log("tongtong");
     getUsermedia();
 
     return () => {
@@ -42,47 +34,81 @@ const DialogCallReceiver = (props) => {
     };
   }, []);
 
+  // function handleHangup() {
+  //   onClose();
+  //   hangUpByOtherEnd(peerConnection, remoteVideo, localVideo);
+  // }
+
   const getUsermedia = async () => {
     if (open) {
       // Get remoteStream
-      const [localStream, remoteStream] = await openMediaDevice(peerConnection);
+      const [localStream, remoteStream] = await openMediaDevice();
       localVideo.current.srcObject = localStream;
       remoteVideo.current.srcObject = remoteStream;
-      console.log(remoteStream.active);
+      return;
     }
   };
 
   const answerConnection = async () => {
-    console.log("getCall");
-    console.log(idCall);
     createAnswer(
       peerConnection,
-
       remoteVideo.current.srcObject, //remote stream
       localVideo.current.srcObject, //local stream
-      idCall
+      idCall,
+      onClose
     );
   };
 
   return (
-    <Dialog open={open} onClose={onClose} classes={{ paper: classes.dialog }}>
-      <DialogTitle>receiver</DialogTitle>
-      <DialogContent>
-        <Button onClick={answerConnection}>answer</Button>
-
-        <>
-          <video ref={localVideo} autoPlay />
-          <div>receiver tong</div>
-          <video ref={remoteVideo} autoPlay />
-          <Button
-            onClick={() =>
-              hangUp(peerConnection, remoteVideo, localVideo, idCall)
-            }
+    <Dialog open={open}>
+      <div style={{ width: "300px", height: "500px" }}>
+        <img
+          src={mockProfile}
+          style={{ objectFit: "cover", width: "300px", height: "300px" }}
+        ></img>
+        <audio ref={localVideo} autoPlay />
+        <audio ref={remoteVideo} autoPlay />
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            marginBottom: "30px",
+          }}
+        >
+          <h1>{myFriend.username}</h1>
+        </div>
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            marginBottom: "30px",
+          }}
+        >
+          <IconButton
+            className={classes.iconButton}
+            style={{
+              backgroundColor: "rgb(255,54,60)",
+              color: "whitesmoke",
+              marginRight: "40px",
+            }}
+            onClick={() => {
+              hangUp(peerConnection, remoteVideo, localVideo, idCall);
+              onClose();
+            }}
           >
-            X
-          </Button>
-        </>
-      </DialogContent>
+            <CallEndRounded fontSize="large" />
+          </IconButton>
+          <IconButton
+            onClick={() => answerConnection()}
+            className={classes.iconButton}
+            style={{ backgroundColor: "rgb(0,200,49)", color: "whitesmoke" }}
+          >
+            <CallRounded fontSize="large" />
+          </IconButton>
+        </div>
+      </div>
     </Dialog>
   );
 };

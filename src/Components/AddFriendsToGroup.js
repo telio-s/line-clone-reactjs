@@ -72,7 +72,6 @@ function AddFriendsToGroup(props) {
       createGroup(group, users);
     }
     handleOnClose(1);
-    // console.log(alreadyIn);
   }
 
   return (
