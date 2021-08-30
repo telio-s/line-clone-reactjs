@@ -5,11 +5,12 @@ const chatListWidth = 600;
 
 const useStyles = makeStyles((theme) => ({
   root: {
+    // width: `calc(100vw - ${80}px)`,
     width: chatListWidth,
     overflowY: "scroll",
     overflow: "hidden",
     height: `calc(98vh - 64px)`,
-    marginLeft: "80px",
+    // marginLeft: "80px",
   },
   appbar: {
     backgroundColor: "#ffffff",
