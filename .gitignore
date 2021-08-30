@@ -9,7 +9,7 @@
 /coverage
 
 # production
-/build
+# /build
 
 # misc
 .DS_Store
@@ -32,9 +32,9 @@ amplify/backend/awscloudformation
 amplify/backend/.temp
 amplify/team-provider-info.json
 build/
-dist/
+# dist/
 node_modules/
-aws-exports.js
+# aws-exports.js
 awsconfiguration.json
 amplifyconfiguration.json
 amplifyconfiguration.dart

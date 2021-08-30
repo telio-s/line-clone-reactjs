@@ -1,4 +1,4 @@
-import React, { useRef, useEffect } from "react";
+import React, { useRef, useEffect, useState } from "react";
 import { Dialog } from "@material-ui/core";
 import { openMediaDevice, createAnswer, hangUp } from "./webRTC";
 import useStyle from "../Style/DialogCallStyle";
@@ -25,6 +25,7 @@ const DialogCallReceiver = (props) => {
   const remoteVideo = useRef(null);
   const classes = useStyle();
   const peerConnection = new RTCPeerConnection(servers);
+  const [isReceive, setIsRecieve] = useState(false);
 
   useEffect(() => {
     getUsermedia();
@@ -33,11 +34,6 @@ const DialogCallReceiver = (props) => {
       console.log("clean up dialog caller");
     };
   }, []);
-
-  // function handleHangup() {
-  //   onClose();
-  //   hangUpByOtherEnd(peerConnection, remoteVideo, localVideo);
-  // }
 
   const getUsermedia = async () => {
     if (open) {
@@ -50,6 +46,8 @@ const DialogCallReceiver = (props) => {
   };
 
   const answerConnection = async () => {
+    console.log("call create answer");
+    setIsRecieve(true);
     createAnswer(
       peerConnection,
       remoteVideo.current.srcObject, //remote stream
@@ -91,7 +89,7 @@ const DialogCallReceiver = (props) => {
             style={{
               backgroundColor: "rgb(255,54,60)",
               color: "whitesmoke",
-              marginRight: "40px",
+              marginRight: isReceive ? "0px" : "40px",
             }}
             onClick={() => {
               hangUp(peerConnection, remoteVideo, localVideo, idCall);
@@ -103,7 +101,11 @@ const DialogCallReceiver = (props) => {
           <IconButton
             onClick={() => answerConnection()}
             className={classes.iconButton}
-            style={{ backgroundColor: "rgb(0,200,49)", color: "whitesmoke" }}
+            style={{
+              display: isReceive ? "none" : "",
+              backgroundColor: "rgb(0,200,49)",
+              color: "whitesmoke",
+            }}
           >
             <CallRounded fontSize="large" />
           </IconButton>

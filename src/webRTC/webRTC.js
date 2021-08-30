@@ -69,11 +69,11 @@ export const createCall = async (
   });
   // when answered, add icecandidate to peerConnection
   answerCandidates.onSnapshot((snapshot) => {
-    snapshot.docChanges().forEach((change) => {
+    snapshot.docChanges().forEach(async (change) => {
       console.log("answerCandidates snapshot", change);
       if (change.type === "added") {
         const candidate = new RTCIceCandidate(change.doc.data());
-        peerConnection.addIceCandidate(candidate);
+        await peerConnection.addIceCandidate(candidate);
         //trigger icecandidate event
       }
       if (change.type === "removed") {
@@ -91,16 +91,19 @@ export const createAnswer = async (
   idCall,
   onClose
 ) => {
+  console.log("create Answer", idCall);
   const room = firestore.collection("calls").doc(idCall);
+  console.log(room);
   const callSnapshot = await room.get();
   const offerCandidates = room.collection("offerCandidates");
   const answerCandidates = room.collection("answerCandidates");
 
   if (callSnapshot.exists) {
+    console.log("call snapshot is exists");
     registerPeerConnectionListeners(peerConnection);
     if (!localStream) {
       localStream = await navigator.mediaDevices.getUserMedia({
-        video: true,
+        video: false,
         audio: true,
       });
     }
@@ -137,11 +140,11 @@ export const createAnswer = async (
     await room.update({ answer });
 
     offerCandidates.onSnapshot((snapshot) => {
-      snapshot.docChanges().forEach((change) => {
+      snapshot.docChanges().forEach(async (change) => {
         console.log("offerCandidate snapshot", change);
         if (change.type === "added") {
           const candidate = new RTCIceCandidate(change.doc.data());
-          peerConnection.addIceCandidate(candidate);
+          await peerConnection.addIceCandidate(candidate);
         }
         if (change.type === "removed") {
           console.log("offerCandidates removed");
