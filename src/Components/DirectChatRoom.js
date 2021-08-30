@@ -334,6 +334,7 @@ const DirectChatRoom = (props) => {
         <DialogCallReceiver
           open={incomingCall}
           onClose={closeIncomingCall}
+          idCall={idCall}
           myUser={user}
           myFriend={friend}
         />
