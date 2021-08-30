@@ -8,13 +8,24 @@ import {
   InputBase,
   Button,
 } from "@material-ui/core";
+import {
+  BrowserRouter as Router,
+  Switch,
+  Route,
+  Link,
+  useParams,
+} from "react-router-dom";
 import { EventNote, MoreVert, Attachment } from "@material-ui/icons";
 import CallIcon from "@material-ui/icons/Call";
 import { API, graphqlOperation, Storage } from "aws-amplify";
 import MyMessageBubble from "./MyMessageBubble";
 import TheirMessageBubble from "./TheirMessageBubble";
 import { DashboardContext } from "../Page/Dashboard";
-import { getDirect } from "../api/queries";
+import {
+  getDirect,
+  getMessageByDateInGroup,
+  getTheGroup,
+} from "../api/queries";
 import { createMessageInGroup } from "./../api/mutations";
 import { newOnCreateMessage } from "../graphql/subscriptions";
 import AddFriendsToGroup from "./AddFriendsToGroup";
@@ -26,9 +37,10 @@ import { resizeImages } from "../utils/resizeImage";
 import aws_exports from "../aws-exports";
 
 export const DirectChatRoomContext = React.createContext();
-const DirectChatRoom = (props) => {
-  const { friend } = props;
-  const { user, setFriend } = useContext(DashboardContext);
+const DirectChatRoom = () => {
+  const { idGroup } = useParams();
+  console.log(idGroup);
+  const { user, setFriend, friend } = useContext(DashboardContext);
   const classes = useStyles();
   const [currMessage, setCurrMessage] = useState("");
   const [messages, setMessages] = useState([]);
@@ -43,35 +55,42 @@ const DirectChatRoom = (props) => {
   const [call, setCall] = useState(false);
   const [incomingCall, setIncomingCall] = useState(false);
   const [idCall, setIdCall] = useState("");
+  const [friendthis, setFriendThis] = useState("");
   const dummy = useRef();
+  const id = idGroup;
   // after add friend we have to create group after that
   // so first when we get to direct message withe other user we have to find the group
   useEffect(() => {
     async function getMessages() {
-      const [data, id, group] = await getDirect(user.username, friend.username);
+      const data = await getMessageByDateInGroup(idGroup);
+      const group = await getTheGroup(idGroup);
       setDirectId(id);
       setMessages(data);
-      setDirect(group.group);
+      console.log(data, id, group);
+      setDirect(group);
       let aIn = [];
-      group.group.users.items.map((user) => {
-        aIn.push(user.user.id);
+      group.users.items.map(async (thisuser) => {
+        if (thisuser.user.id !== user.id) {
+          console.log(thisuser.user);
+          setFriendThis(thisuser.user);
+          await setFriend(thisuser.user);
+        }
+        aIn.push(thisuser.user.id);
       });
       setAlreadyIn([...aIn]);
       scrollToBottom();
     }
-    console.log(idCall);
 
     getMessages();
-    setFriend(friend);
-  }, [friend, realTimeData]);
+  }, [realTimeData, idGroup]);
 
   useEffect(() => {
     setupSubscriptions();
-
+    console.log("gg", friendthis);
     return () => {
       subscriptionOnCreate.unsubscribe();
     };
-  }, []);
+  }, [friendthis]);
 
   let subscriptionOnCreate;
   function setupSubscriptions() {
@@ -83,11 +102,17 @@ const DirectChatRoom = (props) => {
         setRealTimeData(data);
         if (data.value.data.newOnCreateMessage) {
           const token = await getToken();
-          sendRequestPost(
-            token,
-            `${data.value.data.newOnCreateMessage.user.username} sent`,
-            data.value.data.newOnCreateMessage.message
-          );
+          console.log(token);
+          if (
+            data.value.data.newOnCreateMessage.user.username !== user.username
+          ) {
+            sendRequestPost(
+              token,
+              `${data.value.data.newOnCreateMessage.user.username} sent`,
+              data.value.data.newOnCreateMessage.message
+            );
+          }
+
           if (
             data.value.data.newOnCreateMessage.isCall &&
             data.value.data.newOnCreateMessage.user.username !== user.username
@@ -203,10 +228,6 @@ const DirectChatRoom = (props) => {
     hiddenFileUpload.current.click();
   }
 
-  // const openDialogCall = () => {
-  //   setCall(true);
-  // };
-
   const closeDialogCall = () => {
     setCall(false);
   };
@@ -223,7 +244,7 @@ const DirectChatRoom = (props) => {
             className={classes.nameChat}
             style={{ flexGrow: 1, textAlign: "left" }}
           >
-            {friend.username}
+            {friendthis.username}
           </Typography>
           <IconButton className={classes.iconButton}>
             <EventNote className={classes.iconSection} />
@@ -313,7 +334,7 @@ const DirectChatRoom = (props) => {
           onClose={closeDialogCall}
           idCall={idCall}
           myUser={user}
-          myFriend={friend}
+          myFriend={friendthis}
         />
       ) : null}
       {incomingCall && idCall ? (
@@ -322,7 +343,7 @@ const DirectChatRoom = (props) => {
           onClose={closeIncomingCall}
           idCall={idCall}
           myUser={user}
-          myFriend={friend}
+          myFriend={friendthis}
         />
       ) : null}
     </div>
