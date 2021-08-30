@@ -10,7 +10,7 @@ import {
 } from "@material-ui/core";
 import { EventNote, MoreVert, Attachment } from "@material-ui/icons";
 import CallIcon from "@material-ui/icons/Call";
-import { API, graphqlOperation } from "aws-amplify";
+import { API, graphqlOperation, Storage } from "aws-amplify";
 import MyMessageBubble from "./MyMessageBubble";
 import TheirMessageBubble from "./TheirMessageBubble";
 import { DashboardContext } from "../Page/Dashboard";
@@ -23,17 +23,8 @@ import useStyles from "../Style/ChatRoomStyle";
 import DialogCaller from "../webRTC/DialogCaller";
 import DialogCallReceiver from "../webRTC/DialogCallReceiver";
 import { resizeImages } from "../utils/resizeImage";
-import S3 from "react-aws-s3";
-import { hangUpByOtherEnd } from "../webRTC/webRTC";
+import aws_exports from "../aws-exports";
 
-const config = {
-  bucketName: process.env.REACT_APP_BUCKET_NAME,
-  dirName: process.env.REACT_APP_DIR_NAME,
-  region: process.env.REACT_APP_REGION,
-  accessKeyId: process.env.REACT_APP_ACCESS_ID,
-  secretAccessKey: process.env.REACT_APP_ACCESS_KEY,
-};
-const ReactS3Client = new S3(config);
 export const DirectChatRoomContext = React.createContext();
 const DirectChatRoom = (props) => {
   const { friend } = props;
@@ -124,17 +115,12 @@ const DirectChatRoom = (props) => {
       console.log(files);
       console.log("uploading file...");
       const responsePromise = files.map(async (file) => {
-        return ReactS3Client.uploadFile(file.file, file.name)
-          .then((data) => {
-            if (data.status === 204) {
-              console.log("success to upload");
-              return data.location;
-            } else {
-              console.log("failed to upload");
-              return null;
-            }
-          })
-          .catch((error) => console.log("Error: ", error));
+        return Storage.put(file.name, file.file, {
+          contentType: file.file.type,
+        }).then((data) => {
+          console.log(data);
+          return `https://${aws_exports.aws_user_files_s3_bucket}.s3.${aws_exports.aws_user_files_s3_bucket_region}.amazonaws.com/public/${data.key}`;
+        });
       });
 
       const responses = await Promise.all(responsePromise)
