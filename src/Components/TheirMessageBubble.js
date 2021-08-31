@@ -55,13 +55,25 @@ const TheirMessageBubble = (props) => {
         </Typography>
       )}
 
-      <Dialog
-        open={open}
-        onClose={() => handleFullView()}
-        fullWidth={true}
-        maxWidth="md"
-      >
-        <img src={fullView} />
+      <Dialog open={open} onClose={() => handleFullView()}>
+        <div
+          style={{
+            backgroundColor: "black",
+            height: "600px",
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+          }}
+        >
+          <img
+            src={fullView}
+            style={{
+              objectFit: "contain",
+              width: "600px",
+              height: "400px",
+            }}
+          />
+        </div>
       </Dialog>
     </div>
   );
