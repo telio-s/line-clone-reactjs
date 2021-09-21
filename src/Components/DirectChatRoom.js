@@ -186,6 +186,7 @@ const DirectChatRoom = () => {
 
   const scrollToBottom = () => {
     // console.log("test auto scroll when useeffect");
+    console.log(dummy);
     dummy.current.scrollIntoView({
       behavior: "smooth",
     });

@@ -64,8 +64,8 @@ const DialogCallReceiver = (props) => {
           src={mockProfile}
           style={{ objectFit: "cover", width: "300px", height: "300px" }}
         ></img>
-        <audio ref={localVideo} autoPlay />
-        <audio ref={remoteVideo} autoPlay />
+        <video ref={localVideo} autoPlay />
+        <video ref={remoteVideo} autoPlay />
         <div
           style={{
             display: "flex",

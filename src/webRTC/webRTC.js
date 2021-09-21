@@ -6,7 +6,7 @@ export const openMediaDevice = async () => {
 
   try {
     const localStream = await navigator.mediaDevices.getUserMedia({
-      video: false,
+      video: true,
       audio: true,
     });
 

@@ -61,6 +61,11 @@ const Login = () => {
       console.log("user: ", user);
       updateUser(user);
       updateFormState(() => ({ ...formState, formType: "signedIn" }));
+      if (user) {
+        history.push("/dashboard/chats", {
+          params: updateFormState(() => ({ ...formState, formType: "signIn" })),
+        });
+      }
     } catch (err) {
       // updateUser(null)
     }
@@ -82,7 +87,6 @@ const Login = () => {
     updateFormState(() => ({ ...formState, formType: "signIn" }));
   };
   const signIn = async () => {
-    console.log("rree");
     const { email, password } = formState;
     await Auth.signIn(email, password);
     updateFormState(() => ({ ...formState, formType: "signedIn" }));
