@@ -157,7 +157,7 @@ const ChatFeedRoom = (props) => {
           selection === "chats" ? classes.chatfeed : classes.chatfeedNoAppbar
         }
       >
-        {console.log(chat)}
+        {/* {console.log(chat)} */}
         {chat
           ? chat.messages.map((message, index) =>
               message.user.id === myUser.id ? (

@@ -19,6 +19,7 @@ import ChatList from "../Components/dashboard/ChatList";
 import Selection from "../Components/dashboard/Selection";
 import ChatFeedRoom from "../Components/dashboard/chat-feed/ChatFeedRoom";
 import Profile from "../Components/dashboard/Profile";
+import { getToken, sendRequestPost } from "../firebase/firebase";
 // import { showNotification } from "../../model/Notification";
 import { scrollToBottom } from "../service/ScrollView";
 // import CallerDialogue from "./../../Dialogue/CallerDialogue";
@@ -27,6 +28,7 @@ import { scrollToBottom } from "../service/ScrollView";
 //   handleCallerDialogue,
 //   handleCalleeDialogue,
 // } from "../../../utils/chat-room/utils";
+import firebase from "../firebase";
 
 function reducer(state, action) {
   // console.log("switch");
@@ -108,6 +110,7 @@ const Dashboard = ({ match }) => {
   const [countNoti, setCountNoti] = useState();
   const [friendList, setFriendList] = useState([]);
   const [call, setCall] = useState({ call: false, idSender: "" });
+  const messaging = firebase.messaging();
   const dummy = useRef();
   const [state, dispatch] = useReducer(reducer, {
     chatList: [],
@@ -115,6 +118,18 @@ const Dashboard = ({ match }) => {
   });
 
   useEffect(async () => {
+    // manage on messages
+    messaging.onMessage((payload) => {
+      console.log("Message received. ", payload);
+      const notificationTitle = payload.data.title;
+      const notificationOptions = {
+        body: payload.data.body,
+        icon: "/firebase-logo.png",
+      };
+
+      new Notification(notificationTitle, notificationOptions);
+    });
+
     // Fetch current user
     checkUserCurrent();
     return () => {};
@@ -173,6 +188,14 @@ const Dashboard = ({ match }) => {
         const newMsgObj = data.value.data.newOnCreateMessage;
         console.log(newMsgObj);
         setNewMessage(newMsgObj);
+        if (newMsgObj) {
+          const token = await getToken();
+          sendRequestPost(
+            token,
+            `${newMsgObj.user.username} sent`,
+            newMsgObj.message
+          );
+        }
 
         // if (Notification.permission === "granted") {
         //   showNotification(newMsgObj.group.id, dispatch, newMsgObj);
