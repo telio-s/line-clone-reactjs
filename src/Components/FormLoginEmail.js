@@ -10,8 +10,8 @@ import {
   IconButton,
 } from "@material-ui/core";
 import { VisibilityOutlined } from "@material-ui/icons";
-import LineButton from "../Style/LineButton";
-import useStyles from "../Style/LoginStyle";
+import LineButton from "../Style/line-button";
+import useStyles from "../Style/authentication-form";
 
 const FormLoginEmail = (props) => {
   const { updateFormState, formState, onChange, onClick } = props;

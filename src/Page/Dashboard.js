@@ -1,105 +1,357 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useReducer, useRef } from "react";
 import {
-  BrowserRouter as Router,
+  HashRouter as Router,
   Route,
   Link,
   useHistory,
   Switch,
+  useLocation,
 } from "react-router-dom";
+import AddFriend from "../Components/dashboard/AddFriend";
+import { Divider, Button } from "@material-ui/core";
 import { Auth, Hub } from "aws-amplify";
+import { getUserById, getMessagesByDate } from "../api/queries";
+import { setLocalTimeZone } from "../service/Localtime";
+import { API, graphqlOperation } from "aws-amplify";
+import { newOnCreateMessage } from "../graphql/subscriptions";
+import DrawerMenu from "../Components/dashboard/DrawerMenu";
+import ChatList from "../Components/dashboard/ChatList";
+import Selection from "../Components/dashboard/Selection";
+import ChatFeedRoom from "../Components/dashboard/chat-feed/ChatFeedRoom";
+import Profile from "../Components/dashboard/Profile";
+// import { showNotification } from "../../model/Notification";
+import { scrollToBottom } from "../service/ScrollView";
+// import CallerDialogue from "./../../Dialogue/CallerDialogue";
+// import CalleeDialogue from "./../../Dialogue/CalleeDialogue";
+// import {
+//   handleCallerDialogue,
+//   handleCalleeDialogue,
+// } from "../../../utils/chat-room/utils";
 
-import ChatDashboard from "../Components/ChatDashboard";
-import ChatRoomList from "../Components/ChatRoomList";
-import { Divider } from "@material-ui/core";
-import Selection from "./../Components/Selection";
-import MenuBar from "../Components/MenuBar";
-import AllChats from "../Components/AllChats";
+function reducer(state, action) {
+  // console.log("switch");
+  switch (action.type) {
+    case "set":
+      console.log("set");
+      return [action.payload];
+    case "add":
+      console.log("add");
+      let notiForChatlist = 0;
+      const time = setLocalTimeZone(action.payload.createdAt);
+      if (action.payload.user.username !== state[0].user.username) {
+        state[0].setCountNoti(state[0].countNoti + 1);
+        notiForChatlist = 1;
+      }
 
-import { getLoggedInUser } from "./../api/queries";
-import SideBar from "../Components/SideBar";
-import Chat from "./../Components/Chat";
-import Profile from "../Components/Profile";
-import useStyles from "../Style/DashboardStyle";
-// import firebase from "../firebase-messaging-sw";
-export const DashboardContext = React.createContext();
+      // Set for chatfeed UI
+      if (state[0].chat) {
+        // console.log(state[0].chat);
+        // Id of new msg in And id of chat at that time Are compatible.
+        if (state[0].chat.idGroup === action.payload.group.id) {
+          state[0].setChat((prevState) => ({
+            idGroup: prevState.idGroup,
+            name: prevState.name,
+            sender: action.payload.user.username,
+            content: action.payload.message,
+            time: time,
+            ISOtime: action.payload.createdAt,
+            theirUser: { ...prevState.theirUser },
+            messages: [...prevState.messages, action.payload],
+          }));
+        }
+        // clicked And ids are NOT compatible, need open chat ..cause clicked
+        else if (
+          action.onClick === "onClick" &&
+          state[0].chat.idGroup !== action.payload.group.id
+        ) {
+          console.log("clicked in");
+          const chat = state[0].chatList.find((obj) => {
+            return obj.idGroup == action.payload.group.id;
+          });
+          console.log(chat);
+          state[0].setChat(chat);
+        }
+      }
+
+      // Set for chatlist UI
+      if (action.onClick === "noClick") {
+        console.log("chatlist... editing");
+        state[0].setChatList(
+          state[0].chatList.map((obj) =>
+            obj.idGroup === action.payload.type
+              ? {
+                  ...obj,
+                  sender: action.payload.user.username,
+                  content: action.payload.message,
+                  time: time,
+                  ISOtime: action.payload.createdAt,
+                  theirUser: { ...obj.theirUser },
+                  messages: [...obj.messages, action.payload],
+                  unread: obj.unread + notiForChatlist,
+                }
+              : obj
+          )
+        );
+      }
+  }
+}
 
 const Dashboard = ({ match }) => {
-  const [user, setUser] = useState(null);
-  const [sideBar, setSideBar] = useState(null);
-  const [chat, setChat] = useState(null);
-  const [friend, setFriend] = useState([]);
+  const history = useHistory();
+  const [selection, setSelection] = useState("");
+  const [myUser, setMyUser] = useState();
+  const [user, setUser] = useState();
+  const [chatList, setChatList] = useState([]);
+  const [sordteChatList, updateSordteChatList] = useState([]);
+  const [chat, setChat] = useState();
+  const [newMessage, setNewMessage] = useState();
+  const [countNoti, setCountNoti] = useState();
+  const [friendList, setFriendList] = useState([]);
+  const [call, setCall] = useState({ call: false, idSender: "" });
+  const dummy = useRef();
+  const [state, dispatch] = useReducer(reducer, {
+    chatList: [],
+    chat: {},
+  });
 
-  const classes = useStyles();
-
-  useEffect(() => {
-    if ("serviceWorker" in navigator) {
-      navigator.serviceWorker
-        .register("/firebase-messaging-sw.js")
-        .then(function (registration) {
-          console.log("Registration successful, scope is:", registration.scope);
-        })
-        .catch(function (err) {
-          console.log("Service worker registration failed, error:", err);
-        });
-    }
+  useEffect(async () => {
+    // Fetch current user
     checkUserCurrent();
-
-    // async function getUser() {
-    //   const data = await getLoggedInUser();
-    //   console.log(data);
-    //   setUser(data.data.listUsers.items[0]);
-    // }
-    // getUser();
-    console.log("Dashboard called");
-    // sideBar ? setSideBar(sideBar) : setSideBar(<Profile user={user} />);
-
-    return () => {
-      console.log("clean up");
-    };
+    return () => {};
   }, []);
 
   useEffect(() => {
-    console.log(user);
-  }, [user]);
+    // Fetch for chatList
+    setChatList([]);
+    fetchChatList();
+
+    return () => {};
+  }, [myUser]);
+
+  useEffect(() => {
+    chatList.sort(function sort(b, a) {
+      console.log("...sorting");
+      return new Date(a.ISOtime).getTime() - new Date(b.ISOtime).getTime();
+    });
+    // console.log(chatList, chat);
+
+    dispatch({
+      type: "set",
+      payload: {
+        chatList: chatList,
+        chat: chat,
+        countNoti: countNoti,
+        setChat: setChat,
+        setChatList: setChatList,
+        setCountNoti: setCountNoti,
+        user: myUser,
+      },
+    });
+
+    updateSordteChatList(chatList);
+
+    if (dummy.current) {
+      scrollToBottom(dummy);
+    }
+    return () => {};
+  }, [chatList, chat, countNoti]);
+
+  useEffect(() => {
+    // Open subscribe
+    setupSubscriptions();
+    return () => {
+      subscriptionOnCreate.unsubscribe();
+    };
+  }, []);
+
+  let subscriptionOnCreate;
+  const setupSubscriptions = async () => {
+    subscriptionOnCreate = API.graphql(
+      graphqlOperation(newOnCreateMessage)
+    ).subscribe({
+      next: async (data) => {
+        const newMsgObj = data.value.data.newOnCreateMessage;
+        console.log(newMsgObj);
+        setNewMessage(newMsgObj);
+
+        // if (Notification.permission === "granted") {
+        //   showNotification(newMsgObj.group.id, dispatch, newMsgObj);
+        // } else if (Notification.permission !== "denied") {
+        //   Notification.requestPermission().then((permission) => {
+        //     if (permission == " granted")
+        //       showNotification(newMsgObj.group.id, dispatch, newMsgObj);
+        //   });
+        // }
+      },
+    });
+  };
 
   const checkUserCurrent = async () => {
-    try {
-      const user = await Auth.currentAuthenticatedUser();
-      console.log("user: ", user);
+    // Get id by checking user current auth
+    const auth = await Auth.currentAuthenticatedUser();
+    console.log(auth);
+    const id = auth.attributes.sub;
 
-      const data = await getLoggedInUser(user.attributes.sub);
-      setUser(data.data.listUsers.items[0]);
-      sideBar
-        ? setSideBar(sideBar)
-        : setSideBar(<Profile user={data.data.listUsers.items[0]} />);
+    // Get User by id
+    try {
+      const userById = await getUserById(id);
+      setMyUser(userById);
+      setUser(userById);
     } catch (err) {
-      // updateUser(null)
+      console.log(err);
+    }
+  };
+
+  const fetchChatList = async () => {
+    console.log(myUser);
+    if (myUser) {
+      let noti = 0;
+      const fetchFriendList = myUser.groups.items.filter((obj) => {
+        return obj.group.isDirect === true;
+      });
+      setFriendList(fetchFriendList);
+      console.log(fetchFriendList);
+      await myUser.groups.items.map(async (group) => {
+        if (group.group.isDirect && group.group.messages.items.length != 0) {
+          const fetchAllMessage = await getMessagesByDate(group.group.id);
+          const theirUser = findFriendForChatlist(
+            myUser,
+            group.group.users.items
+          );
+          const resultFilterTheirUser = countHasUnRead(fetchAllMessage);
+          noti += resultFilterTheirUser.length;
+
+          const localtime = setLocalTimeZone(
+            fetchAllMessage.items[
+              fetchAllMessage.items.length - 1
+            ].createdAt.toString()
+          );
+          // console.log("lastMsg", fetchAllMessage.items);
+
+          let newChatInfo = {
+            idGroup: group.group.id,
+            name: group.group.name,
+            sender:
+              fetchAllMessage.items[fetchAllMessage.items.length - 1].user
+                .username,
+            content:
+              fetchAllMessage.items[fetchAllMessage.items.length - 1].message,
+            time: localtime,
+            ISOtime:
+              fetchAllMessage.items[fetchAllMessage.items.length - 1].createdAt,
+            theirUser: theirUser,
+            messages: fetchAllMessage.items,
+            unread: resultFilterTheirUser.length,
+          };
+          // console.log("fetch chatlist");
+          setChat(newChatInfo);
+          setChatList((previouschat) => [...previouschat, newChatInfo]);
+          setCountNoti(noti);
+        }
+      });
+    }
+  };
+
+  const countHasUnRead = (fetchAllMessage) => {
+    const result = fetchAllMessage.items.filter(
+      (item) => item.hasRead === false
+    );
+    // console.log("result count", result);
+    const resultFilterTheirUser = result.filter(
+      (item) => item.user.username !== myUser.username
+    );
+    // console.log(resultFilterTheirUser);
+
+    return resultFilterTheirUser;
+  };
+
+  const findFriendForChatlist = (myuser, group) => {
+    for (let i = 0; i < group.length; i++) {
+      if (myuser.username !== group[i].user.username) {
+        return group[i].user;
+      }
+    }
+  };
+
+  const choseMenu = () => {
+    switch (selection) {
+      case "chats":
+        // console.log(selection);
+        return (
+          <ChatList
+            match={match}
+            chatListArr={sordteChatList}
+            setChat={setChat}
+            setChatList={setChatList}
+            chatList={chatList}
+            setCountNoti={setCountNoti}
+            countNoti={countNoti}
+            myUser={myUser}
+          />
+        );
+      case "addfriends":
+        return (
+          <AddFriend
+            user={myUser}
+            match={match}
+            chatRoom={sordteChatList}
+            setChat={setChat}
+          />
+        );
+      case "profile":
+        // console.log(selection);
+        return (
+          <Profile
+            match={match}
+            user={user}
+            setUser={setUser}
+            friendList={friendList}
+            setChat={setChat}
+          />
+        );
+      default:
+        // console.log("default profile");
+        return (
+          <Profile
+            match={match}
+            user={user}
+            setUser={setUser}
+            friendList={friendList}
+            setChat={setChat}
+          />
+        );
     }
   };
 
   return (
-    <DashboardContext.Provider
-      value={{
-        user,
-        sideBar,
-        setSideBar,
-        chat,
-        setChat,
-        friend,
-        setFriend,
-      }}
-    >
-      <div className={classes.root}>
-        <Selection />
-        <Divider />
-        <div className={classes.mainDrawerRoot}>
-          <MenuBar match={match} />
-          {/* <SideBar /> */}
-          {/* <Divider orientation="vertical" flexItem /> */}
-          {/* <Chat /> */}
+    <div style={{ display: "flex" }}>
+      {/* {console.log(match.url)} */}
+      <DrawerMenu
+        match={match}
+        setSelection={setSelection}
+        countNoti={countNoti}
+      />
+      <div>
+        <Selection type={selection} />
+        <div style={{ display: "flex" }}>
+          {choseMenu()}
+          <Divider orientation="vertical" flexItem />
+          <Switch>
+            <Route path={`${match.path}/:idGroup`}>
+              <ChatFeedRoom
+                myUser={myUser}
+                chat={chat}
+                setChat={setChat}
+                setChatList={setChatList}
+                chatList={chatList}
+                dummy={dummy}
+                selection={selection}
+              />
+            </Route>
+          </Switch>
         </div>
       </div>
-    </DashboardContext.Provider>
+    </div>
   );
 };
 

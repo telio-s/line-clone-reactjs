@@ -8,14 +8,10 @@ import { Auth, Hub } from "aws-amplify";
 
 function App() {
   return (
-    <div>
-      <Router>
-        <div className="App">
-          <Route path="/" exact component={Login} />
-          <Route path="/dashboard" component={Dashboard} />
-        </div>
-      </Router>
-    </div>
+    <Router>
+      <Route path="/dashboard" component={Dashboard} />
+      <Route path="/" exact component={Login} />
+    </Router>
   );
 }
 

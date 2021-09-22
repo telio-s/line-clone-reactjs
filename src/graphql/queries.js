@@ -31,6 +31,12 @@ export const getUser = /* GraphQL */ `
             messages {
               items {
                 message
+                user {
+                  id
+                  username
+                  displayName
+                  statusMessage
+                }
               }
             }
             users {
@@ -38,6 +44,8 @@ export const getUser = /* GraphQL */ `
                 user {
                   id
                   username
+                  displayName
+                  statusMessage
                 }
               }
             }

@@ -1,4 +1,3 @@
-import React from "react";
 import { Button } from "@material-ui/core";
 import { withStyles } from "@material-ui/core/styles";
 const LineButton = withStyles((theme) => ({
@@ -17,6 +16,7 @@ const LineButton = withStyles((theme) => ({
     marginTop: "15px",
     paddingTop: "10px",
     paddingBottom: "10px",
+    marginBottom: "10px",
   },
 }))(Button);
 

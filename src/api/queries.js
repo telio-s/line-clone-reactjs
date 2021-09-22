@@ -1,65 +1,39 @@
 import { API, graphqlOperation } from "aws-amplify";
-import { getGroup, listUsers, messageByDate } from "./../graphql/queries";
+import { getUser, listUsers, messageByDate } from "./../graphql/queries";
 
-// get logged in user using listUser
 export async function getLoggedInUser(id) {
-  try {
-    const user = await API.graphql(
-      graphqlOperation(listUsers, {
-        filter: { id: { eq: id } },
-      })
-    );
-    return user;
-  } catch (error) {
-    return error;
-  }
-}
-
-export async function getMessageByDateInGroup(id) {
-  const data = await API.graphql(
-    graphqlOperation(messageByDate, {
-      type: id.toString(),
-      sortDirection: "ASC",
-    })
-  );
-  return data.data.messageByDate.items;
+  const user = await API.graphql(graphqlOperation(getUser, { id }))
+    .then((data) => data.data.getUser)
+    .catch((err) => console.log(err));
+  return user;
 }
 
 export async function getUserByUsername(username) {
-  const data = await API.graphql(
+  const user = await API.graphql(
     graphqlOperation(listUsers, { filter: { username: { eq: username } } })
+  )
+    .then((data) => data.data.listUsers.items[0])
+    .catch(() => null);
+  return user;
+}
+
+export const getUserById = async (id) => {
+  const data = await API.graphql(
+    graphqlOperation(getUser, {
+      id,
+    })
   );
-  return data.data.listUsers.items[0];
-}
 
-export async function getTheGroup(id) {
-  const data = await API.graphql(graphqlOperation(getGroup, { id }));
-  return data.data.getGroup;
-}
+  return data.data.getUser;
+};
 
-export async function getDirect(userUsername, friendUsername) {
-  const _user = await getUserByUsername(userUsername);
-  const _friend = await getUserByUsername(friendUsername);
-  let userGroup = [];
-  let directId = "";
-  let groupInfo = [];
-  _user.groups.items.map((group) => {
-    if (group.group.isDirect) {
-      // keep all direct chats
-      userGroup.push(group.group.id);
-    }
-  });
-  _friend.groups.items.map((group) => {
-    if (userGroup.includes(group.group.id)) {
-      directId = group.group.id;
-      groupInfo = group;
-      return;
-    }
-  });
-  try {
-    const _direct = await getMessageByDateInGroup(directId);
-    return [_direct, directId, groupInfo];
-  } catch (error) {
-    return;
-  }
-}
+export const getMessagesByDate = async (type) => {
+  const data = await API.graphql(
+    graphqlOperation(messageByDate, {
+      type: type,
+      sortDirection: "ASC",
+    })
+  );
+
+  return data.data.messageByDate;
+};
