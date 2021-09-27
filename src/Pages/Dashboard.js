@@ -261,7 +261,8 @@ const Dashboard = ({ match }) => {
     try {
       const userById = await getUserById(id);
       setMyUser(userById);
-      setUser(userById);
+      console.log(userById);
+      // setUser(userById);
     } catch (err) {
       console.log(err);
     }
@@ -372,6 +373,7 @@ const Dashboard = ({ match }) => {
             setUser={setUser}
             friendList={friendList}
             setChat={setChat}
+            setCaller={setCaller}
           />
         );
       default:

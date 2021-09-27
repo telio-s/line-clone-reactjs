@@ -38,7 +38,8 @@ import { uploadFiles } from "./../../../utils/sending-media/utils";
 import useStyles from "../../../Style/ChatFeedRoomStyle";
 
 const ChatFeedRoom = (props) => {
-  const { myUser, chat, setChat, dummy, selection, setMyUser, setCaller } = props;
+  const { myUser, chat, setChat, dummy, selection, setMyUser, setCaller } =
+    props;
   const classes = useStyles();
   const idGroup = useParams();
   const [currentMsg, setCurrentMsg] = useState();

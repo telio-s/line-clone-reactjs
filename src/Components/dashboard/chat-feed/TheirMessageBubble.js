@@ -39,8 +39,10 @@ const TheirMessageBubble = (props) => {
   function handleProfileDialogue() {
     setOpenProfile(!openProfile);
   }
+  console.log(user);
   return (
     <div className={classes.root}>
+      {console.log(user)}
       <Avatar
         src={user.profilePhoto ? getImg(user, "profile") : ""}
         style={{ width: "40px", height: "40px", marginLeft: "10px" }}
@@ -61,7 +63,6 @@ const TheirMessageBubble = (props) => {
           />
         </Typography>
       )}
-
       <Dialog open={open} onClose={() => handleFullView()}>
         <div
           style={{

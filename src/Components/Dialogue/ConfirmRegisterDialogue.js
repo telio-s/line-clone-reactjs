@@ -4,7 +4,7 @@ import {
   confirmRegister,
   handleOnKeyUpEvent,
 } from "./../../utils/authentication/utils";
-import useStyles from "./../../styles/authentication-form";
+import useStyles from "../../Style/authentication/authentication-form";
 import { useHistory } from "react-router-dom";
 
 function ConfirmRegisterDialogue(props) {

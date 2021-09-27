@@ -10,7 +10,6 @@ import { HashRouter as Router, Link } from "react-router-dom";
 import { ExpandLess, ExpandMore, AccountCircle } from "@material-ui/icons";
 import ProfileDialogue from "../Dialogue/FriendProfileDialogue";
 import { getImg } from "../../utils/profile/utils";
-// import FriendProfileDialogue from "../Dialogue/FriendProfileDialogue";
 import useStyles from "../../Style/profile-style/profile";
 import FriendProfileDialogue from "../Dialogue/FriendProfileDialogue";
 
@@ -37,7 +36,7 @@ const Profile = (props) => {
   return (
     <div className={classes.root}>
       {console.log(friendList)}
-      {/* {console.log(user)} */}
+      {console.log(user)}
       {user && (
         <>
           <ListItem button onClick={() => handleProfile()}>
@@ -143,6 +142,7 @@ const Profile = (props) => {
             user={user}
             setUser={setUser}
           />
+          {/* {friend && console.log(friend.friend)}
           {friend && (
             <FriendProfileDialogue
               open={showFriendProfile}
@@ -152,7 +152,7 @@ const Profile = (props) => {
               idGroup={friend.groupId}
               user={user}
             />
-          )}
+          )} */}
         </>
       )}
     </div>

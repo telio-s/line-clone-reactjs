@@ -23,7 +23,6 @@ import useStyles from "../../Style/add-friend/addfriend-dialogue";
 import { Link } from "react-router-dom";
 import { getImg } from "../../utils/profile/utils";
 
-
 function AddFriendDialogue(props) {
   const { user, onClose, isOpen, match, chatRoom, setChat } = props;
   const classes = useStyles();

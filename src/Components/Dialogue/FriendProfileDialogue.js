@@ -22,11 +22,13 @@ function FriendProfileDialogue(props) {
     setFullPreview(!fullPreview);
     if (!fullPreview) setImg(e.target.src);
   }
+  console.log(friend);
 
   return (
     <Dialog open={open} onClose={onclose}>
       <div style={{ width: "300px", height: "400px" }}>
         <>
+          {console.log(friend)}
           <img
             src={friend.coverPhoto ? getImg(friend, "cover") : ""}
             onClick={(e) => handleFullPreview(e)}
