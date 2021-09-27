@@ -7,10 +7,12 @@ import {
   InputBase,
   InputAdornment,
   Button,
+  Avatar,
 } from "@material-ui/core";
 import { updateMessageHasRead } from "../../api/mutations";
 import { SearchOutlined, AccountCircle } from "@material-ui/icons";
-import useStyles from "../../styles/ChatListStyle";
+import useStyles from "../../Style/ChatListStyle";
+import { getImg } from "../../utils/profile/utils";
 
 const ChatList = (props) => {
   const {
@@ -53,6 +55,7 @@ const ChatList = (props) => {
       </AppBar>
       {chatListArr.map((message, index) => (
         <div key={index}>
+          {console.log(message.theirUser)}
           <Link
             to={`${match.url}/${message.idGroup}`}
             style={{ textDecoration: "none" }}
@@ -126,10 +129,16 @@ const ChatList = (props) => {
                 setCountNoti(countNoti - resultFilterTheirUser.length);
               }}
             >
-              <AccountCircle style={{ fontSize: "60px" }} />
+              <Avatar
+                src={
+                  message.theirUser.profilePhoto &&
+                  getImg(message.theirUser, "profile")
+                }
+                style={{ width: "60px", height: "60px" }}
+              />
               <div className={classes.chatDesc}>
                 <Typography className={classes.nameChat}>
-                  {message.name}
+                  {message.theirUser.displayName}
                 </Typography>
                 <Typography
                   noWrap={false}

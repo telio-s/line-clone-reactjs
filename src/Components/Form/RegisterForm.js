@@ -11,8 +11,8 @@ import {
   register,
   handleOnKeyUpEvent,
 } from "./../../utils/authentication/utils";
-import LineButton from "../../styles/line-button";
-import useStyles from "../../styles/authentication/authentication-form";
+import LineButton from "../../Style/line-button";
+import useStyles from "../../Style/authentication/authentication-form";
 
 function RegisterForm(props) {
   const classes = useStyles();

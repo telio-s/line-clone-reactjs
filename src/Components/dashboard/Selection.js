@@ -1,6 +1,6 @@
 import React from "react";
 import { AppBar, Toolbar, Button, Divider } from "@material-ui/core";
-import useStyles from "../../styles/SelectionStyle";
+import useStyles from "../../Style/SelectionStyle";
 
 const chatTypeSection = [
   { title: "All" },

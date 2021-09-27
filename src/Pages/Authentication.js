@@ -6,7 +6,7 @@ import RegisterForm from "../Components/Form/RegisterForm";
 import ConfirmRegisterDialogue from "../Components/Dialogue/ConfirmRegisterDialogue";
 import { HashRouter as Router, useHistory } from "react-router-dom";
 import mockQRCode from "./../assets/imgs/mockQRCode.png";
-import useStyles from "../styles/authentication/authentication-form";
+import useStyles from "../Style/authentication/authentication-form";
 import { Hub } from "aws-amplify";
 
 function Authentication() {

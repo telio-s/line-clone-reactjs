@@ -36,6 +36,20 @@ const useStyles = makeStyles((theme) => ({
     height: "30px",
     marginBottom: "15px",
   },
+  chatBtn: {
+    backgroundColor: "#07b53b",
+    "&:hover": {
+      backgroundColor: "#07b53b",
+    },
+    "&:disabled": {
+      backgroundColor: "#bababa",
+    },
+    textTransform: "capitalize !important",
+    marginTop: "15px",
+    paddingTop: "10px",
+    paddingBottom: "10px",
+    marginBottom: "10px",
+  },
 }));
 
 export default useStyles;

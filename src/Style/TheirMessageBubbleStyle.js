@@ -5,19 +5,24 @@ const useStyles = makeStyles((theme) => ({
   bubble: {
     backgroundColor: "#efefef",
     borderRadius: "20px",
-    maxWidth: "40%",
-    padding: "10px",
-    float: "left",
+    padding: "7px 14px 7px 14px",
     marginLeft: "10px",
+    marginBottom: "10px",
   },
   root: {
-    marginLeft: "20px",
-    maxWidth: "100%",
+    width: "100%",
     display: "flex",
-    marginTop: "10px",
+    justifyContent: "flex-start",
   },
   head: {
     display: "inline-block",
+  },
+  container: {
+    padding: "0px",
+    margin: "0px",
+    width: "15vw",
+    display: "flex",
+    maxWidth: "200px",
   },
 }));
 

@@ -58,14 +58,10 @@ export const newOnCreateMessage = /* GraphQL */ `
         id
         name
         users {
-          items {
-            id
-          }
+          nextToken
         }
         messages {
-          items {
-            message
-          }
+          nextToken
         }
         isDirect
         announce {

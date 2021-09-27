@@ -31,33 +31,23 @@ import MyMessageBubble from "./MyMessageBubble";
 import TheirMessageBubble from "./TheirMessageBubble";
 import { createMessageInGroup } from "../../../api/mutations";
 import { setLocalTimeZone } from "../../../service/Localtime";
-import {
-  handleCall,
-  handleCalleeDialogue,
-  handleCallerDialogue,
-} from "../../../utils/chat-room/utils";
+import { handleCallMenu } from "../../../utils/chat-room/utils";
+import CallMenu from "../../Menu/CallMenu";
 import { scrollToBottom } from "../../../service/ScrollView";
-import useStyles from "../../../styles/ChatFeedRoomStyle";
-// import CallMenu from "../../../Menu/CallMenu";
+import { uploadFiles } from "./../../../utils/sending-media/utils";
+import useStyles from "../../../Style/ChatFeedRoomStyle";
 
 const ChatFeedRoom = (props) => {
-  const {
-    myUser,
-    chat,
-    setChat,
-    setChatList,
-    chatList,
-    dummy,
-    selection,
-    setMyUser,
-  } = props;
+  const { myUser, chat, setChat, dummy, selection, setMyUser, setCaller } =
+    props;
   const classes = useStyles();
   const idGroup = useParams();
   const [currentMsg, setCurrentMsg] = useState();
+  const [imgs, setImgs] = useState([]);
+  const [filesUpload, setFilesUpload] = useState([]);
+  const hiddenUploadBtn = useRef(null);
+  const [anchorEl, setAnchorEl] = useState(null);
   const location = useLocation();
-  const [caller, setCaller] = useState({ isCall: false, type: "audio" });
-  const [callee, setCallee] = useState({ isCall: false, type: "audio" });
-
   const match = useRouteMatch();
   useEffect(() => {
     checkUserCurrent();
@@ -76,7 +66,7 @@ const ChatFeedRoom = (props) => {
 
   const handleSendMessage = async (e) => {
     if (e.keyCode === 13) {
-      const message = {
+      let message = {
         type: idGroup.idGroup,
         message: currentMsg,
         messageUserId: myUser.id,
@@ -84,40 +74,18 @@ const ChatFeedRoom = (props) => {
         isBlock: false,
         hasRead: false,
         isCall: false,
-        // media: responses,
       };
+      if (filesUpload.length) {
+        console.log(filesUpload);
+        setImgs([]);
+        const responses = await uploadFiles(filesUpload);
+        console.log(responses);
+        message = { ...message, media: responses };
+      }
       const msg = await createMessageInGroup(message);
       const time = setLocalTimeZone(msg.createdAt);
-
-      // Set for bubble of chatfeed UI
-      // await setChat((prevState) => ({
-      //   idGroup: prevState.idGroup,
-      //   name: prevState.name,
-      //   sender: msg.user.username,
-      //   content: msg.message,
-      //   time: time,
-      //   ISOtime: msg.createdAt,
-      //   theirUser: { ...prevState.theirUser },
-      //   messages: [...prevState.messages, msg],
-      // }));
-
-      // Set for chatlist UI
-      // setChatList(
-      //   chatList.map((obj) =>
-      //     obj.idGroup === idGroup.idGroup
-      //       ? {
-      //           ...obj,
-      //           sender: msg.user.username,
-      //           content: msg.message,
-      //           time: time,
-      //           ISOtime: msg.createdAt,
-      //           theirUser: { ...obj.theirUser },
-      //           messages: [...obj.messages, msg],
-      //         }
-      //       : obj
-      //   )
-      // );
       setCurrentMsg("");
+      setFilesUpload([]);
     }
   };
 
@@ -153,6 +121,23 @@ const ChatFeedRoom = (props) => {
     });
   };
 
+  function handleSelectedFiles(e) {
+    const files = e.target.files;
+    console.log(files);
+    // setFilesUpload(files);
+    for (let i = 0; i < files.length; i++) {
+      console.log(files[i]);
+      setFilesUpload((prevFiles) => [...prevFiles, files[i]]);
+      const _img = URL.createObjectURL(files[i]);
+      setImgs((prevImgs) => [...prevImgs, _img]);
+    }
+  }
+
+  function handleTriggerUploadPhoto() {
+    console.log("trigger hidden btn");
+    hiddenUploadBtn.current.click();
+  }
+
   return (
     <div
       className={selection === "chats" ? classes.root : classes.rootNoAppbar}
@@ -175,37 +160,22 @@ const ChatFeedRoom = (props) => {
               </IconButton>
               <IconButton
                 className={classes.iconButton}
-                onClick={() =>
-                  handleCall(
-                    "audio",
-                    setCaller,
-                    setChat,
-                    chat,
-                    idGroup.idgroup,
-                    myUser
-                  )
-                }
+                onClick={(e) => handleCallMenu(e, anchorEl, setAnchorEl)}
               >
                 <CallRounded className={classes.iconSection} />
-              </IconButton>
-              <IconButton
-                className={classes.iconButton}
-                onClick={() =>
-                  handleCall(
-                    "video",
-                    setCaller,
-                    setChat,
-                    chat,
-                    idGroup.idGroup,
-                    myUser
-                  )
-                }
-              >
-                <VideocamRounded className={classes.iconSection} />
               </IconButton>
               <IconButton className={classes.iconButton}>
                 <MoreVert className={classes.iconSection} />
               </IconButton>
+              {anchorEl && (
+                <CallMenu
+                  setCaller={setCaller}
+                  idGroup={idGroup.idGroup}
+                  user={myUser}
+                  onclose={() => handleCallMenu(null, anchorEl, setAnchorEl)}
+                  anchorEl={anchorEl}
+                />
+              )}
             </Toolbar>
           </AppBar>
           <div
@@ -221,7 +191,14 @@ const ChatFeedRoom = (props) => {
                   message.user.id === myUser.id ? (
                     <MyMessageBubble key={index} message={message} />
                   ) : (
-                    <TheirMessageBubble key={index} message={message} />
+                    <TheirMessageBubble
+                      key={index}
+                      message={message}
+                      user={chat.theirUser}
+                      setCaller={setCaller}
+                      idGroup={idGroup.idGroup}
+                      myUser={myUser}
+                    />
                   )
                 )
               : null}
@@ -232,7 +209,7 @@ const ChatFeedRoom = (props) => {
       )}
       <form className={classes.textArea}>
         <InputBase
-          placeholder="Enter a message"
+          placeholder={!imgs ? "Enter a message" : ""}
           fullWidth
           multiline
           rowsMin={1}
@@ -243,33 +220,39 @@ const ChatFeedRoom = (props) => {
           onKeyUp={(e) => {
             handleSendMessage(e);
           }}
+          startAdornment={
+            imgs &&
+            imgs.map((uri, index) => (
+              <img
+                key={index}
+                src={uri}
+                style={{
+                  width: "50px",
+                  height: "50px",
+                  objectFit: "cover",
+                  marginRight: "3px",
+                  borderRadius: "5px",
+                }}
+              />
+            ))
+          }
         ></InputBase>
+        <input
+          ref={hiddenUploadBtn}
+          style={{ display: "none" }}
+          type="file"
+          multiple="multiple"
+          onChange={(e) => handleSelectedFiles(e)}
+        />
         <div className={classes.iconButtTextArea}>
-          <IconButton className={classes.iconButton}>
+          <IconButton
+            className={classes.iconButton}
+            onClick={() => handleTriggerUploadPhoto()}
+          >
             <Attachment />
           </IconButton>
         </div>
       </form>
-      {/* {caller.isCall && idGroup && (
-        <CallerDialogue
-          open={caller.isCall}
-          onclose={() => handleCallerDialogue(setCaller)}
-          id={idGroup.idGroup}
-          callee={chat.theirUser}
-          call={caller}
-          setCall={setCaller}
-        />
-      )}
-      {callee.isCall && idGroup && (
-        <CalleeDialogue
-          open={callee.isCall}
-          onclose={() => handleCalleeDialogue(setCallee)}
-          id={idGroup.idGroup}
-          caller={myUser}
-          call={callee}
-          setCall={setCallee}
-        />
-      )} */}
     </div>
   );
 };

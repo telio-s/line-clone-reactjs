@@ -4,7 +4,7 @@ import {
   confirmRegister,
   handleOnKeyUpEvent,
 } from "./../../utils/authentication/utils";
-import useStyles from "../../styles/authentication/authentication-form";
+import useStyles from "../../Style/authentication/authentication-form";
 import { useHistory } from "react-router-dom";
 
 function ConfirmRegisterDialogue(props) {
@@ -34,7 +34,20 @@ function ConfirmRegisterDialogue(props) {
           }
         />
       </div>
-      {errMes && <h4>{errMes}</h4>}
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          height: "40px",
+        }}
+      >
+        {errMes && (
+          <h4 style={{ fontSize: "10px" }} className={classes.errorMessage}>
+            {errMes}
+          </h4>
+        )}
+      </div>
       <Button
         className={classes.confirmBtn}
         disabled={form.authCode.length !== 6}

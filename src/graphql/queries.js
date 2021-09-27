@@ -36,6 +36,16 @@ export const getUser = /* GraphQL */ `
                   username
                   displayName
                   statusMessage
+                  profilePhoto {
+                    bucket
+                    region
+                    key
+                  }
+                  coverPhoto {
+                    bucket
+                    region
+                    key
+                  }
                 }
               }
             }
@@ -46,6 +56,16 @@ export const getUser = /* GraphQL */ `
                   username
                   displayName
                   statusMessage
+                  profilePhoto {
+                    bucket
+                    region
+                    key
+                  }
+                  coverPhoto {
+                    bucket
+                    region
+                    key
+                  }
                 }
               }
             }
@@ -65,6 +85,17 @@ export const getUser = /* GraphQL */ `
           updatedAt
           friend {
             username
+            displayName
+            profilePhoto {
+              bucket
+              region
+              key
+            }
+            coverPhoto {
+              bucket
+              region
+              key
+            }
           }
         }
         nextToken

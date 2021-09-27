@@ -10,8 +10,8 @@ import {
 } from "@material-ui/core";
 import { VisibilityOutlined } from "@material-ui/icons";
 import { signin } from "./../../utils/authentication/utils";
-import useStyles from "../../styles/authentication/authentication-form";
-import LineButton from "../../styles/line-button";
+import useStyles from "../../Style/authentication/authentication-form";
+import LineButton from "../../Style/line-button";
 import { useHistory } from "react-router-dom";
 
 function LoginForm(props) {

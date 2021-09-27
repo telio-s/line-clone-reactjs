@@ -20,14 +20,13 @@ import Selection from "../Components/dashboard/Selection";
 import ChatFeedRoom from "../Components/dashboard/chat-feed/ChatFeedRoom";
 import Profile from "../Components/dashboard/Profile";
 import { getToken, sendRequestPost } from "../firebase/firebase";
-// import { showNotification } from "../../model/Notification";
 import { scrollToBottom } from "../service/ScrollView";
-// import CallerDialogue from "./../../Dialogue/CallerDialogue";
-// import CalleeDialogue from "./../../Dialogue/CalleeDialogue";
-// import {
-//   handleCallerDialogue,
-//   handleCalleeDialogue,
-// } from "../../../utils/chat-room/utils";
+import CallerDialogue from "../Components/Dialogue/CallerDialogue";
+import CalleeDialogue from "../Components/Dialogue/CalleeDialogue";
+import {
+  handleCalleeDialogue,
+  handleCallerDialogue,
+} from "../utils/chat-room/utils";
 import firebase from "../firebase";
 
 function reducer(state, action) {
@@ -43,6 +42,15 @@ function reducer(state, action) {
       if (action.payload.user.username !== state[0].user.username) {
         state[0].setCountNoti(state[0].countNoti + 1);
         notiForChatlist = 1;
+      }
+      // for Calling
+      if (action.payload.isCall) {
+        console.log(action.payload);
+        state[0].setCall({
+          isCall: true,
+          caller: action.payload.user,
+          callerType: action.payload.message,
+        });
       }
 
       // Set for chatfeed UI
@@ -109,7 +117,13 @@ const Dashboard = ({ match }) => {
   const [newMessage, setNewMessage] = useState();
   const [countNoti, setCountNoti] = useState();
   const [friendList, setFriendList] = useState([]);
-  const [call, setCall] = useState({ call: false, idSender: "" });
+  const [call, setCall] = useState({
+    isCall: false,
+    caller: null,
+    callerType: "audio",
+  });
+  const [caller, setCaller] = useState({ type: "audio" });
+  const [callee, setCallee] = useState({ type: "audio" });
   const messaging = firebase.messaging();
   const dummy = useRef();
   const [state, dispatch] = useReducer(reducer, {
@@ -143,11 +157,6 @@ const Dashboard = ({ match }) => {
         notificationTitle,
         notificationOptions
       );
-      // notification.onclick = (e) => {
-      //   e.preventDefault();
-      //   // Every states are empty, that's why we need reducer
-      //   dispatch({ type: "add", payload: newMsgObj, onClick: "onClick" });
-      // };
     });
 
     // Fetch current user
@@ -180,6 +189,7 @@ const Dashboard = ({ match }) => {
         setChatList: setChatList,
         setCountNoti: setCountNoti,
         user: myUser,
+        setCall,
       },
     });
 
@@ -251,7 +261,8 @@ const Dashboard = ({ match }) => {
     try {
       const userById = await getUserById(id);
       setMyUser(userById);
-      setUser(userById);
+      console.log(userById);
+      // setUser(userById);
     } catch (err) {
       console.log(err);
     }
@@ -362,6 +373,7 @@ const Dashboard = ({ match }) => {
             setUser={setUser}
             friendList={friendList}
             setChat={setChat}
+            setCaller={setCaller}
           />
         );
       default:
@@ -373,42 +385,68 @@ const Dashboard = ({ match }) => {
             setUser={setUser}
             friendList={friendList}
             setChat={setChat}
+            setCaller={setCaller}
           />
         );
     }
   };
 
   return (
-    <div style={{ display: "flex" }}>
-      {/* {console.log(match.url)} */}
-      {console.log(chat)}
-      <DrawerMenu
-        match={match}
-        setSelection={setSelection}
-        countNoti={countNoti}
-      />
-      <div>
-        <Selection type={selection} />
-        <div style={{ display: "flex" }}>
-          {choseMenu()}
-          <Divider orientation="vertical" flexItem />
-          <Switch>
-            <Route path={`${match.path}/:idGroup`}>
-              <ChatFeedRoom
-                myUser={myUser}
-                chat={chat}
-                setChat={setChat}
-                setChatList={setChatList}
-                chatList={chatList}
-                dummy={dummy}
-                selection={selection}
-                setMyUser={setMyUser}
-              />
-            </Route>
-          </Switch>
+    <>
+      <div style={{ display: "flex" }}>
+        {/* {console.log(match.url)} */}
+        {console.log(chat)}
+        <DrawerMenu
+          match={match}
+          setSelection={setSelection}
+          countNoti={countNoti}
+        />
+        <div>
+          <Selection type={selection} />
+          <div style={{ display: "flex" }}>
+            {choseMenu()}
+            <Divider orientation="vertical" flexItem />
+            <Switch>
+              <Route path={`${match.path}/:idGroup`}>
+                <ChatFeedRoom
+                  myUser={myUser}
+                  chat={chat}
+                  setChat={setChat}
+                  dummy={dummy}
+                  selection={selection}
+                  setMyUser={setMyUser}
+                  setCaller={setCaller}
+                />
+              </Route>
+            </Switch>
+          </div>
         </div>
       </div>
-    </div>
+      {chat ? (
+        call.isCall && call.caller.id === myUser.id ? (
+          <CallerDialogue
+            open={call.isCall}
+            onclose={() => handleCallerDialogue(setCaller, setCall)}
+            id={chat.idGroup}
+            callee={chat.theirUser}
+            caller={caller}
+            setCaller={setCaller}
+          />
+        ) : (
+          call.caller && (
+            <CalleeDialogue
+              open={call.isCall}
+              onclose={() => handleCalleeDialogue(setCallee, setCall)}
+              id={chat.idGroup}
+              caller={call.caller}
+              callee={callee}
+              setCallee={setCallee}
+              call={call}
+            />
+          )
+        )
+      ) : null}
+    </>
   );
 };
 
