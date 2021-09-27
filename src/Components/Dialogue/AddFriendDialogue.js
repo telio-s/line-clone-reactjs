@@ -9,14 +9,16 @@ import {
   InputBase,
   InputAdornment,
   IconButton,
+  Avatar,
 } from "@material-ui/core";
 import { SearchOutlined, AccountCircle } from "@material-ui/icons";
 import {
   addFriend,
   findFriendByUsername,
 } from "./../../utils/addfriends/utils";
-import useStyles from "./../../Style/addfriend-dialogue";
 import { Link } from "react-router-dom";
+import { getImg } from "../../utils/profile/utils";
+import useStyles from "../../Style/addfriend-dialogue";
 
 function AddFriendDialogue(props) {
   const { user, onClose, isOpen, match, chatRoom, setChat } = props;
@@ -140,8 +142,15 @@ function AddFriendDialogue(props) {
                 alignItems="center"
                 style={{ marginTop: "40px" }}
               >
-                <AccountCircle style={{ fontSize: 90 }} />
-                <h3 style={{ margin: "10px" }}>{friend.username}</h3>
+                {friend.profilePhoto ? (
+                  <Avatar
+                    src={getImg(friend, "profile")}
+                    className={classes.imgSize}
+                  />
+                ) : (
+                  <AccountCircle style={{ fontSize: 90 }} />
+                )}
+                <h3 style={{ margin: "10px" }}>{friend.displayName}</h3>
                 {added ? (
                   <LineButton
                     style={{ height: "30px" }}
@@ -176,8 +185,15 @@ function AddFriendDialogue(props) {
             >
               {friend ? (
                 <>
-                  <AccountCircle style={{ fontSize: 90 }} />
-                  <h3>{friend.friend.username}</h3>
+                  {friend.friend.profilePhoto ? (
+                    <Avatar
+                      src={getImg(friend.friend, "profile")}
+                      className={classes.imgSize}
+                    />
+                  ) : (
+                    <AccountCircle style={{ fontSize: 90 }} />
+                  )}
+                  <h3>{friend.friend.displayName}</h3>
                   <Typography style={{ color: "rgb(109,118,134)" }}>
                     This user is already your friend.
                   </Typography>

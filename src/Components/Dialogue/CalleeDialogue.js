@@ -6,7 +6,7 @@ import {
   VideocamRounded,
 } from "@material-ui/icons";
 import { useRef, useState } from "react";
-import useStyles from "../../styles/calling-content";
+import useStyles from "../../Style/calling-content";
 import { servers } from "../../utils/calling/stun-servers";
 import {
   createAnswer,
@@ -18,10 +18,12 @@ import {
 import CallingContent from "./DialogueContent/CallingContent";
 
 function CalleeDialogue(props) {
-  const { open, onclose, id, caller, callee, setCallee } = props;
+  const { open, onclose, id, caller, callee, setCallee, call } = props;
   const classes = useStyles();
   const [isRecieve, setIsRecieve] = useState(false);
-  const [otherend, setOtherend] = useState(false);
+  const [otherend, setOtherend] = useState(
+    call.callerType === "Voice call" ? false : true
+  );
   const peerConnection = new RTCPeerConnection(servers);
   // const dataChannel = peerConnection.createDataChannel(id);
   const [dataChannel, setDataChannel] = useState();
@@ -80,7 +82,7 @@ function CalleeDialogue(props) {
           remoteVideo={remoteVideo}
           call={callee}
           user={caller}
-          otherend={otherend}
+          otherend={isRecieve ? otherend : !otherend}
         />
       )}
       <div className={classes.details}>
