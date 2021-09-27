@@ -8,13 +8,13 @@ import {
 } from "@material-ui/core";
 import { HashRouter as Router, Link } from "react-router-dom";
 import { ExpandLess, ExpandMore, AccountCircle } from "@material-ui/icons";
-import ProfileDialogue from "../Dialogue/ProfileDialogue";
+import ProfileDialogue from "../Dialogue/FriendProfileDialogue";
 import { getImg } from "../../utils/profile/utils";
+// import FriendProfileDialogue from "../Dialogue/FriendProfileDialogue";
 import useStyles from "../../Style/profile-style/profile";
 import FriendProfileDialogue from "../Dialogue/FriendProfileDialogue";
 
 const Profile = (props) => {
-  // setCaller props
   const { match, user, setUser, friendList, setChat, setCaller } = props;
   const classes = useStyles();
   const [showFriends, setShowFriends] = useState(false);

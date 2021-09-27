@@ -1,5 +1,4 @@
 import firebase from "./../../firebase";
-
 const firestore = firebase.firestore();
 
 export async function openMediaDevices() {
@@ -34,17 +33,20 @@ export async function createCall(
   const dataChannel = peerConnection.createDataChannel(idCall, {
     reliable: false,
   });
-
   setDataChannel(dataChannel);
-
   dataChannel.onopen = function (event) {
     const state = dataChannel.readyState;
     if (state === "open") {
       console.log("data channel open");
     }
   };
-  dataChannel.addEventListener("message", (event) => {
-    console.log(event.data);
+  peerConnection.addEventListener("datachannel", (event) => {
+    const receiveChannel = event.channel;
+    console.log(receiveChannel);
+    receiveChannel.addEventListener("message", (event) => {
+      const message = event.data;
+      setOtherend(message === "false" ? false : true);
+    });
   });
 
   peerConnection.addEventListener("track", (event) => {
@@ -136,7 +138,7 @@ export async function createAnswer(
       console.log(receiveChannel);
       receiveChannel.addEventListener("message", (event) => {
         const message = event.data;
-        console.log(message);
+        console.log(event.data);
         setOtherend(message === "false" ? false : true);
       });
     });
@@ -188,7 +190,6 @@ export function switchCallType(localStream, call, setCall, dataChannel) {
   if (call.type === "video") {
     setCall({ type: "audio" });
     localStream.getVideoTracks()[0].enabled = false;
-
     if (dataChannel) {
       console.log("datachannel", dataChannel);
       if (dataChannel.readyState === "open") {

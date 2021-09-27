@@ -9,14 +9,20 @@ import {
   InputBase,
   InputAdornment,
   IconButton,
+  Avatar,
+  Button,
 } from "@material-ui/core";
 import { SearchOutlined, AccountCircle } from "@material-ui/icons";
 import {
   addFriend,
   findFriendByUsername,
+  getGroupId,
+  setChatRoom,
 } from "./../../utils/addfriends/utils";
-import useStyles from "./../../Style/addfriend-dialogue";
+import useStyles from "../../Style/add-friend/addfriend-dialogue";
 import { Link } from "react-router-dom";
+import { getImg } from "../../utils/profile/utils";
+
 
 function AddFriendDialogue(props) {
   const { user, onClose, isOpen, match, chatRoom, setChat } = props;
@@ -25,14 +31,14 @@ function AddFriendDialogue(props) {
   const [isFound, setIsFound] = useState(false);
   const [mes, setMes] = useState(null);
   const [added, setAdded] = useState(false);
-  const [groupId, setGroupId] = useState(null);
+  const [group, setGroup] = useState({});
 
   function handleCloseDialogue() {
     // for clear all information
     setIsFound(false);
     setFriend(null);
     setMes(null);
-    setGroupId(null);
+    setGroup(null);
     onClose();
   }
 
@@ -58,8 +64,10 @@ function AddFriendDialogue(props) {
     if (typeof data === "string") {
       const index = data.split("-")[2];
       setIsFound(false);
+      console.log(user.friends.items[index]);
       setFriend(user.friends.items[index]);
-      setGroupId(user.friends.items[index].id);
+      const [groupId, groupName, messages] = getGroupId(user, e.target.value);
+      setGroup({ ...group, id: groupId, name: groupName, messages });
       console.log(user.friends.items[index]);
       return;
     }
@@ -74,7 +82,7 @@ function AddFriendDialogue(props) {
   }
 
   async function handleAddFriend() {
-    const [success, groupID] = await addFriend(
+    const [success, groupID, groupName] = await addFriend(
       user.id,
       friend.id,
       user.username,
@@ -82,13 +90,20 @@ function AddFriendDialogue(props) {
     );
     if (success) {
       setAdded(true);
-      setGroupId(groupID);
+      setGroup({ ...group, id: groupID, name: groupName });
       console.log("friend added groupid: ", groupID);
     }
   }
 
-  function goToChat() {
+  function goToChat(type) {
     console.log("go to chat feed");
+    if (type === "new-friend") {
+      setChatRoom(setChat, group, friend.friend, type);
+      handleCloseDialogue();
+      return;
+    }
+    setChatRoom(setChat, group, friend.friend, type);
+    handleCloseDialogue();
   }
 
   return (
@@ -140,21 +155,28 @@ function AddFriendDialogue(props) {
                 alignItems="center"
                 style={{ marginTop: "40px" }}
               >
-                <AccountCircle style={{ fontSize: 90 }} />
-                <h3 style={{ margin: "10px" }}>{friend.username}</h3>
+                <Avatar
+                  src={friend.profilePhoto && getImg(friend, "profile")}
+                  style={{ width: "90px", height: "90px" }}
+                />
+                <h3 style={{ margin: "10px" }}>{friend.displayName}</h3>
                 {added ? (
-                  <LineButton
-                    style={{ height: "30px" }}
-                    disabled={false}
-                    // onClick={() => goToChat()}
-                  >
-                    <Link
-                      to={`${match.url}/${groupId}`}
-                      style={{ textDecoration: "none" }}
+                  group && (
+                    <LineButton
+                      style={{ height: "30px" }}
+                      disabled={false}
+                      onClick={() => {
+                        goToChat("new-friend");
+                      }}
                     >
-                      chat
-                    </Link>
-                  </LineButton>
+                      <Link
+                        to={`${match.url}/${group.id}`}
+                        style={{ textDecoration: "none" }}
+                      >
+                        chat
+                      </Link>
+                    </LineButton>
+                  )
                 ) : (
                   <LineButton
                     disabled={false}
@@ -175,25 +197,35 @@ function AddFriendDialogue(props) {
               style={{ marginTop: "40px" }}
             >
               {friend ? (
-                <>
-                  <AccountCircle style={{ fontSize: 90 }} />
-                  <h3>{friend.friend.username}</h3>
-                  <Typography style={{ color: "rgb(109,118,134)" }}>
-                    This user is already your friend.
-                  </Typography>
-                  <LineButton
-                    style={{ height: "30px" }}
-                    disabled={false}
-                    // onClick={() => goToChat()}
-                  >
-                    <Link
-                      to={`${match.url}/${groupId}`}
-                      style={{ textDecoration: "none", color: "white" }}
+                group && (
+                  <>
+                    <Avatar
+                      src={
+                        friend.friend.profilePhoto &&
+                        getImg(friend.friend, "profile")
+                      }
+                      style={{ width: "90px", height: "90px" }}
+                    />
+                    <h3>{friend.friend.displayName}</h3>
+                    <Typography style={{ color: "rgb(109,118,134)" }}>
+                      This user is already your friend.
+                    </Typography>
+                    <LineButton
+                      style={{ height: "30px" }}
+                      disabled={false}
+                      onClick={() => {
+                        goToChat("already-friend");
+                      }}
                     >
-                      chat
-                    </Link>
-                  </LineButton>{" "}
-                </>
+                      <Link
+                        to={`${match.url}/${group.id}`}
+                        style={{ textDecoration: "none", color: "white" }}
+                      >
+                        chat
+                      </Link>
+                    </LineButton>
+                  </>
+                )
               ) : (
                 <Typography>{mes}</Typography>
               )}

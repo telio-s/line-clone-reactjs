@@ -31,20 +31,22 @@ import MyMessageBubble from "./MyMessageBubble";
 import TheirMessageBubble from "./TheirMessageBubble";
 import { createMessageInGroup } from "../../../api/mutations";
 import { setLocalTimeZone } from "../../../service/Localtime";
+import { handleCallMenu } from "../../../utils/chat-room/utils";
+import CallMenu from "../../Menu/CallMenu";
 import { scrollToBottom } from "../../../service/ScrollView";
 import { uploadFiles } from "./../../../utils/sending-media/utils";
 import useStyles from "../../../Style/ChatFeedRoomStyle";
 
 const ChatFeedRoom = (props) => {
-  const { myUser, chat, setChat, dummy, setCaller, selection, setMyUser } =
-    props;
+  const { myUser, chat, setChat, dummy, selection, setMyUser, setCaller } = props;
   const classes = useStyles();
   const idGroup = useParams();
   const [currentMsg, setCurrentMsg] = useState();
   const [imgs, setImgs] = useState([]);
   const [filesUpload, setFilesUpload] = useState([]);
   const hiddenUploadBtn = useRef(null);
-
+  const [anchorEl, setAnchorEl] = useState(null);
+  const location = useLocation();
   const match = useRouteMatch();
   useEffect(() => {
     checkUserCurrent();
@@ -155,9 +157,24 @@ const ChatFeedRoom = (props) => {
               <IconButton className={classes.iconButton}>
                 <EventNote className={classes.iconSection} />
               </IconButton>
+              <IconButton
+                className={classes.iconButton}
+                onClick={(e) => handleCallMenu(e, anchorEl, setAnchorEl)}
+              >
+                <CallRounded className={classes.iconSection} />
+              </IconButton>
               <IconButton className={classes.iconButton}>
                 <MoreVert className={classes.iconSection} />
               </IconButton>
+              {anchorEl && (
+                <CallMenu
+                  setCaller={setCaller}
+                  idGroup={idGroup.idGroup}
+                  user={myUser}
+                  onclose={() => handleCallMenu(null, anchorEl, setAnchorEl)}
+                  anchorEl={anchorEl}
+                />
+              )}
             </Toolbar>
           </AppBar>
           <div

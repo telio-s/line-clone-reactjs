@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Button, Typography } from "@material-ui/core";
 import { PersonAdd } from "@material-ui/icons";
-import useStyles from "../../Style/add-friend-bar";
+import useStyles from "../../Style/add-friend/add-friend-bar";
 import AddFriendDialogue from "./../Dialogue/AddFriendDialogue";
 
 function AddFriend(props) {
