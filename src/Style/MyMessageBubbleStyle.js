@@ -4,16 +4,15 @@ import { makeStyles } from "@material-ui/styles";
 const useStyles = makeStyles((theme) => ({
   root: {
     width: "100%",
-    display: "inline-block",
-    alignItems: "flex-end",
+    display: "flex",
+    justifyContent: "flex-end",
   },
   bubble: {
     backgroundColor: "#c3f69d",
     borderRadius: "20px",
-    maxWidth: "40%",
-    padding: "10px",
-    float: "right",
-    marginRight: "20px",
+    padding: "7px 14px 7px 14px",
+    marginRight: "10px",
+    marginBottom: "10px",
   },
   pictures: {
     width: "100px",
@@ -25,6 +24,13 @@ const useStyles = makeStyles((theme) => ({
     margin: "1px",
     marginTop: "5px",
     backgroundPosition: "center",
+  },
+  container: {
+    padding: "0px",
+    margin: "0px",
+    width: "15vw",
+    display: "flex",
+    maxWidth: "200px",
   },
 }));
 
