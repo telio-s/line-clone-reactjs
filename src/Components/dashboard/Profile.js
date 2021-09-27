@@ -10,7 +10,7 @@ import { HashRouter as Router, Link } from "react-router-dom";
 import { ExpandLess, ExpandMore, AccountCircle } from "@material-ui/icons";
 import ProfileDialogue from "../Dialogue/ProfileDialogue";
 import { getImg } from "../../utils/profile/utils";
-import useStyles from "../../Style/profile-style/profile";
+import useStyles from "../../styles/profile-style/profile";
 
 const Profile = (props) => {
   const { match, user, setUser, friendList, setChat } = props;

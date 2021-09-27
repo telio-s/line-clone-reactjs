@@ -9,7 +9,7 @@ import {
   IconButton,
 } from "@material-ui/core";
 import LineButton from "../Style/line-button";
-import useStyles from "../Style/authentication-form";
+import useStyles from "../Style/authentication/authentication-form";
 
 const FormConfirmRegister = (props) => {
   const { updateFormState, formState, onChange, onClick } = props;

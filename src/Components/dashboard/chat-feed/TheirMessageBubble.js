@@ -1,7 +1,7 @@
 import React from "react";
 import { Typography, Dialog } from "@material-ui/core";
 import { AccountCircle } from "@material-ui/icons";
-import useStyles from "../../../Style/TheirMessageBubbleStyle";
+import useStyles from "../../../styles/TheirMessageBubbleStyle";
 
 const TheirMessageBubble = (props) => {
   const { message } = props;

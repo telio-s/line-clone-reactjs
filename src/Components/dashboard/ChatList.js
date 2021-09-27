@@ -10,7 +10,7 @@ import {
 } from "@material-ui/core";
 import { updateMessageHasRead } from "../../api/mutations";
 import { SearchOutlined, AccountCircle } from "@material-ui/icons";
-import useStyles from "../../Style/ChatListStyle";
+import useStyles from "../../styles/ChatListStyle";
 
 const ChatList = (props) => {
   const {

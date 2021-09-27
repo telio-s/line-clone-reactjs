@@ -1,6 +1,6 @@
 import React from "react";
 import { Typography } from "@material-ui/core";
-import useStyles from "../../../Style/MyMessageBubbleStyle";
+import useStyles from "../../../styles/MyMessageBubbleStyle";
 
 const MyMessageBubble = (props) => {
   const { message } = props;

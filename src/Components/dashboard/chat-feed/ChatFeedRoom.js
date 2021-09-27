@@ -37,7 +37,7 @@ import {
   handleCallerDialogue,
 } from "../../../utils/chat-room/utils";
 import { scrollToBottom } from "../../../service/ScrollView";
-import useStyles from "../../../Style/ChatFeedRoomStyle";
+import useStyles from "../../../styles/ChatFeedRoomStyle";
 // import CallMenu from "../../../Menu/CallMenu";
 
 const ChatFeedRoom = (props) => {

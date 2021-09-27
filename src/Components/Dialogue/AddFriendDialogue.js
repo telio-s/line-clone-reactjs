@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import LineButton from "../../Style/line-button";
+import LineButton from "../../styles/line-button";
 import {
   Dialog,
   DialogTitle,
@@ -15,7 +15,7 @@ import {
   addFriend,
   findFriendByUsername,
 } from "./../../utils/addfriends/utils";
-import useStyles from "./../../Style/addfriend-dialogue";
+import useStyles from "../../styles/addfriend-dialogue";
 import { Link } from "react-router-dom";
 
 function AddFriendDialogue(props) {

@@ -11,7 +11,7 @@ import {
 } from "@material-ui/core";
 import { VisibilityOutlined } from "@material-ui/icons";
 import LineButton from "../Style/line-button";
-import useStyles from "../Style/authentication-form";
+import useStyles from "../Style/authentication/authentication-form";
 
 const FormRegister = (props) => {
   const { updateFormState, formState, onChange, onClick } = props;

@@ -17,7 +17,7 @@ import {
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import MoreMenu from "../Menu/MoreMenu";
 import { faCommentDots, faNewspaper } from "@fortawesome/free-solid-svg-icons";
-import useStyles from "../../Style/DrawerMenuStyle";
+import useStyles from "../../styles/DrawerMenuStyle";
 
 const DrawerMenu = (props) => {
   const { match, setSelection, countNoti } = props;
