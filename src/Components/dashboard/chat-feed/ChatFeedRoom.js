@@ -31,32 +31,15 @@ import MyMessageBubble from "./MyMessageBubble";
 import TheirMessageBubble from "./TheirMessageBubble";
 import { createMessageInGroup } from "../../../api/mutations";
 import { setLocalTimeZone } from "../../../service/Localtime";
-import {
-  handleCall,
-  handleCalleeDialogue,
-  handleCallerDialogue,
-} from "../../../utils/chat-room/utils";
 import { scrollToBottom } from "../../../service/ScrollView";
 import useStyles from "../../../Style/ChatFeedRoomStyle";
-// import CallMenu from "../../../Menu/CallMenu";
 
 const ChatFeedRoom = (props) => {
-  const {
-    myUser,
-    chat,
-    setChat,
-    setChatList,
-    chatList,
-    dummy,
-    selection,
-    setMyUser,
-  } = props;
+  const { myUser, chat, setChat, dummy, setCaller, selection, setMyUser } =
+    props;
   const classes = useStyles();
   const idGroup = useParams();
   const [currentMsg, setCurrentMsg] = useState();
-  const location = useLocation();
-  const [caller, setCaller] = useState({ isCall: false, type: "audio" });
-  const [callee, setCallee] = useState({ isCall: false, type: "audio" });
 
   const match = useRouteMatch();
   useEffect(() => {
@@ -173,36 +156,6 @@ const ChatFeedRoom = (props) => {
               <IconButton className={classes.iconButton}>
                 <EventNote className={classes.iconSection} />
               </IconButton>
-              <IconButton
-                className={classes.iconButton}
-                onClick={() =>
-                  handleCall(
-                    "audio",
-                    setCaller,
-                    setChat,
-                    chat,
-                    idGroup.idgroup,
-                    myUser
-                  )
-                }
-              >
-                <CallRounded className={classes.iconSection} />
-              </IconButton>
-              <IconButton
-                className={classes.iconButton}
-                onClick={() =>
-                  handleCall(
-                    "video",
-                    setCaller,
-                    setChat,
-                    chat,
-                    idGroup.idGroup,
-                    myUser
-                  )
-                }
-              >
-                <VideocamRounded className={classes.iconSection} />
-              </IconButton>
               <IconButton className={classes.iconButton}>
                 <MoreVert className={classes.iconSection} />
               </IconButton>
@@ -221,7 +174,14 @@ const ChatFeedRoom = (props) => {
                   message.user.id === myUser.id ? (
                     <MyMessageBubble key={index} message={message} />
                   ) : (
-                    <TheirMessageBubble key={index} message={message} />
+                    <TheirMessageBubble
+                      key={index}
+                      message={message}
+                      user={chat.theirUser}
+                      setCaller={setCaller}
+                      idGroup={idGroup.idGroup}
+                      myUser={myUser}
+                    />
                   )
                 )
               : null}
@@ -250,26 +210,6 @@ const ChatFeedRoom = (props) => {
           </IconButton>
         </div>
       </form>
-      {/* {caller.isCall && idGroup && (
-        <CallerDialogue
-          open={caller.isCall}
-          onclose={() => handleCallerDialogue(setCaller)}
-          id={idGroup.idGroup}
-          callee={chat.theirUser}
-          call={caller}
-          setCall={setCaller}
-        />
-      )}
-      {callee.isCall && idGroup && (
-        <CalleeDialogue
-          open={callee.isCall}
-          onclose={() => handleCalleeDialogue(setCallee)}
-          id={idGroup.idGroup}
-          caller={myUser}
-          call={callee}
-          setCall={setCallee}
-        />
-      )} */}
     </div>
   );
 };

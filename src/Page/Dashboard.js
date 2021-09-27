@@ -109,7 +109,7 @@ const Dashboard = ({ match }) => {
   const [newMessage, setNewMessage] = useState();
   const [countNoti, setCountNoti] = useState();
   const [friendList, setFriendList] = useState([]);
-  const [call, setCall] = useState({ call: false, idSender: "" });
+  const [caller, setCaller] = useState({ type: "audio" });
   const messaging = firebase.messaging();
   const dummy = useRef();
   const [state, dispatch] = useReducer(reducer, {
@@ -373,6 +373,7 @@ const Dashboard = ({ match }) => {
             setUser={setUser}
             friendList={friendList}
             setChat={setChat}
+            setCaller={setCaller}
           />
         );
     }
@@ -398,11 +399,10 @@ const Dashboard = ({ match }) => {
                 myUser={myUser}
                 chat={chat}
                 setChat={setChat}
-                setChatList={setChatList}
-                chatList={chatList}
                 dummy={dummy}
                 selection={selection}
                 setMyUser={setMyUser}
+                setCaller={setCaller}
               />
             </Route>
           </Switch>
