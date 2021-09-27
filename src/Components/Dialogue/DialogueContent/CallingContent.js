@@ -1,5 +1,5 @@
 import React from "react";
-import useStyles from "../../../styles/calling-content";
+import useStyles from "../../../Style/calling-content";
 // import { isVideoEnable } from "./../../../utils/calling/utils";
 import logo from "./../../../logo.svg";
 
@@ -23,7 +23,6 @@ function CallingContent(props) {
             ref={localVideo}
             autoPlay
             style={{ display: call.type === "audio" ? "none" : "" }}
-            // hidden={call.type === "audio"}
             className={classes.media}
             muted
           />
@@ -31,18 +30,16 @@ function CallingContent(props) {
             ref={remoteVideo}
             autoPlay
             hidden={!otherend}
-            // style={{ display: otherend ? "" : "none" }}
             className={classes.media}
           />
           <img
             className={classes.media}
+            hidden={otherend}
             src={
               user.profilePhoto
                 ? `https://${user.profilePhoto.bucket}.s3.${user.profilePhoto.region}.amazonaws.com/public/${user.profilePhoto.key}`
                 : logo
             }
-            hidden={otherend}
-            // style={{ display: !otherend ? "" : "none" }}
           />
         </div>
       </div>
