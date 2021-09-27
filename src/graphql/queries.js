@@ -85,6 +85,7 @@ export const getUser = /* GraphQL */ `
           updatedAt
           friend {
             username
+            displayName
             profilePhoto {
               bucket
               region
