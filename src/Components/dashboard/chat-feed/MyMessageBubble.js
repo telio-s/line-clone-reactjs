@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Typography, Dialog } from "@material-ui/core";
 import useStyles from "./../../../Style/MyMessageBubbleStyle";
+import PhotosBubble from "./PhotosBubble";
 import { isEmpty } from "../../../utils/chat-room/utils";
 
 const MyMessageBubble = (props) => {
@@ -35,6 +36,20 @@ const MyMessageBubble = (props) => {
     <div className={classes.root}>
       {!isEmpty(message.message) && (
         <Typography className={classes.bubble}>{message.message}</Typography>
+      )}
+      {!isEmpty(message.media) && (
+        <Typography
+          className={classes.bubble}
+          style={{ backgroundColor: "transparent" }}
+          name="nomessage"
+        >
+          <PhotosBubble
+            photos={photos}
+            handleFullView={handleFullView}
+            type={"my-message"}
+            setPhotos={setPhotos}
+          />
+        </Typography>
       )}
       <Dialog open={open} onClose={() => handleFullView()}>
         <div
