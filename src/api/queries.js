@@ -1,5 +1,10 @@
 import { API, graphqlOperation } from "aws-amplify";
-import { getUser, listUsers, messageByDate } from "./../graphql/queries";
+import {
+  getUser,
+  listUsers,
+  messageByDate,
+  getGroup,
+} from "./../graphql/queries";
 
 export async function getLoggedInUser(id) {
   const user = await API.graphql(graphqlOperation(getUser, { id }))
@@ -36,4 +41,13 @@ export const getMessagesByDate = async (type) => {
   );
 
   return data.data.messageByDate;
+};
+
+export const getGroupById = async (idGroup) => {
+  const data = await API.graphql(
+    graphqlOperation(getGroup, {
+      id: idGroup,
+    })
+  );
+  return data.data.getGroup;
 };

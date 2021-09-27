@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useReducer, useRef } from "react";
 import {
-  HashRouter as Router,
+  Router as Router,
   Route,
   Link,
   useHistory,
@@ -118,6 +118,18 @@ const Dashboard = ({ match }) => {
   });
 
   useEffect(async () => {
+    // service worker
+    if ("serviceWorker" in navigator) {
+      navigator.serviceWorker
+        .register("/firebase-messaging-sw.js")
+        .then(function (registration) {
+          console.log("Registration successful, scope is:", registration.scope);
+        })
+        .catch(function (err) {
+          console.log("Service worker registration failed, error:", err);
+        });
+    }
+
     // manage on messages
     messaging.onMessage((payload) => {
       console.log("Message received. ", payload);
@@ -127,7 +139,15 @@ const Dashboard = ({ match }) => {
         icon: "/firebase-logo.png",
       };
 
-      new Notification(notificationTitle, notificationOptions);
+      const notification = new Notification(
+        notificationTitle,
+        notificationOptions
+      );
+      // notification.onclick = (e) => {
+      //   e.preventDefault();
+      //   // Every states are empty, that's why we need reducer
+      //   dispatch({ type: "add", payload: newMsgObj, onClick: "onClick" });
+      // };
     });
 
     // Fetch current user
@@ -189,11 +209,23 @@ const Dashboard = ({ match }) => {
         console.log(newMsgObj);
         setNewMessage(newMsgObj);
         if (newMsgObj) {
+          // setChat({
+          //   idGroup: newMsgObj.group.id,
+          //   name: newMsgObj.group.name,
+          //   sender: newMsgObj.user.username,
+          //   content: newMsgObj.message,
+          //   time: "50:80",
+          //   ISOtime: newMsgObj.createdAt,
+          //   theirUser: newMsgObj.user,
+          //   messages: newMsgObj.group.messages,
+          // });
           const token = await getToken();
           sendRequestPost(
             token,
             `${newMsgObj.user.username} sent`,
-            newMsgObj.message
+            newMsgObj.message,
+            dispatch,
+            newMsgObj
           );
         }
 
@@ -349,6 +381,7 @@ const Dashboard = ({ match }) => {
   return (
     <div style={{ display: "flex" }}>
       {/* {console.log(match.url)} */}
+      {console.log(chat)}
       <DrawerMenu
         match={match}
         setSelection={setSelection}
@@ -369,6 +402,7 @@ const Dashboard = ({ match }) => {
                 chatList={chatList}
                 dummy={dummy}
                 selection={selection}
+                setMyUser={setMyUser}
               />
             </Route>
           </Switch>

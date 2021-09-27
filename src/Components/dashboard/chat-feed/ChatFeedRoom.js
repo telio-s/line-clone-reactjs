@@ -17,6 +17,8 @@ import {
   Divider,
   InputBase,
 } from "@material-ui/core";
+import { Auth, Hub } from "aws-amplify";
+import { getUserById } from "../../../api/queries";
 import {
   EventNote,
   MoreVert,
@@ -24,6 +26,7 @@ import {
   CallRounded,
   VideocamRounded,
 } from "@material-ui/icons";
+import { getGroupById } from "../../../api/queries";
 import MyMessageBubble from "./MyMessageBubble";
 import TheirMessageBubble from "./TheirMessageBubble";
 import { createMessageInGroup } from "../../../api/mutations";
@@ -38,8 +41,16 @@ import useStyles from "../../../Style/ChatFeedRoomStyle";
 // import CallMenu from "../../../Menu/CallMenu";
 
 const ChatFeedRoom = (props) => {
-  const { myUser, chat, setChat, setChatList, chatList, dummy, selection } =
-    props;
+  const {
+    myUser,
+    chat,
+    setChat,
+    setChatList,
+    chatList,
+    dummy,
+    selection,
+    setMyUser,
+  } = props;
   const classes = useStyles();
   const idGroup = useParams();
   const [currentMsg, setCurrentMsg] = useState();
@@ -47,10 +58,19 @@ const ChatFeedRoom = (props) => {
   const [caller, setCaller] = useState({ isCall: false, type: "audio" });
   const [callee, setCallee] = useState({ isCall: false, type: "audio" });
 
+  const match = useRouteMatch();
   useEffect(() => {
+    checkUserCurrent();
+
     if (dummy.current) {
       scrollToBottom(dummy);
     }
+
+    if (!chat) {
+      console.log("no chat");
+      fetch(match.params.idGroup);
+    }
+
     return () => {};
   }, []);
 
@@ -101,75 +121,115 @@ const ChatFeedRoom = (props) => {
     }
   };
 
+  const checkUserCurrent = async () => {
+    // Get id by checking user current auth
+    const auth = await Auth.currentAuthenticatedUser();
+    console.log(auth);
+    const id = auth.attributes.sub;
+
+    // Get User by id
+    try {
+      const userById = await getUserById(id);
+      setMyUser(userById);
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  const fetch = async (id) => {
+    console.log(id);
+    const group = await getGroupById(id);
+    // console.log(group);
+    // console.log(group.messages.items.length);
+    setChat({
+      idGroup: group.id,
+      name: group.name,
+      sender: "",
+      content: "",
+      time: "",
+      ISOtime: group.createdAt,
+      theirUser: group.messages.items[group.messages.items.length - 1].user,
+      messages: group.messages.items,
+    });
+  };
+
   return (
     <div
       className={selection === "chats" ? classes.root : classes.rootNoAppbar}
     >
-      {/* {console.log(location.pathname)} */}
-      <AppBar elevation={0} position="static" className={classes.appbar}>
-        <Toolbar className={classes.Toolbar}>
-          <Typography
-            className={classes.nameChat}
-            style={{ flexGrow: 1, textAlign: "left" }}
-          >
-            {chat.theirUser.displayName}
-          </Typography>
-          <IconButton className={classes.iconButton}>
-            <EventNote className={classes.iconSection} />
-          </IconButton>
-          <IconButton
-            className={classes.iconButton}
-            onClick={() =>
-              handleCall(
-                "audio",
-                setCaller,
-                setChat,
-                chat,
-                idGroup.idgroup,
-                myUser
-              )
+      {/* {console.log(location.pathname, match)} */}
+      {/* {chat ? fetch(match.params.idGroup) : console.log(chat, "no have chat")} */}
+      {console.log("chat", chat)}
+      {chat && myUser && (
+        <>
+          <AppBar elevation={0} position="static" className={classes.appbar}>
+            <Toolbar className={classes.Toolbar}>
+              <Typography
+                className={classes.nameChat}
+                style={{ flexGrow: 1, textAlign: "left" }}
+              >
+                {chat.theirUser.displayName}
+              </Typography>
+              <IconButton className={classes.iconButton}>
+                <EventNote className={classes.iconSection} />
+              </IconButton>
+              <IconButton
+                className={classes.iconButton}
+                onClick={() =>
+                  handleCall(
+                    "audio",
+                    setCaller,
+                    setChat,
+                    chat,
+                    idGroup.idgroup,
+                    myUser
+                  )
+                }
+              >
+                <CallRounded className={classes.iconSection} />
+              </IconButton>
+              <IconButton
+                className={classes.iconButton}
+                onClick={() =>
+                  handleCall(
+                    "video",
+                    setCaller,
+                    setChat,
+                    chat,
+                    idGroup.idGroup,
+                    myUser
+                  )
+                }
+              >
+                <VideocamRounded className={classes.iconSection} />
+              </IconButton>
+              <IconButton className={classes.iconButton}>
+                <MoreVert className={classes.iconSection} />
+              </IconButton>
+            </Toolbar>
+          </AppBar>
+          <div
+            className={
+              selection === "chats"
+                ? classes.chatfeed
+                : classes.chatfeedNoAppbar
             }
           >
-            <CallRounded className={classes.iconSection} />
-          </IconButton>
-          <IconButton
-            className={classes.iconButton}
-            onClick={() =>
-              handleCall(
-                "video",
-                setCaller,
-                setChat,
-                chat,
-                idGroup.idGroup,
-                myUser
-              )
-            }
-          >
-            <VideocamRounded classeName={classes.iconSection} />
-          </IconButton>
-          <IconButton className={classes.iconButton}>
-            <MoreVert className={classes.iconSection} />
-          </IconButton>
-        </Toolbar>
-      </AppBar>
-      <div
-        className={
-          selection === "chats" ? classes.chatfeed : classes.chatfeedNoAppbar
-        }
-      >
-        {/* {console.log(chat)} */}
-        {chat
-          ? chat.messages.map((message, index) =>
-              message.user.id === myUser.id ? (
-                <MyMessageBubble key={index} message={message} />
-              ) : (
-                <TheirMessageBubble key={index} message={message} />
-              )
-            )
-          : null}
-        <div ref={dummy} />
-      </div>
-      <Divider />
+            {console.log(myUser)}
+            {chat
+              ? chat.messages.map((message, index) =>
+                  message.user.id === myUser.id ? (
+                    <MyMessageBubble key={index} message={message} />
+                  ) : (
+                    <TheirMessageBubble key={index} message={message} />
+                  )
+                )
+              : null}
+            <div ref={dummy} />
+          </div>
+          <Divider />
+        </>
+      )}
       <form className={classes.textArea}>
         <InputBase
           placeholder="Enter a message"
