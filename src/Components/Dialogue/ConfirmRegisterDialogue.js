@@ -34,7 +34,20 @@ function ConfirmRegisterDialogue(props) {
           }
         />
       </div>
-      {errMes && <h4>{errMes}</h4>}
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          height: "40px",
+        }}
+      >
+        {errMes && (
+          <h4 style={{ fontSize: "10px" }} className={classes.errorMessage}>
+            {errMes}
+          </h4>
+        )}
+      </div>
       <Button
         className={classes.confirmBtn}
         disabled={form.authCode.length !== 6}

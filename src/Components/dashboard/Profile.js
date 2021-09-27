@@ -8,15 +8,18 @@ import {
 } from "@material-ui/core";
 import { HashRouter as Router, Link } from "react-router-dom";
 import { ExpandLess, ExpandMore, AccountCircle } from "@material-ui/icons";
-import ProfileDialogue from "../Dialogue/ProfileDialogue";
+import ProfileDialogue from "../Dialogue/FriendProfileDialogue";
 import { getImg } from "../../utils/profile/utils";
+// import FriendProfileDialogue from "../Dialogue/FriendProfileDialogue";
 import useStyles from "../../Style/profile-style/profile";
 
 const Profile = (props) => {
-  const { match, user, setUser, friendList, setChat } = props;
+  const { match, user, setUser, friendList, setChat, setCaller } = props;
   const classes = useStyles();
   const [showFriends, setShowFriends] = useState(false);
   const [showProfile, setShowProfile] = useState(false);
+  const [openProfile, setOpenProfile] = useState(false);
+  const [friend, setFriend] = useState(null);
 
   function handleShowFriends() {
     setShowFriends(!showFriends);
@@ -24,6 +27,9 @@ const Profile = (props) => {
 
   function handleProfile() {
     setShowProfile(!showProfile);
+  }
+  function handleProfileDialogue() {
+    setOpenProfile(!openProfile);
   }
 
   return (
@@ -123,6 +129,16 @@ const Profile = (props) => {
             user={user}
             setUser={setUser}
           />
+          {/* {friend && (
+            <FriendProfileDialogue
+              open={openProfile}
+              onclose={handleProfileDialogue}
+              friend={friend.friend}
+              setCaller={setCaller}
+              idGroup={friend.idGroup}
+              user={user}
+            />
+          )} */}
         </>
       )}
     </div>

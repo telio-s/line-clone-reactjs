@@ -14,7 +14,7 @@ import {
 } from "../../utils/calling/utils";
 import { servers } from "../../utils/calling/stun-servers";
 import CallingContent from "./DialogueContent/CallingContent";
-import useStyles from "./../../styles/calling-content";
+import useStyles from "./../../Style/calling-content";
 
 function CallerDialogue(props) {
   const { open, onclose, id, callee, caller, setCaller } = props;
