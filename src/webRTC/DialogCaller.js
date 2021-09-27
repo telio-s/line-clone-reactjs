@@ -66,8 +66,9 @@ const DialogCaller = (props) => {
             >
               <h1>{myFriend.username}</h1>
             </div>
-            <audio ref={localVideo} autoPlay />
-            <audio ref={remoteVideo} autoPlay />
+            {console.log(localVideo)}
+            <video ref={localVideo} autoPlay />
+            <video ref={remoteVideo} autoPlay />
             <div
               style={{
                 display: "flex",

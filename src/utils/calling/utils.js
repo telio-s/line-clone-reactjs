@@ -1,96 +1,103 @@
-import firebase from "../firebase";
+import firebase from "./../../firebase";
+
 const firestore = firebase.firestore();
 
-export const openMediaDevice = async () => {
+export async function openMediaDevices() {
+  const localStream = await navigator.mediaDevices.getUserMedia({
+    video: true,
+    audio: true,
+  });
   const remoteStream = new MediaStream();
-
-  try {
-    const localStream = await navigator.mediaDevices.getUserMedia({
-      video: true,
-      audio: true,
-    });
-
-    return [localStream, remoteStream];
-  } catch (error) {
-    console.error("Error accessing media devices.", error);
-  }
-};
-
-export const createCall = async (
+  return [localStream, remoteStream];
+}
+export async function createCall(
   peerConnection,
-  remoteStream,
   localStream,
+  remoteStream,
   idCall,
-  onClose
-) => {
+  onclose,
+  setOtherend,
+  setDataChannel
+) {
   registerPeerConnectionListeners(peerConnection);
   const room = firestore.collection("calls").doc(idCall);
   const offerCandidates = room.collection("offerCandidates");
   const answerCandidates = room.collection("answerCandidates");
 
-  // get tracks to localStream and push to peerConnection
   localStream.getTracks().forEach(async (track) => {
     await peerConnection.addTrack(track, localStream);
   });
-  // listen to icecandidate event and add icecandidate (port,ip) to offerCandidates
+
   peerConnection.addEventListener("icecandidate", (event) => {
     event.candidate && offerCandidates.add(event.candidate.toJSON());
+  });
+  const dataChannel = peerConnection.createDataChannel(idCall, {
+    reliable: false,
+  });
+
+  setDataChannel(dataChannel);
+
+  dataChannel.onopen = function (event) {
+    const state = dataChannel.readyState;
+    if (state === "open") {
+      console.log("data channel open");
+    }
+  };
+  dataChannel.addEventListener("message", (event) => {
+    console.log(event.data);
   });
 
   peerConnection.addEventListener("track", (event) => {
     console.log("Got remote track:", event.streams[0]);
     event.streams[0].getTracks().forEach((track) => {
       console.log("Add a track to the remoteStream:", track);
+      // setOtherend(isVideoEnable(remoteStream));
       remoteStream.addTrack(track, remoteStream);
     });
   });
 
-  // create offer (sdp: contains video/audio information and negotiate connection info)
-  // setLocalDesCription with offer
   const offerDescription = await peerConnection.createOffer();
-  await peerConnection.setLocalDescription(offerDescription); // start generating icacandidates
-  //then trigger icecandidate event (?-?)
+  await peerConnection.setLocalDescription(offerDescription);
   const offer = {
     sdp: offerDescription.sdp,
     type: offerDescription.type,
   };
   await room.set({ offer });
 
-  //detect change in calls document (listen for remote answer)
   room.onSnapshot(async (snapshot) => {
     const data = snapshot.data();
     if (peerConnection.iceConnectionState !== "closed") {
       if (!peerConnection.currentRemoteDescription && data?.answer) {
         const answerDescription = new RTCSessionDescription(data.answer);
         await peerConnection.setRemoteDescription(answerDescription);
-        //trigger track event
       }
     }
   });
-  // when answered, add icecandidate to peerConnection
+
   answerCandidates.onSnapshot((snapshot) => {
     snapshot.docChanges().forEach(async (change) => {
       console.log("answerCandidates snapshot", change);
       if (change.type === "added") {
         const candidate = new RTCIceCandidate(change.doc.data());
         await peerConnection.addIceCandidate(candidate);
-        //trigger icecandidate event
       }
       if (change.type === "removed") {
         console.log("answerCandidates removed");
-        hangUpByOtherEnd(peerConnection, localStream, remoteStream, onClose);
+        hangup(peerConnection, localStream, remoteStream, idCall, onclose);
       }
     });
   });
-};
+}
 
-export const createAnswer = async (
+export async function createAnswer(
   peerConnection,
-  remoteStream,
   localStream,
+  remoteStream,
   idCall,
-  onClose
-) => {
+  onclose,
+  setOtherend,
+  setDataChannel
+) {
   console.log("create Answer", idCall);
   const room = firestore.collection("calls").doc(idCall);
   console.log(room);
@@ -103,7 +110,7 @@ export const createAnswer = async (
     registerPeerConnectionListeners(peerConnection);
     if (!localStream) {
       localStream = await navigator.mediaDevices.getUserMedia({
-        video: false,
+        video: true,
         audio: true,
       });
     }
@@ -114,6 +121,25 @@ export const createAnswer = async (
     peerConnection.addEventListener("icecandidate", (event) => {
       event.candidate && answerCandidates.add(event.candidate.toJSON());
     });
+    const dataChannel = peerConnection.createDataChannel(idCall, {
+      reliable: false,
+    });
+    setDataChannel(dataChannel);
+    dataChannel.onopen = function (event) {
+      const state = dataChannel.readyState;
+      if (state === "open") {
+        console.log("data channel open");
+      }
+    };
+    peerConnection.addEventListener("datachannel", (event) => {
+      const receiveChannel = event.channel;
+      console.log(receiveChannel);
+      receiveChannel.addEventListener("message", (event) => {
+        const message = event.data;
+        console.log(message);
+        setOtherend(message === "false" ? false : true);
+      });
+    });
 
     //listen to track event when track is added by remote user
     peerConnection.addEventListener("track", (event) => {
@@ -121,8 +147,10 @@ export const createAnswer = async (
       event.streams[0].getTracks().forEach((track) => {
         console.log("Add a track to the remoteStream:", track);
         remoteStream.addTrack(track);
+        // setOtherend(isVideoEnable(remoteStream));
       });
     });
+
     // remoteVideo = remoteStream;
     // set remote with offer (establish connection ?-?)
     // and createAnswer
@@ -148,51 +176,81 @@ export const createAnswer = async (
         }
         if (change.type === "removed") {
           console.log("offerCandidates removed");
-          hangUpByOtherEnd(peerConnection, localStream, remoteStream, onClose);
+          hangup(peerConnection, localStream, remoteStream, idCall, onclose);
         }
       });
     });
   }
-};
+}
 
-export const hangUp = async (
-  peerConnection,
-  remoteVideo,
-  localVideo,
-  idCall
-) => {
-  const tracks = localVideo.current.srcObject.getTracks();
-  tracks.forEach((track) => track.stop());
+export function switchCallType(localStream, call, setCall, dataChannel) {
+  console.log(call);
+  if (call.type === "video") {
+    setCall({ type: "audio" });
+    localStream.getVideoTracks()[0].enabled = false;
 
-  if (remoteVideo.current.srcObject) {
-    remoteVideo.current.srcObject.getTracks().forEach((track) => track.stop());
+    if (dataChannel) {
+      console.log("datachannel", dataChannel);
+      if (dataChannel.readyState === "open") {
+        console.log("open data channel");
+        dataChannel.send("false");
+      }
+    }
+  } else if (call.type === "audio") {
+    setCall({ type: "video" });
+    localStream.getVideoTracks()[0].enabled = true;
+    if (dataChannel) {
+      console.log("datachannel", dataChannel);
+      if (dataChannel.readyState === "open") {
+        console.log("open data channel");
+        dataChannel.send("true");
+      }
+    }
   }
+}
 
-  if (peerConnection) {
-    peerConnection.close();
+export function handleSetCallType(localStream, call, dataChannel) {
+  if (call.type === "video") {
+    localStream.getVideoTracks()[0].enabled = true;
+    if (dataChannel) {
+      console.log("datachannel", dataChannel);
+      if (dataChannel.readyState === "open") {
+        console.log("open data channel");
+        dataChannel.send("true");
+      }
+    }
+    return;
   }
-
-  if (idCall) {
-    const room = firestore.collection("calls").doc(idCall);
-    const answerCandidates = await room.collection("answerCandidates").get();
-    answerCandidates.forEach(async (candidate) => {
-      await candidate.ref.delete();
-    });
-    const offerCandidates = await room.collection("offerCandidates").get();
-    offerCandidates.forEach(async (candidate) => {
-      await candidate.ref.delete();
-    });
-    await room.delete();
+  localStream.getVideoTracks()[0].enabled = false;
+  if (dataChannel) {
+    console.log("datachannel", dataChannel);
+    if (dataChannel.readyState === "open") {
+      console.log("open data channel");
+      dataChannel.send("false");
+    }
   }
-};
+  console.log("localstream", localStream.getVideoTracks()[0]);
+}
 
-const hangUpByOtherEnd = async (
+export function isVideoEnable(remoteStream) {
+  console.log(remoteStream);
+  if (remoteStream) {
+    if (remoteStream.getVideoTracks()[0]) {
+      console.log(remoteStream.getVideoTracks()[0]);
+      return remoteStream.getVideoTracks()[0].enabled;
+    }
+    return false;
+  }
+  return false;
+}
+
+export async function hangup(
   peerConnection,
   localStream,
   remoteStream,
-  onClose
-) => {
-  console.log("hangUpByOtherEnd");
+  idCall,
+  onclose
+) {
   const tracks = localStream.getTracks();
   tracks.forEach((track) => track.stop());
 
@@ -203,8 +261,19 @@ const hangUpByOtherEnd = async (
   if (peerConnection) {
     peerConnection.close();
   }
-  onClose();
-};
+
+  const room = firestore.collection("calls").doc(idCall);
+  const answerCandidates = await room.collection("answerCandidates").get();
+  answerCandidates.forEach(async (candidate) => {
+    await candidate.ref.delete();
+  });
+  const offerCandidates = await room.collection("offerCandidates").get();
+  offerCandidates.forEach(async (candidate) => {
+    await candidate.ref.delete();
+  });
+  await room.delete();
+  onclose();
+}
 
 function registerPeerConnectionListeners(peerConnection) {
   peerConnection.addEventListener("icegatheringstatechange", () => {

@@ -7,7 +7,6 @@ importScripts("https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js");
 importScripts(
   "https://www.gstatic.com/firebasejs/8.10.0/firebase-messaging.js"
 );
-
 // Initialize the Firebase app in the service worker by passing in
 // your app's Firebase config object.
 // https://firebase.google.com/docs/web/setup#config-object
@@ -47,7 +46,35 @@ messaging.onBackgroundMessage((payload) => {
 self.addEventListener("notificationclick", function (event) {
   console.log("[Service Worker] Notification click Received.", event);
 
-  event.notification.close();
+  // event.notification.close();
 
-  event.waitUntil(clients.openWindow(event.notification.data));
+  // event.waitUntil(clients.openWindow(event.notification.data));
+
+  let url = event.notification.data;
+  event.notification.close(); // Android needs explicit close.
+  event.waitUntil(
+    clients
+      .matchAll({ includeUncontrolled: true, type: "window" })
+      .then((windowClients) => {
+        console.log("matchall");
+        console.log(windowClients);
+        // Check if there is already a window/tab open with the target URL
+        for (var i = 0; i < windowClients.length; i++) {
+          var client = windowClients[i];
+          // If so, just focus it.
+          console.log(client.url);
+          if (
+            client.url === "http://localhost:3000/dashboard" &&
+            "focus" in client
+          ) {
+            return client.focus();
+          }
+        }
+        // If not, then open the target URL in a new window/tab.
+        if (clients.openWindow) {
+          console.log("open win");
+          return clients.openWindow(url);
+        }
+      })
+  );
 });

@@ -20,7 +20,7 @@ import { Auth, Hub } from "aws-amplify";
 import FormRegister from "../Components/FormRegister";
 import FormLoginEmail from "../Components/FormLoginEmail";
 import FormConfirmRegister from "../Components/FormConfirmRegister";
-import useStyles from "../Style/LoginStyle";
+import useStyles from "../Style/authentication-form";
 
 const initialFormState = {
   username: "",
@@ -61,6 +61,11 @@ const Login = () => {
       console.log("user: ", user);
       updateUser(user);
       updateFormState(() => ({ ...formState, formType: "signedIn" }));
+      if (user) {
+        history.push("/dashboard", {
+          params: updateFormState(() => ({ ...formState, formType: "signIn" })),
+        });
+      }
     } catch (err) {
       // updateUser(null)
     }
@@ -82,11 +87,10 @@ const Login = () => {
     updateFormState(() => ({ ...formState, formType: "signIn" }));
   };
   const signIn = async () => {
-    console.log("rree");
     const { email, password } = formState;
     await Auth.signIn(email, password);
     updateFormState(() => ({ ...formState, formType: "signedIn" }));
-    history.push("/dashboard/chats", {
+    history.push("/dashboard", {
       params: updateFormState(() => ({ ...formState, formType: "signIn" })),
     });
   };

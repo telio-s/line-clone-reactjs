@@ -1,16 +1,17 @@
 import React from "react";
 import { makeStyles } from "@material-ui/styles";
 
-const chatListWidth = 600;
+const chatListWidth = "35%";
 
 const useStyles = makeStyles((theme) => ({
   root: {
     // width: `calc(100vw - ${80}px)`,
     width: chatListWidth,
-    overflowY: "scroll",
-    overflow: "hidden",
+    overflowY: "auto",
+    // overflow: "hidden",
     height: `calc(98vh - 64px)`,
-    // marginLeft: "80px",
+    marginLeft: "80px",
+    minWidth: "400px",
   },
   appbar: {
     backgroundColor: "#ffffff",
@@ -27,7 +28,7 @@ const useStyles = makeStyles((theme) => ({
     color: "#b7b7b7",
   },
   chatRoom: {
-    width: chatListWidth,
+    width: "100%",
     height: 100,
     "&:hover": {
       backgroundColor: "#f3f3f3",
@@ -42,7 +43,7 @@ const useStyles = makeStyles((theme) => ({
   chatDesc: {
     textAlign: "left",
     padding: "10px",
-    width: "400px",
+    width: "70%",
   },
   nameChat: {
     fontWeight: "600",

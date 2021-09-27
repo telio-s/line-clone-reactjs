@@ -1,4 +1,3 @@
-import React from "react";
 import { makeStyles } from "@material-ui/styles";
 
 const chatListWidth = 600;
@@ -14,22 +13,28 @@ const useStyles = makeStyles((theme) => ({
   },
   searchInput: {
     padding: "15px",
-    backgroundColor: "#f3f3f3",
+    backgroundColor: "white",
     borderRadius: "10px",
-    marginTop: "20px",
+    marginTop: "10px",
+    height: "40px",
   },
   iconSearch: {
-    paddingBottom: "10px",
     color: "#b7b7b7",
+    fontSize: "20px",
   },
   headText: {
     color: "#ffffff",
-    fontWeight: "600",
-    fontSize: "20px",
-    alignSelf: "center",
+    backgroundColor: "#1f2b45",
+    color: "white",
+    height: "20px",
   },
   dialog: {
     width: "400px",
+  },
+  iconBtn: {
+    width: "30px",
+    height: "30px",
+    marginBottom: "15px",
   },
 }));
 

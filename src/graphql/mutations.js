@@ -89,9 +89,6 @@ export const createUser = /* GraphQL */ `
           createdAt
           updatedAt
         }
-        posts {
-          nextToken
-        }
         createdAt
         updatedAt
       }
@@ -141,21 +138,8 @@ export const createUser = /* GraphQL */ `
           createdAt
           updatedAt
         }
-        posts {
-          nextToken
-        }
         createdAt
         updatedAt
-      }
-      posts {
-        items {
-          id
-          name
-          description
-          createdAt
-          updatedAt
-        }
-        nextToken
       }
       createdAt
       updatedAt
@@ -250,9 +234,6 @@ export const updateUser = /* GraphQL */ `
           createdAt
           updatedAt
         }
-        posts {
-          nextToken
-        }
         createdAt
         updatedAt
       }
@@ -302,21 +283,8 @@ export const updateUser = /* GraphQL */ `
           createdAt
           updatedAt
         }
-        posts {
-          nextToken
-        }
         createdAt
         updatedAt
-      }
-      posts {
-        items {
-          id
-          name
-          description
-          createdAt
-          updatedAt
-        }
-        nextToken
       }
       createdAt
       updatedAt
@@ -411,9 +379,6 @@ export const deleteUser = /* GraphQL */ `
           createdAt
           updatedAt
         }
-        posts {
-          nextToken
-        }
         createdAt
         updatedAt
       }
@@ -463,21 +428,8 @@ export const deleteUser = /* GraphQL */ `
           createdAt
           updatedAt
         }
-        posts {
-          nextToken
-        }
         createdAt
         updatedAt
-      }
-      posts {
-        items {
-          id
-          name
-          description
-          createdAt
-          updatedAt
-        }
-        nextToken
       }
       createdAt
       updatedAt
@@ -532,17 +484,6 @@ export const createGroup = /* GraphQL */ `
         region
         key
       }
-      albums {
-        id
-        albumName
-        file {
-          bucket
-          region
-          key
-        }
-        createdAt
-        updatedAt
-      }
       createdAt
       updatedAt
     }
@@ -596,17 +537,6 @@ export const updateGroup = /* GraphQL */ `
         region
         key
       }
-      albums {
-        id
-        albumName
-        file {
-          bucket
-          region
-          key
-        }
-        createdAt
-        updatedAt
-      }
       createdAt
       updatedAt
     }
@@ -659,17 +589,6 @@ export const deleteGroup = /* GraphQL */ `
         bucket
         region
         key
-      }
-      albums {
-        id
-        albumName
-        file {
-          bucket
-          region
-          key
-        }
-        createdAt
-        updatedAt
       }
       createdAt
       updatedAt
@@ -729,9 +648,6 @@ export const createUserGroups = /* GraphQL */ `
           createdAt
           updatedAt
         }
-        posts {
-          nextToken
-        }
         createdAt
         updatedAt
       }
@@ -752,12 +668,6 @@ export const createUserGroups = /* GraphQL */ `
           bucket
           region
           key
-        }
-        albums {
-          id
-          albumName
-          createdAt
-          updatedAt
         }
         createdAt
         updatedAt
@@ -820,9 +730,6 @@ export const updateUserGroups = /* GraphQL */ `
           createdAt
           updatedAt
         }
-        posts {
-          nextToken
-        }
         createdAt
         updatedAt
       }
@@ -843,12 +750,6 @@ export const updateUserGroups = /* GraphQL */ `
           bucket
           region
           key
-        }
-        albums {
-          id
-          albumName
-          createdAt
-          updatedAt
         }
         createdAt
         updatedAt
@@ -911,9 +812,6 @@ export const deleteUserGroups = /* GraphQL */ `
           createdAt
           updatedAt
         }
-        posts {
-          nextToken
-        }
         createdAt
         updatedAt
       }
@@ -934,12 +832,6 @@ export const deleteUserGroups = /* GraphQL */ `
           bucket
           region
           key
-        }
-        albums {
-          id
-          albumName
-          createdAt
-          updatedAt
         }
         createdAt
         updatedAt
@@ -1004,9 +896,6 @@ export const createUserFriends = /* GraphQL */ `
           createdAt
           updatedAt
         }
-        posts {
-          nextToken
-        }
         createdAt
         updatedAt
       }
@@ -1055,9 +944,6 @@ export const createUserFriends = /* GraphQL */ `
           phoneNumber
           createdAt
           updatedAt
-        }
-        posts {
-          nextToken
         }
         createdAt
         updatedAt
@@ -1123,9 +1009,6 @@ export const updateUserFriends = /* GraphQL */ `
           createdAt
           updatedAt
         }
-        posts {
-          nextToken
-        }
         createdAt
         updatedAt
       }
@@ -1174,9 +1057,6 @@ export const updateUserFriends = /* GraphQL */ `
           phoneNumber
           createdAt
           updatedAt
-        }
-        posts {
-          nextToken
         }
         createdAt
         updatedAt
@@ -1242,9 +1122,6 @@ export const deleteUserFriends = /* GraphQL */ `
           createdAt
           updatedAt
         }
-        posts {
-          nextToken
-        }
         createdAt
         updatedAt
       }
@@ -1293,9 +1170,6 @@ export const deleteUserFriends = /* GraphQL */ `
           phoneNumber
           createdAt
           updatedAt
-        }
-        posts {
-          nextToken
         }
         createdAt
         updatedAt
@@ -1359,9 +1233,6 @@ export const createMessage = /* GraphQL */ `
           createdAt
           updatedAt
         }
-        posts {
-          nextToken
-        }
         createdAt
         updatedAt
       }
@@ -1387,12 +1258,6 @@ export const createMessage = /* GraphQL */ `
           bucket
           region
           key
-        }
-        albums {
-          id
-          albumName
-          createdAt
-          updatedAt
         }
         createdAt
         updatedAt
@@ -1461,9 +1326,6 @@ export const updateMessage = /* GraphQL */ `
           createdAt
           updatedAt
         }
-        posts {
-          nextToken
-        }
         createdAt
         updatedAt
       }
@@ -1484,12 +1346,6 @@ export const updateMessage = /* GraphQL */ `
           bucket
           region
           key
-        }
-        albums {
-          id
-          albumName
-          createdAt
-          updatedAt
         }
         createdAt
         updatedAt
@@ -1558,9 +1414,6 @@ export const deleteMessage = /* GraphQL */ `
           createdAt
           updatedAt
         }
-        posts {
-          nextToken
-        }
         createdAt
         updatedAt
       }
@@ -1582,12 +1435,6 @@ export const deleteMessage = /* GraphQL */ `
           region
           key
         }
-        albums {
-          id
-          albumName
-          createdAt
-          updatedAt
-        }
         createdAt
         updatedAt
       }
@@ -1598,243 +1445,6 @@ export const deleteMessage = /* GraphQL */ `
       isBlock
       hasRead
       isCall
-      updatedAt
-    }
-  }
-`;
-export const createPost = /* GraphQL */ `
-  mutation CreatePost(
-    $input: CreatePostInput!
-    $condition: ModelPostConditionInput
-  ) {
-    createPost(input: $input, condition: $condition) {
-      id
-      name
-      description
-      comments {
-        items {
-          id
-          comment
-          createdAt
-          updatedAt
-        }
-        nextToken
-      }
-      likes {
-        items {
-          id
-          createdAt
-          updatedAt
-        }
-        nextToken
-      }
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const updatePost = /* GraphQL */ `
-  mutation UpdatePost(
-    $input: UpdatePostInput!
-    $condition: ModelPostConditionInput
-  ) {
-    updatePost(input: $input, condition: $condition) {
-      id
-      name
-      description
-      comments {
-        items {
-          id
-          comment
-          createdAt
-          updatedAt
-        }
-        nextToken
-      }
-      likes {
-        items {
-          id
-          createdAt
-          updatedAt
-        }
-        nextToken
-      }
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const deletePost = /* GraphQL */ `
-  mutation DeletePost(
-    $input: DeletePostInput!
-    $condition: ModelPostConditionInput
-  ) {
-    deletePost(input: $input, condition: $condition) {
-      id
-      name
-      description
-      comments {
-        items {
-          id
-          comment
-          createdAt
-          updatedAt
-        }
-        nextToken
-      }
-      likes {
-        items {
-          id
-          createdAt
-          updatedAt
-        }
-        nextToken
-      }
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const createComment = /* GraphQL */ `
-  mutation CreateComment(
-    $input: CreateCommentInput!
-    $condition: ModelCommentConditionInput
-  ) {
-    createComment(input: $input, condition: $condition) {
-      id
-      comment
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const updateComment = /* GraphQL */ `
-  mutation UpdateComment(
-    $input: UpdateCommentInput!
-    $condition: ModelCommentConditionInput
-  ) {
-    updateComment(input: $input, condition: $condition) {
-      id
-      comment
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const deleteComment = /* GraphQL */ `
-  mutation DeleteComment(
-    $input: DeleteCommentInput!
-    $condition: ModelCommentConditionInput
-  ) {
-    deleteComment(input: $input, condition: $condition) {
-      id
-      comment
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const createLike = /* GraphQL */ `
-  mutation CreateLike(
-    $input: CreateLikeInput!
-    $condition: ModelLikeConditionInput
-  ) {
-    createLike(input: $input, condition: $condition) {
-      id
-      emoji {
-        bucket
-        region
-        key
-      }
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const updateLike = /* GraphQL */ `
-  mutation UpdateLike(
-    $input: UpdateLikeInput!
-    $condition: ModelLikeConditionInput
-  ) {
-    updateLike(input: $input, condition: $condition) {
-      id
-      emoji {
-        bucket
-        region
-        key
-      }
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const deleteLike = /* GraphQL */ `
-  mutation DeleteLike(
-    $input: DeleteLikeInput!
-    $condition: ModelLikeConditionInput
-  ) {
-    deleteLike(input: $input, condition: $condition) {
-      id
-      emoji {
-        bucket
-        region
-        key
-      }
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const createAlbum = /* GraphQL */ `
-  mutation CreateAlbum(
-    $input: CreateAlbumInput!
-    $condition: ModelAlbumConditionInput
-  ) {
-    createAlbum(input: $input, condition: $condition) {
-      id
-      albumName
-      file {
-        bucket
-        region
-        key
-      }
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const updateAlbum = /* GraphQL */ `
-  mutation UpdateAlbum(
-    $input: UpdateAlbumInput!
-    $condition: ModelAlbumConditionInput
-  ) {
-    updateAlbum(input: $input, condition: $condition) {
-      id
-      albumName
-      file {
-        bucket
-        region
-        key
-      }
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const deleteAlbum = /* GraphQL */ `
-  mutation DeleteAlbum(
-    $input: DeleteAlbumInput!
-    $condition: ModelAlbumConditionInput
-  ) {
-    deleteAlbum(input: $input, condition: $condition) {
-      id
-      albumName
-      file {
-        bucket
-        region
-        key
-      }
-      createdAt
       updatedAt
     }
   }

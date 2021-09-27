@@ -51,9 +51,6 @@ export const newOnCreateMessage = /* GraphQL */ `
           createdAt
           updatedAt
         }
-        posts {
-          nextToken
-        }
         createdAt
         updatedAt
       }
@@ -61,10 +58,14 @@ export const newOnCreateMessage = /* GraphQL */ `
         id
         name
         users {
-          nextToken
+          items {
+            id
+          }
         }
         messages {
-          nextToken
+          items {
+            message
+          }
         }
         isDirect
         announce {
@@ -74,12 +75,6 @@ export const newOnCreateMessage = /* GraphQL */ `
           bucket
           region
           key
-        }
-        albums {
-          id
-          albumName
-          createdAt
-          updatedAt
         }
         createdAt
         updatedAt
@@ -180,9 +175,6 @@ export const onCreateUser = /* GraphQL */ `
           createdAt
           updatedAt
         }
-        posts {
-          nextToken
-        }
         createdAt
         updatedAt
       }
@@ -232,21 +224,8 @@ export const onCreateUser = /* GraphQL */ `
           createdAt
           updatedAt
         }
-        posts {
-          nextToken
-        }
         createdAt
         updatedAt
-      }
-      posts {
-        items {
-          id
-          name
-          description
-          createdAt
-          updatedAt
-        }
-        nextToken
       }
       createdAt
       updatedAt
@@ -338,9 +317,6 @@ export const onUpdateUser = /* GraphQL */ `
           createdAt
           updatedAt
         }
-        posts {
-          nextToken
-        }
         createdAt
         updatedAt
       }
@@ -390,21 +366,8 @@ export const onUpdateUser = /* GraphQL */ `
           createdAt
           updatedAt
         }
-        posts {
-          nextToken
-        }
         createdAt
         updatedAt
-      }
-      posts {
-        items {
-          id
-          name
-          description
-          createdAt
-          updatedAt
-        }
-        nextToken
       }
       createdAt
       updatedAt
@@ -496,9 +459,6 @@ export const onDeleteUser = /* GraphQL */ `
           createdAt
           updatedAt
         }
-        posts {
-          nextToken
-        }
         createdAt
         updatedAt
       }
@@ -548,21 +508,8 @@ export const onDeleteUser = /* GraphQL */ `
           createdAt
           updatedAt
         }
-        posts {
-          nextToken
-        }
         createdAt
         updatedAt
-      }
-      posts {
-        items {
-          id
-          name
-          description
-          createdAt
-          updatedAt
-        }
-        nextToken
       }
       createdAt
       updatedAt
@@ -614,14 +561,6 @@ export const onCreateGroup = /* GraphQL */ `
         region
         key
       }
-      albums {
-        id
-        albumName
-        file {
-          bucket
-          region
-          key
-        }
         createdAt
         updatedAt
       }
@@ -675,17 +614,6 @@ export const onUpdateGroup = /* GraphQL */ `
         region
         key
       }
-      albums {
-        id
-        albumName
-        file {
-          bucket
-          region
-          key
-        }
-        createdAt
-        updatedAt
-      }
       createdAt
       updatedAt
     }
@@ -735,17 +663,6 @@ export const onDeleteGroup = /* GraphQL */ `
         bucket
         region
         key
-      }
-      albums {
-        id
-        albumName
-        file {
-          bucket
-          region
-          key
-        }
-        createdAt
-        updatedAt
       }
       createdAt
       updatedAt
@@ -802,9 +719,6 @@ export const onCreateUserGroups = /* GraphQL */ `
           createdAt
           updatedAt
         }
-        posts {
-          nextToken
-        }
         createdAt
         updatedAt
       }
@@ -825,12 +739,6 @@ export const onCreateUserGroups = /* GraphQL */ `
           bucket
           region
           key
-        }
-        albums {
-          id
-          albumName
-          createdAt
-          updatedAt
         }
         createdAt
         updatedAt
@@ -890,9 +798,6 @@ export const onUpdateUserGroups = /* GraphQL */ `
           createdAt
           updatedAt
         }
-        posts {
-          nextToken
-        }
         createdAt
         updatedAt
       }
@@ -913,12 +818,6 @@ export const onUpdateUserGroups = /* GraphQL */ `
           bucket
           region
           key
-        }
-        albums {
-          id
-          albumName
-          createdAt
-          updatedAt
         }
         createdAt
         updatedAt
@@ -978,9 +877,6 @@ export const onDeleteUserGroups = /* GraphQL */ `
           createdAt
           updatedAt
         }
-        posts {
-          nextToken
-        }
         createdAt
         updatedAt
       }
@@ -1001,12 +897,6 @@ export const onDeleteUserGroups = /* GraphQL */ `
           bucket
           region
           key
-        }
-        albums {
-          id
-          albumName
-          createdAt
-          updatedAt
         }
         createdAt
         updatedAt
@@ -1068,9 +958,6 @@ export const onCreateUserFriends = /* GraphQL */ `
           createdAt
           updatedAt
         }
-        posts {
-          nextToken
-        }
         createdAt
         updatedAt
       }
@@ -1119,9 +1006,6 @@ export const onCreateUserFriends = /* GraphQL */ `
           phoneNumber
           createdAt
           updatedAt
-        }
-        posts {
-          nextToken
         }
         createdAt
         updatedAt
@@ -1184,9 +1068,6 @@ export const onUpdateUserFriends = /* GraphQL */ `
           createdAt
           updatedAt
         }
-        posts {
-          nextToken
-        }
         createdAt
         updatedAt
       }
@@ -1235,9 +1116,6 @@ export const onUpdateUserFriends = /* GraphQL */ `
           phoneNumber
           createdAt
           updatedAt
-        }
-        posts {
-          nextToken
         }
         createdAt
         updatedAt
@@ -1300,9 +1178,6 @@ export const onDeleteUserFriends = /* GraphQL */ `
           createdAt
           updatedAt
         }
-        posts {
-          nextToken
-        }
         createdAt
         updatedAt
       }
@@ -1351,9 +1226,6 @@ export const onDeleteUserFriends = /* GraphQL */ `
           phoneNumber
           createdAt
           updatedAt
-        }
-        posts {
-          nextToken
         }
         createdAt
         updatedAt
@@ -1414,9 +1286,6 @@ export const onCreateMessage = /* GraphQL */ `
           createdAt
           updatedAt
         }
-        posts {
-          nextToken
-        }
         createdAt
         updatedAt
       }
@@ -1437,12 +1306,6 @@ export const onCreateMessage = /* GraphQL */ `
           bucket
           region
           key
-        }
-        albums {
-          id
-          albumName
-          createdAt
-          updatedAt
         }
         createdAt
         updatedAt
@@ -1508,9 +1371,6 @@ export const onUpdateMessage = /* GraphQL */ `
           createdAt
           updatedAt
         }
-        posts {
-          nextToken
-        }
         createdAt
         updatedAt
       }
@@ -1531,12 +1391,6 @@ export const onUpdateMessage = /* GraphQL */ `
           bucket
           region
           key
-        }
-        albums {
-          id
-          albumName
-          createdAt
-          updatedAt
         }
         createdAt
         updatedAt
@@ -1602,9 +1456,6 @@ export const onDeleteMessage = /* GraphQL */ `
           createdAt
           updatedAt
         }
-        posts {
-          nextToken
-        }
         createdAt
         updatedAt
       }
@@ -1626,12 +1477,6 @@ export const onDeleteMessage = /* GraphQL */ `
           region
           key
         }
-        albums {
-          id
-          albumName
-          createdAt
-          updatedAt
-        }
         createdAt
         updatedAt
       }
@@ -1642,207 +1487,6 @@ export const onDeleteMessage = /* GraphQL */ `
       isBlock
       hasRead
       isCall
-      updatedAt
-    }
-  }
-`;
-export const onCreatePost = /* GraphQL */ `
-  subscription OnCreatePost {
-    onCreatePost {
-      id
-      name
-      description
-      comments {
-        items {
-          id
-          comment
-          createdAt
-          updatedAt
-        }
-        nextToken
-      }
-      likes {
-        items {
-          id
-          createdAt
-          updatedAt
-        }
-        nextToken
-      }
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const onUpdatePost = /* GraphQL */ `
-  subscription OnUpdatePost {
-    onUpdatePost {
-      id
-      name
-      description
-      comments {
-        items {
-          id
-          comment
-          createdAt
-          updatedAt
-        }
-        nextToken
-      }
-      likes {
-        items {
-          id
-          createdAt
-          updatedAt
-        }
-        nextToken
-      }
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const onDeletePost = /* GraphQL */ `
-  subscription OnDeletePost {
-    onDeletePost {
-      id
-      name
-      description
-      comments {
-        items {
-          id
-          comment
-          createdAt
-          updatedAt
-        }
-        nextToken
-      }
-      likes {
-        items {
-          id
-          createdAt
-          updatedAt
-        }
-        nextToken
-      }
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const onCreateComment = /* GraphQL */ `
-  subscription OnCreateComment {
-    onCreateComment {
-      id
-      comment
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const onUpdateComment = /* GraphQL */ `
-  subscription OnUpdateComment {
-    onUpdateComment {
-      id
-      comment
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const onDeleteComment = /* GraphQL */ `
-  subscription OnDeleteComment {
-    onDeleteComment {
-      id
-      comment
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const onCreateLike = /* GraphQL */ `
-  subscription OnCreateLike {
-    onCreateLike {
-      id
-      emoji {
-        bucket
-        region
-        key
-      }
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const onUpdateLike = /* GraphQL */ `
-  subscription OnUpdateLike {
-    onUpdateLike {
-      id
-      emoji {
-        bucket
-        region
-        key
-      }
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const onDeleteLike = /* GraphQL */ `
-  subscription OnDeleteLike {
-    onDeleteLike {
-      id
-      emoji {
-        bucket
-        region
-        key
-      }
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const onCreateAlbum = /* GraphQL */ `
-  subscription OnCreateAlbum {
-    onCreateAlbum {
-      id
-      albumName
-      file {
-        bucket
-        region
-        key
-      }
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const onUpdateAlbum = /* GraphQL */ `
-  subscription OnUpdateAlbum {
-    onUpdateAlbum {
-      id
-      albumName
-      file {
-        bucket
-        region
-        key
-      }
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const onDeleteAlbum = /* GraphQL */ `
-  subscription OnDeleteAlbum {
-    onDeleteAlbum {
-      id
-      albumName
-      file {
-        bucket
-        region
-        key
-      }
-      createdAt
       updatedAt
     }
   }
