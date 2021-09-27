@@ -32,13 +32,12 @@ import TheirMessageBubble from "./TheirMessageBubble";
 import { createMessageInGroup } from "../../../api/mutations";
 import { setLocalTimeZone } from "../../../service/Localtime";
 import { handleCallMenu } from "../../../utils/chat-room/utils";
+import CallMenu from "../../Menu/CallMenu";
 import { scrollToBottom } from "../../../service/ScrollView";
 import useStyles from "../../../Style/ChatFeedRoomStyle";
-import CallMenu from "../../Menu/CallMenu";
 
 const ChatFeedRoom = (props) => {
-  const { myUser, chat, setChat, dummy, selection, setMyUser, setCaller } =
-    props;
+  const { myUser, chat, setChat, dummy, selection, setMyUser, setCaller } = props;
   const classes = useStyles();
   const idGroup = useParams();
   const [currentMsg, setCurrentMsg] = useState();
@@ -192,7 +191,14 @@ const ChatFeedRoom = (props) => {
                   message.user.id === myUser.id ? (
                     <MyMessageBubble key={index} message={message} />
                   ) : (
-                    <TheirMessageBubble key={index} message={message} />
+                    <TheirMessageBubble
+                      key={index}
+                      message={message}
+                      user={chat.theirUser}
+                      setCaller={setCaller}
+                      idGroup={idGroup.idGroup}
+                      myUser={myUser}
+                    />
                   )
                 )
               : null}

@@ -36,6 +36,16 @@ export const getUser = /* GraphQL */ `
                   username
                   displayName
                   statusMessage
+                  profilePhoto {
+                    bucket
+                    region
+                    key
+                  }
+                  coverPhoto {
+                    bucket
+                    region
+                    key
+                  }
                 }
               }
             }

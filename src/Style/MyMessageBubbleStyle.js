@@ -7,7 +7,7 @@ const useStyles = makeStyles((theme) => ({
     display: "inline-block",
     alignItems: "flex-end",
   },
-  buble: {
+  bubble: {
     backgroundColor: "#c3f69d",
     borderRadius: "20px",
     maxWidth: "40%",

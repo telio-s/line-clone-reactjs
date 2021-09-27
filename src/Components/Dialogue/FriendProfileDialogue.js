@@ -24,8 +24,7 @@ function FriendProfileDialogue(props) {
   }
 
   return (
-    <>
-      {/* <Dialog open={open} onClose={onclose}>
+    <Dialog open={open} onClose={onclose}>
       <div style={{ width: "300px", height: "400px" }}>
         <>
           <img
@@ -79,8 +78,7 @@ function FriendProfileDialogue(props) {
           />
         </Dialog>
       </div>
-    </Dialog> */}
-    </>
+    </Dialog>
   );
 }
 
