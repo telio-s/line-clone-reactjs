@@ -142,8 +142,6 @@ const ChatFeedRoom = (props) => {
     <div
       className={selection === "chats" ? classes.root : classes.rootNoAppbar}
     >
-      {/* {console.log(location.pathname, match)} */}
-      {/* {chat ? fetch(match.params.idGroup) : console.log(chat, "no have chat")} */}
       {console.log("chat", chat)}
       {chat && myUser && (
         <>

@@ -21,6 +21,12 @@ const useStyles = makeStyles((theme) => ({
     marginRight: "10px",
     marginBottom: "10px",
   },
+  pic_zero: {
+    width: "200px",
+    height: "100px",
+    objectFit: "cover",
+    borderRadius: "2px",
+  },
   pictures: {
     width: "100px",
     height: "100px",

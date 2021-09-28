@@ -58,7 +58,6 @@ export async function handleUpdateUserPhoto(id, file, type, user) {
 }
 
 export function getImg(user, type) {
-  console.log("getImg");
   if (type === "profile") {
     return `https://${user.profilePhoto.bucket}.s3.${user.profilePhoto.region}.amazonaws.com/public/${user.profilePhoto.key}`;
   }
