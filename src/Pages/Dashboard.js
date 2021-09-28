@@ -262,7 +262,7 @@ const Dashboard = ({ match }) => {
       const userById = await getUserById(id);
       setMyUser(userById);
       console.log(userById);
-      // setUser(userById);
+      setUser(userById);
     } catch (err) {
       console.log(err);
     }
@@ -365,7 +365,7 @@ const Dashboard = ({ match }) => {
           />
         );
       case "profile":
-        // console.log(selection);
+        console.log("profile", user, friendList);
         return (
           <Profile
             match={match}
@@ -377,7 +377,7 @@ const Dashboard = ({ match }) => {
           />
         );
       default:
-        // console.log("default profile");
+        console.log("profile", user, friendList);
         return (
           <Profile
             match={match}

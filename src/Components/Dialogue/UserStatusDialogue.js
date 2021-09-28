@@ -1,8 +1,8 @@
 import { Dialog, InputBase, Divider, Typography } from "@material-ui/core";
 import React, { useState } from "react";
-import LineButton from "../../styles/line-button";
+import LineButton from "../../Style/line-button";
 import { handleUpdateChange } from "../../utils/profile/utils";
-import { useStyles } from "../../styles/profile-style/user-status";
+import { useStyles } from "../../Style/profile-style/user-status";
 
 function UserStatusDialogue(props) {
   const { isOpen, onClose, setEditStatus, user, setUser } = props;

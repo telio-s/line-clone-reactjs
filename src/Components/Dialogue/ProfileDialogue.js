@@ -9,7 +9,7 @@ import {
 import { CameraAltOutlined, EditRounded } from "@material-ui/icons";
 import EditProfileDialogue from "./EditProfileDialogue";
 import { getImg, handleUpdateUserPhoto } from "../../utils/profile/utils";
-import { useStyles } from "../../styles/profile-style/profile-dialogue";
+import { useStyles } from "../../Style/profile-style/profile-dialogue";
 import UserStatusDialogue from "./UserStatusDialogue";
 
 function ProfileDialogue(props) {

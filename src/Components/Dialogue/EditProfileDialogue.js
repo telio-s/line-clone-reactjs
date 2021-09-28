@@ -20,7 +20,7 @@ import {
   handleUpdateUserPhoto,
 } from "../../utils/profile/utils";
 import UserStatusDialogue from "./UserStatusDialogue";
-import { useStyles } from "../../styles/profile-style/edit-profile";
+import { useStyles } from "../../Style/profile-style/edit-profile";
 
 function EditProfileDialogue(props) {
   const { isOpen, onClose, user, setUser } = props;
