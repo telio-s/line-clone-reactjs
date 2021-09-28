@@ -8,7 +8,7 @@ import {
 } from "@material-ui/core";
 import { HashRouter as Router, Link } from "react-router-dom";
 import { ExpandLess, ExpandMore, AccountCircle } from "@material-ui/icons";
-import ProfileDialogue from "../Dialogue/FriendProfileDialogue";
+import ProfileDialogue from "../Dialogue/ProfileDialogue";
 import { getImg } from "../../utils/profile/utils";
 import useStyles from "../../Style/profile-style/profile";
 import FriendProfileDialogue from "../Dialogue/FriendProfileDialogue";
@@ -126,6 +126,7 @@ const Profile = (props) => {
                           noWrap={false}
                           gutterBottom
                           className={classes.multiLineEllipsis}
+                          style={{ fontSize: "12px" }}
                         >
                           {their.user.statusMessage}
                         </Typography>
@@ -142,7 +143,7 @@ const Profile = (props) => {
             user={user}
             setUser={setUser}
           />
-          {/* {friend && console.log(friend.friend)}
+          {friend && console.log(friend.friend)}
           {friend && (
             <FriendProfileDialogue
               open={showFriendProfile}
@@ -152,7 +153,7 @@ const Profile = (props) => {
               idGroup={friend.groupId}
               user={user}
             />
-          )} */}
+          )}
         </>
       )}
     </div>

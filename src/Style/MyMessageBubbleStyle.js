@@ -7,6 +7,13 @@ const useStyles = makeStyles((theme) => ({
     display: "flex",
     justifyContent: "flex-end",
   },
+  bubble_pics: {
+    backgroundColor: "#c3f69d",
+    borderRadius: "20px",
+    padding: "7px 5px 7px 5px",
+    marginRight: "10px",
+    marginBottom: "10px",
+  },
   bubble: {
     backgroundColor: "#c3f69d",
     borderRadius: "20px",

@@ -24,7 +24,8 @@ import { Link } from "react-router-dom";
 import { getImg } from "../../utils/profile/utils";
 
 function AddFriendDialogue(props) {
-  const { user, onClose, isOpen, match, chatRoom, setChat } = props;
+  const { user, onClose, isOpen, match, chatRoom, setChat, setFriendList } =
+    props;
   const classes = useStyles();
   const [friend, setFriend] = useState(null);
   const [isFound, setIsFound] = useState(false);
@@ -78,29 +79,41 @@ function AddFriendDialogue(props) {
     }
     setIsFound(true);
     setFriend(data);
+    console.log(data);
   }
 
   async function handleAddFriend() {
-    const [success, groupID, groupName] = await addFriend(
+    const [success, group] = await addFriend(
       user.id,
       friend.id,
       user.username,
       friend.username
     );
+    console.log(friend);
     if (success) {
       setAdded(true);
-      setGroup({ ...group, id: groupID, name: groupName });
-      console.log("friend added groupid: ", groupID);
+      setGroup({ ...group, id: group.id, name: group.name });
+      setFriendList((prevState) => [
+        ...prevState,
+        {
+          createdAt: group.createdAt,
+          updatedAt: group.updatedAt,
+          id: "",
+          group,
+        },
+      ]);
     }
   }
 
   function goToChat(type) {
     console.log("go to chat feed");
     if (type === "new-friend") {
-      setChatRoom(setChat, group, friend.friend, type);
+      console.log(friend);
+      setChatRoom(setChat, group, friend, type);
       handleCloseDialogue();
       return;
     }
+    console.log(friend);
     setChatRoom(setChat, group, friend.friend, type);
     handleCloseDialogue();
   }

@@ -39,7 +39,7 @@ const MyMessageBubble = (props) => {
       )}
       {!isEmpty(message.media) && (
         <Typography
-          className={classes.bubble}
+          className={classes.bubble_pics}
           style={{ backgroundColor: "transparent" }}
           name="nomessage"
         >

@@ -209,7 +209,7 @@ const ChatFeedRoom = (props) => {
       )}
       <form className={classes.textArea}>
         <InputBase
-          placeholder={!imgs ? "Enter a message" : ""}
+          placeholder={imgs.length ? "" : "Enter a message"}
           fullWidth
           multiline
           rowsMin={1}

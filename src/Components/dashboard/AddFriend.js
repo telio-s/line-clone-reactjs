@@ -5,7 +5,7 @@ import useStyles from "../../Style/add-friend/add-friend-bar";
 import AddFriendDialogue from "./../Dialogue/AddFriendDialogue";
 
 function AddFriend(props) {
-  const { user, match, chatRoom, setChat } = props;
+  const { user, match, chatRoom, setChat, setFriendList } = props;
   const classes = useStyles();
   const [openAddFriend, setOpenAddFriend] = useState(false);
 
@@ -37,6 +37,7 @@ function AddFriend(props) {
         match={match}
         chatRoom={chatRoom}
         setChat={setChat}
+        setFriendList={setFriendList}
       />
     </div>
   );

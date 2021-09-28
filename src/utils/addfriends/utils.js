@@ -3,7 +3,7 @@ import {
   createUserstoGroup,
   createFriends,
 } from "./../../api/mutations";
-import { getUserByUsername } from "./../../api/queries";
+import { getUserById, getUserByUsername } from "./../../api/queries";
 
 export async function findFriendByUsername(username, friends, myUser) {
   let isFriend = false;
@@ -51,18 +51,17 @@ export function getGroupId(user, friendUserName) {
   return [groupId, groupName, messages];
 }
 
-// assume it success
 export async function addFriend(userId, friendId, userName, friendName) {
   const success = await createFriends(userId, friendId);
   const group = await createNewGroup(`${userName}${friendName}`, true);
   const gu = await createUserstoGroup(group.id, userId);
   const gf = await createUserstoGroup(group.id, friendId);
-  const messages = group.messages.items;
-  return [success & gu & gf, group.id, `${userName}${friendName}`, messages];
+  return [success & gu & gf, group];
 }
 
 export function setChatRoom(setChat, group, friend, type) {
   if (type === "new-friend") {
+    console.log(friend);
     setChat({
       idGroup: group.id,
       name: group.name,
@@ -76,6 +75,7 @@ export function setChatRoom(setChat, group, friend, type) {
     });
     return;
   }
+  console.log(friend);
   setChat({
     idGroup: group.id,
     name: group.name,

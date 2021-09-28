@@ -20,7 +20,7 @@ import {
   handleUpdateUserPhoto,
 } from "../../utils/profile/utils";
 import UserStatusDialogue from "./UserStatusDialogue";
-import { useStyles } from "../../styles/profile-style/edit-profile";
+import { useStyles } from "../../Style/profile-style/edit-profile";
 
 function EditProfileDialogue(props) {
   const { isOpen, onClose, user, setUser } = props;
@@ -73,7 +73,7 @@ function EditProfileDialogue(props) {
   return (
     <>
       <Dialog open={isOpen} onClose={onClose}>
-        <div style={{ width: "550px", height: "245px" }}>
+        <div style={{ width: "600px", height: "245px" }}>
           <div className={classes.container}>
             <Typography style={{ fontSize: "15px" }}>Settings</Typography>
           </div>

@@ -53,13 +53,14 @@ const TheirMessageBubble = (props) => {
       )}
       {!isEmpty(message.media) && (
         <Typography
-          className={classes.bubble}
+          className={classes.bubble_pics}
           style={{ backgroundColor: "transparent" }}
         >
           <PhotosBubble
             photos={photos}
             handleFullView={handleFullView}
             type={"their-message"}
+            setPhotos={setPhotos}
           />
         </Typography>
       )}

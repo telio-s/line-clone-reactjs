@@ -454,36 +454,27 @@ export const createGroup = /* GraphQL */ `
       }
       messages {
         items {
-          id
-          type
           message
-          createdAt
-          isBlock
-          hasRead
-          isCall
-          updatedAt
+          user {
+            id
+            username
+            displayName
+            statusMessage
+            profilePhoto {
+              bucket
+              region
+              key
+            }
+            coverPhoto {
+              bucket
+              region
+              key
+            }
+          }
         }
         nextToken
       }
       isDirect
-      announce {
-        items {
-          id
-          type
-          message
-          createdAt
-          isBlock
-          hasRead
-          isCall
-          updatedAt
-        }
-        nextToken
-      }
-      files {
-        bucket
-        region
-        key
-      }
       createdAt
       updatedAt
     }

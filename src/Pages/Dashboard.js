@@ -262,7 +262,7 @@ const Dashboard = ({ match }) => {
       const userById = await getUserById(id);
       setMyUser(userById);
       console.log(userById);
-      // setUser(userById);
+      setUser(userById);
     } catch (err) {
       console.log(err);
     }
@@ -276,7 +276,7 @@ const Dashboard = ({ match }) => {
         return obj.group.isDirect === true;
       });
       setFriendList(fetchFriendList);
-      console.log(fetchFriendList);
+      console.log("Hello shijie", fetchFriendList);
       await myUser.groups.items.map(async (group) => {
         if (group.group.isDirect && group.group.messages.items.length != 0) {
           const fetchAllMessage = await getMessagesByDate(group.group.id);
@@ -362,6 +362,7 @@ const Dashboard = ({ match }) => {
             match={match}
             chatRoom={sordteChatList}
             setChat={setChat}
+            setFriendList={setFriendList}
           />
         );
       case "profile":
