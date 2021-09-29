@@ -12,7 +12,7 @@ export async function uploadFiles(files) {
         `https://${bucket}-resized.s3.${region}.amazonaws.com/public/${data.key}`
     );
   });
-  console.log("uploading files");
+  // console.log("uploading files");
 
   const responses = await Promise.all(responsesPromise)
     .then((resolve) => [...resolve])
@@ -28,7 +28,7 @@ export function changeURLImg(resizedPath) {
 }
 
 export async function handleImgError(e, count, photo) {
-  console.log(count.current);
+  // console.log(count.current);
   if (count.current <= 0) {
     e.target.src = changeURLImg(photo);
     return;

@@ -11,19 +11,19 @@ const MyMessageBubble = (props) => {
   const [fullView, setFullView] = useState([]);
   const [open, setOpen] = useState(false);
 
-  useEffect(() => {
-    console.log("my-message bubble");
-    function getMedia() {
-      message.media &&
-        message.media.map((media) => {
-          setPhotos((prevPhotos) => [...prevPhotos, media]);
-        });
-    }
-    if (photos.length) {
-      return;
-    }
-    getMedia();
-  }, []);
+  // useEffect(() => {
+  //   console.log("my-message bubble");
+  //   function getMedia() {
+  //     message.media &&
+  //       message.media.map((media) => {
+  //         setPhotos((prevPhotos) => [...prevPhotos, media]);
+  //       });
+  //   }
+  //   if (photos.length) {
+  //     return;
+  //   }
+  //   getMedia();
+  // }, []);
 
   function handleFullView(index) {
     setOpen(!open);

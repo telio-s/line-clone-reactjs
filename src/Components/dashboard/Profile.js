@@ -35,8 +35,8 @@ const Profile = (props) => {
 
   return (
     <div className={classes.root}>
-      {console.log(friendList)}
-      {console.log(user)}
+      {/* {console.log(friendList)}
+      {console.log(user)} */}
       {user && (
         <>
           <ListItem button onClick={() => handleProfile()}>
@@ -74,7 +74,7 @@ const Profile = (props) => {
                 const their = frind.group.users.items.find(
                   (obj) => obj.user.displayName !== user.displayName
                 );
-                console.log(their);
+                // console.log(their);
                 return (
                   <Link
                     key={index}
