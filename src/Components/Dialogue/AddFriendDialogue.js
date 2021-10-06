@@ -24,7 +24,7 @@ import { Link } from "react-router-dom";
 import { getImg } from "../../utils/profile/utils";
 
 function AddFriendDialogue(props) {
-  const { user, onClose, isOpen, match, chatRoom, setChat, setFriendList } =
+  const { user, onClose, isOpen, match, chatList, setChat, setFriendList } =
     props;
   const classes = useStyles();
   const [friend, setFriend] = useState(null);
@@ -91,16 +91,26 @@ function AddFriendDialogue(props) {
       friend.username
     );
     console.log(friend);
+    console.log("success", success);
     if (success) {
       setAdded(true);
       setGroup({ ...group, id: group.id, name: group.name });
+      console.log(group);
       setFriendList((prevState) => [
         ...prevState,
         {
           createdAt: group.createdAt,
           updatedAt: group.updatedAt,
           id: "",
-          group,
+          group: {
+            id: group.id,
+            isDirect: group.isDirect,
+            messages: group.messages,
+            name: group.name,
+            users: {
+              items: [{ user: friend }],
+            },
+          },
         },
       ]);
     }

@@ -14,10 +14,20 @@ import {
 } from "../../utils/calling/utils";
 import { servers } from "../../utils/calling/stun-servers";
 import CallingContent from "./DialogueContent/CallingContent";
+import { handleAcceptCall } from "../../utils/chat-room/utils";
 import useStyles from "./../../Style/calling-content";
 
 function CallerDialogue(props) {
-  const { open, onclose, id, callee, caller, setCaller } = props;
+  const {
+    open,
+    onclose,
+    id,
+    callee,
+    caller,
+    setCaller,
+    isDeclineCall,
+    idLastMsg,
+  } = props;
   const [otherend, setOtherend] = useState(false);
   const classes = useStyles();
   const peerConnection = new RTCPeerConnection(servers);
@@ -49,13 +59,19 @@ function CallerDialogue(props) {
   }, []);
 
   async function hangupthecall() {
-    await hangup(
-      peerConnection,
-      localVideo.current.srcObject,
-      remoteVideo.current.srcObject,
-      id,
-      onclose
-    );
+    if (isDeclineCall) {
+      await hangup(
+        peerConnection,
+        localVideo.current.srcObject,
+        remoteVideo.current.srcObject,
+        id,
+        onclose
+      );
+      return;
+    }
+
+    // send 'isDeclineCall: true' to callee
+    await handleAcceptCall(idLastMsg, false);
   }
   function handleSwitchCallType() {
     switchCallType(

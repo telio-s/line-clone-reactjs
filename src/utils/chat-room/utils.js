@@ -14,15 +14,15 @@ export async function handleCall(type, setCaller, idGroup, user, theirUser) {
     isBlock: false,
     hasRead: false,
     isCall: true,
-    isDeclineCall: false,
+    isDeclineCall: null,
     messageReceiverId: theirUser.id,
   };
   console.log("create message#1 ", message);
   await createMessageInGroup(message);
 }
 
-export async function handleAcceptCall(id) {
-  const data = await updateMessageAcceptCall(id);
+export async function handleAcceptCall(id, isDeclineCall) {
+  const data = await updateMessageAcceptCall(id, isDeclineCall);
   console.log(data);
 }
 
@@ -31,8 +31,8 @@ export function handleCallerDialogue(setCaller, setCall) {
   setCaller({ type: "audio" });
 }
 
-export function handleCalleeDialogue(setCallee, setCall) {
-  setCall({ isCall: false, caller: null });
+export function handleCalleeDialogue(setCallee, setCall, isDeclineCall) {
+  setCall({ isCall: isDeclineCall, caller: null });
   setCallee({ type: "audio" });
 }
 

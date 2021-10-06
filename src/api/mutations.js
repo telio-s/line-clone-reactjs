@@ -13,6 +13,7 @@ export async function createNewGroup(name, isDirect) {
   )
     .then((data) => data.data.createGroup)
     .catch(() => null);
+
   return group;
 }
 
@@ -76,15 +77,14 @@ export const updateMessageHasRead = async (id, hasRead) => {
   return data;
 };
 
-export async function updateMessageAcceptCall(id) {
+export async function updateMessageAcceptCall(id, isDeclineCall) {
   const data = await API.graphql(
     graphqlOperation(updateMessage, {
       input: {
         id: id,
-        isDeclineCall: true,
+        isDeclineCall: isDeclineCall,
       },
     })
   );
-  console.log("updatefunc", data);
   return data.data.updateMessage;
 }

@@ -399,6 +399,12 @@ export const createGroup = /* GraphQL */ `
           id
           createdAt
           updatedAt
+          user {
+            id
+            displayName
+            statusMessage
+            username
+          }
         }
         nextToken
       }
@@ -954,6 +960,11 @@ export const updateMessage = /* GraphQL */ `
       isBlock
       hasRead
       isCall
+      isDeclineCall
+      receiver {
+        id
+        displayName
+      }
       updatedAt
     }
   }

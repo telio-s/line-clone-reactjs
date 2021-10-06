@@ -137,7 +137,7 @@ const Dashboard = ({ match }) => {
     chatList: [],
     chat: {},
   });
-  const location = useLocation();
+  const [isDeclineCall, setIsDeclineCall] = useState(false);
   const [paramsId, setParamsId] = useState();
 
   useEffect(async () => {
@@ -252,6 +252,9 @@ const Dashboard = ({ match }) => {
         const newMsgUpdateObj = data.value.data.newOnUpdateMessage;
         setNewMessage(newMsgUpdateObj);
         console.log("subscribeUpdateMsg", newMsgUpdateObj);
+        if (newMsgUpdateObj) {
+          setIsDeclineCall(newMsgUpdateObj.isDeclineCall);
+        }
       },
     });
 
@@ -388,7 +391,7 @@ const Dashboard = ({ match }) => {
           <AddFriend
             user={myUser}
             match={match}
-            chatRoom={sordteChatList}
+            chatList={sordteChatList}
             setChat={setChat}
             setFriendList={setFriendList}
           />
@@ -461,17 +464,22 @@ const Dashboard = ({ match }) => {
             callee={chat.theirUser}
             caller={caller}
             setCaller={setCaller}
+            isDeclineCall={isDeclineCall}
+            idLastMsg={chat.idLastMsg}
           />
         ) : (
           call.caller && (
             <CalleeDialogue
               open={call.isCall}
-              onclose={() => handleCalleeDialogue(setCallee, setCall)}
+              onclose={() =>
+                handleCalleeDialogue(setCallee, setCall, isDeclineCall)
+              }
               id={chat.idGroup}
               caller={call.caller}
               callee={callee}
               setCallee={setCallee}
               call={call}
+              isDeclineCall={isDeclineCall}
               idLastMsg={chat.idLastMsg}
             />
           )

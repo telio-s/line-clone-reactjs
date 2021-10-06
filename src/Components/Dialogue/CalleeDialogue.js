@@ -19,8 +19,17 @@ import {
 import CallingContent from "./DialogueContent/CallingContent";
 
 function CalleeDialogue(props) {
-  const { open, onclose, id, caller, callee, setCallee, call, idLastMsg } =
-    props;
+  const {
+    open,
+    onclose,
+    id,
+    caller,
+    callee,
+    setCallee,
+    call,
+    isDeclineCall,
+    idLastMsg,
+  } = props;
   const classes = useStyles();
   const [isRecieve, setIsRecieve] = useState(false);
   const [otherend, setOtherend] = useState(
@@ -42,7 +51,7 @@ function CalleeDialogue(props) {
       handleSetCallType(localStream, callee, dataChannel);
 
       // send 'isDeclineCall: true' to caller
-      await handleAcceptCall(idLastMsg);
+      await handleAcceptCall(idLastMsg, true);
 
       await createAnswer(
         peerConnection,

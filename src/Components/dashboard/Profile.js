@@ -35,8 +35,8 @@ const Profile = (props) => {
 
   return (
     <div className={classes.root}>
-      {/* {console.log(friendList)}
-      {console.log(user)} */}
+      {console.log(friendList)}
+      {/* {console.log(user)}  */}
       {user && (
         <>
           <ListItem button onClick={() => handleProfile()}>
