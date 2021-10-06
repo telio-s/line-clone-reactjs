@@ -8,6 +8,7 @@ import {
 import { useRef, useState } from "react";
 import useStyles from "../../Style/calling-content";
 import { servers } from "../../utils/calling/stun-servers";
+import { handleAcceptCall } from "../../utils/chat-room/utils";
 import {
   createAnswer,
   handleSetCallType,
@@ -18,7 +19,8 @@ import {
 import CallingContent from "./DialogueContent/CallingContent";
 
 function CalleeDialogue(props) {
-  const { open, onclose, id, caller, callee, setCallee, call } = props;
+  const { open, onclose, id, caller, callee, setCallee, call, idLastMsg } =
+    props;
   const classes = useStyles();
   const [isRecieve, setIsRecieve] = useState(false);
   const [otherend, setOtherend] = useState(
@@ -38,6 +40,9 @@ function CalleeDialogue(props) {
       remoteVideo.current.srcObject = remoteStream;
 
       handleSetCallType(localStream, callee, dataChannel);
+
+      // send 'isDeclineCall: true' to caller
+      await handleAcceptCall(idLastMsg);
 
       await createAnswer(
         peerConnection,
@@ -82,7 +87,7 @@ function CalleeDialogue(props) {
           remoteVideo={remoteVideo}
           call={callee}
           user={caller}
-          otherend={isRecieve ? otherend : !otherend}
+          otherend={otherend}
         />
       )}
       <div className={classes.details}>

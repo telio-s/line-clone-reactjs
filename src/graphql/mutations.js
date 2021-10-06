@@ -32,17 +32,6 @@ export const createUser = /* GraphQL */ `
         }
         nextToken
       }
-      friends {
-        items {
-          id
-          userId
-          friendId
-          displayName
-          createdAt
-          updatedAt
-        }
-        nextToken
-      }
       blocked {
         id
         username
@@ -62,9 +51,6 @@ export const createUser = /* GraphQL */ `
         }
         phoneNumber
         groups {
-          nextToken
-        }
-        friends {
           nextToken
         }
         blocked {
@@ -111,9 +97,6 @@ export const createUser = /* GraphQL */ `
         }
         phoneNumber
         groups {
-          nextToken
-        }
-        friends {
           nextToken
         }
         blocked {
@@ -177,17 +160,6 @@ export const updateUser = /* GraphQL */ `
         }
         nextToken
       }
-      friends {
-        items {
-          id
-          userId
-          friendId
-          displayName
-          createdAt
-          updatedAt
-        }
-        nextToken
-      }
       blocked {
         id
         username
@@ -207,9 +179,6 @@ export const updateUser = /* GraphQL */ `
         }
         phoneNumber
         groups {
-          nextToken
-        }
-        friends {
           nextToken
         }
         blocked {
@@ -256,9 +225,6 @@ export const updateUser = /* GraphQL */ `
         }
         phoneNumber
         groups {
-          nextToken
-        }
-        friends {
           nextToken
         }
         blocked {
@@ -322,17 +288,6 @@ export const deleteUser = /* GraphQL */ `
         }
         nextToken
       }
-      friends {
-        items {
-          id
-          userId
-          friendId
-          displayName
-          createdAt
-          updatedAt
-        }
-        nextToken
-      }
       blocked {
         id
         username
@@ -352,9 +307,6 @@ export const deleteUser = /* GraphQL */ `
         }
         phoneNumber
         groups {
-          nextToken
-        }
-        friends {
           nextToken
         }
         blocked {
@@ -403,9 +355,7 @@ export const deleteUser = /* GraphQL */ `
         groups {
           nextToken
         }
-        friends {
-          nextToken
-        }
+
         blocked {
           id
           username
@@ -614,9 +564,7 @@ export const createUserGroups = /* GraphQL */ `
         groups {
           nextToken
         }
-        friends {
-          nextToken
-        }
+
         blocked {
           id
           username
@@ -696,9 +644,7 @@ export const updateUserGroups = /* GraphQL */ `
         groups {
           nextToken
         }
-        friends {
-          nextToken
-        }
+
         blocked {
           id
           username
@@ -778,9 +724,7 @@ export const deleteUserGroups = /* GraphQL */ `
         groups {
           nextToken
         }
-        friends {
-          nextToken
-        }
+
         blocked {
           id
           username
@@ -832,345 +776,7 @@ export const deleteUserGroups = /* GraphQL */ `
     }
   }
 `;
-export const createUserFriends = /* GraphQL */ `
-  mutation CreateUserFriends(
-    $input: CreateUserFriendsInput!
-    $condition: ModelUserFriendsConditionInput
-  ) {
-    createUserFriends(input: $input, condition: $condition) {
-      id
-      userId
-      friendId
-      user {
-        id
-        username
-        email
-        lineID
-        displayName
-        statusMessage
-        profilePhoto {
-          bucket
-          region
-          key
-        }
-        coverPhoto {
-          bucket
-          region
-          key
-        }
-        phoneNumber
-        groups {
-          nextToken
-        }
-        friends {
-          nextToken
-        }
-        blocked {
-          id
-          username
-          email
-          lineID
-          displayName
-          statusMessage
-          phoneNumber
-          createdAt
-          updatedAt
-        }
-        favourites {
-          id
-          username
-          email
-          lineID
-          displayName
-          statusMessage
-          phoneNumber
-          createdAt
-          updatedAt
-        }
-        createdAt
-        updatedAt
-      }
-      friend {
-        id
-        username
-        email
-        lineID
-        displayName
-        statusMessage
-        profilePhoto {
-          bucket
-          region
-          key
-        }
-        coverPhoto {
-          bucket
-          region
-          key
-        }
-        phoneNumber
-        groups {
-          nextToken
-        }
-        friends {
-          nextToken
-        }
-        blocked {
-          id
-          username
-          email
-          lineID
-          displayName
-          statusMessage
-          phoneNumber
-          createdAt
-          updatedAt
-        }
-        favourites {
-          id
-          username
-          email
-          lineID
-          displayName
-          statusMessage
-          phoneNumber
-          createdAt
-          updatedAt
-        }
-        createdAt
-        updatedAt
-      }
-      displayName
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const updateUserFriends = /* GraphQL */ `
-  mutation UpdateUserFriends(
-    $input: UpdateUserFriendsInput!
-    $condition: ModelUserFriendsConditionInput
-  ) {
-    updateUserFriends(input: $input, condition: $condition) {
-      id
-      userId
-      friendId
-      user {
-        id
-        username
-        email
-        lineID
-        displayName
-        statusMessage
-        profilePhoto {
-          bucket
-          region
-          key
-        }
-        coverPhoto {
-          bucket
-          region
-          key
-        }
-        phoneNumber
-        groups {
-          nextToken
-        }
-        friends {
-          nextToken
-        }
-        blocked {
-          id
-          username
-          email
-          lineID
-          displayName
-          statusMessage
-          phoneNumber
-          createdAt
-          updatedAt
-        }
-        favourites {
-          id
-          username
-          email
-          lineID
-          displayName
-          statusMessage
-          phoneNumber
-          createdAt
-          updatedAt
-        }
-        createdAt
-        updatedAt
-      }
-      friend {
-        id
-        username
-        email
-        lineID
-        displayName
-        statusMessage
-        profilePhoto {
-          bucket
-          region
-          key
-        }
-        coverPhoto {
-          bucket
-          region
-          key
-        }
-        phoneNumber
-        groups {
-          nextToken
-        }
-        friends {
-          nextToken
-        }
-        blocked {
-          id
-          username
-          email
-          lineID
-          displayName
-          statusMessage
-          phoneNumber
-          createdAt
-          updatedAt
-        }
-        favourites {
-          id
-          username
-          email
-          lineID
-          displayName
-          statusMessage
-          phoneNumber
-          createdAt
-          updatedAt
-        }
-        createdAt
-        updatedAt
-      }
-      displayName
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const deleteUserFriends = /* GraphQL */ `
-  mutation DeleteUserFriends(
-    $input: DeleteUserFriendsInput!
-    $condition: ModelUserFriendsConditionInput
-  ) {
-    deleteUserFriends(input: $input, condition: $condition) {
-      id
-      userId
-      friendId
-      user {
-        id
-        username
-        email
-        lineID
-        displayName
-        statusMessage
-        profilePhoto {
-          bucket
-          region
-          key
-        }
-        coverPhoto {
-          bucket
-          region
-          key
-        }
-        phoneNumber
-        groups {
-          nextToken
-        }
-        friends {
-          nextToken
-        }
-        blocked {
-          id
-          username
-          email
-          lineID
-          displayName
-          statusMessage
-          phoneNumber
-          createdAt
-          updatedAt
-        }
-        favourites {
-          id
-          username
-          email
-          lineID
-          displayName
-          statusMessage
-          phoneNumber
-          createdAt
-          updatedAt
-        }
-        createdAt
-        updatedAt
-      }
-      friend {
-        id
-        username
-        email
-        lineID
-        displayName
-        statusMessage
-        profilePhoto {
-          bucket
-          region
-          key
-        }
-        coverPhoto {
-          bucket
-          region
-          key
-        }
-        phoneNumber
-        groups {
-          nextToken
-        }
-        friends {
-          nextToken
-        }
-        blocked {
-          id
-          username
-          email
-          lineID
-          displayName
-          statusMessage
-          phoneNumber
-          createdAt
-          updatedAt
-        }
-        favourites {
-          id
-          username
-          email
-          lineID
-          displayName
-          statusMessage
-          phoneNumber
-          createdAt
-          updatedAt
-        }
-        createdAt
-        updatedAt
-      }
-      displayName
-      createdAt
-      updatedAt
-    }
-  }
-`;
+
 export const createMessage = /* GraphQL */ `
   mutation CreateMessage(
     $input: CreateMessageInput!
@@ -1199,9 +805,7 @@ export const createMessage = /* GraphQL */ `
         groups {
           nextToken
         }
-        friends {
-          nextToken
-        }
+
         blocked {
           id
           username
@@ -1260,6 +864,11 @@ export const createMessage = /* GraphQL */ `
       isBlock
       hasRead
       isCall
+      isDeclineCall
+      receiver {
+        id
+        displayName
+      }
       updatedAt
     }
   }
@@ -1290,9 +899,6 @@ export const updateMessage = /* GraphQL */ `
         }
         phoneNumber
         groups {
-          nextToken
-        }
-        friends {
           nextToken
         }
         blocked {
@@ -1378,9 +984,6 @@ export const deleteMessage = /* GraphQL */ `
         }
         phoneNumber
         groups {
-          nextToken
-        }
-        friends {
           nextToken
         }
         blocked {

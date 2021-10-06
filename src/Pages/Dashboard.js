@@ -6,6 +6,7 @@ import {
   useHistory,
   Switch,
   useLocation,
+  useParams,
 } from "react-router-dom";
 import AddFriend from "../Components/dashboard/AddFriend";
 import { Divider, Button } from "@material-ui/core";
@@ -13,7 +14,11 @@ import { Auth, Hub } from "aws-amplify";
 import { getUserById, getMessagesByDate } from "../api/queries";
 import { setLocalTimeZone } from "../service/Localtime";
 import { API, graphqlOperation } from "aws-amplify";
-import { newOnCreateMessage } from "../graphql/subscriptions";
+import {
+  newOnCreateMessage,
+  newOnUpdateMessage,
+  newOnUpdateUser,
+} from "../graphql/subscriptions";
 import DrawerMenu from "../Components/dashboard/DrawerMenu";
 import ChatList from "../Components/dashboard/ChatList";
 import Selection from "../Components/dashboard/Selection";
@@ -40,6 +45,7 @@ function reducer(state, action) {
       let notiForChatlist = 0;
       const time = setLocalTimeZone(action.payload.createdAt);
       if (action.payload.user.username !== state[0].user.username) {
+        console.log("reducer", state[0].countNoti);
         state[0].setCountNoti(state[0].countNoti + 1);
         notiForChatlist = 1;
       }
@@ -67,6 +73,7 @@ function reducer(state, action) {
             ISOtime: action.payload.createdAt,
             theirUser: { ...prevState.theirUser },
             messages: [...prevState.messages, action.payload],
+            idLastMsg: action.payload.id,
           }));
         }
         // clicked And ids are NOT compatible, need open chat ..cause clicked
@@ -120,7 +127,7 @@ const Dashboard = ({ match }) => {
   const [call, setCall] = useState({
     isCall: false,
     caller: null,
-    callerType: "audio",
+    callerType: "Voice call",
   });
   const [caller, setCaller] = useState({ type: "audio" });
   const [callee, setCallee] = useState({ type: "audio" });
@@ -130,6 +137,8 @@ const Dashboard = ({ match }) => {
     chatList: [],
     chat: {},
   });
+  const location = useLocation();
+  const [paramsId, setParamsId] = useState();
 
   useEffect(async () => {
     // service worker
@@ -193,6 +202,7 @@ const Dashboard = ({ match }) => {
       },
     });
 
+    // console.log(chatList);
     updateSordteChatList(chatList);
 
     if (dummy.current) {
@@ -205,30 +215,24 @@ const Dashboard = ({ match }) => {
     // Open subscribe
     setupSubscriptions();
     return () => {
-      subscriptionOnCreate.unsubscribe();
+      subscriptionOnCreateMsg.unsubscribe();
+      subscriptionOnUpdateMsg.unsubscribe();
+      subscriptionOnUpdateUser.unsubscribe();
     };
   }, []);
 
-  let subscriptionOnCreate;
+  let subscriptionOnCreateMsg;
+  let subscriptionOnUpdateMsg;
+  let subscriptionOnUpdateUser;
   const setupSubscriptions = async () => {
-    subscriptionOnCreate = API.graphql(
+    subscriptionOnCreateMsg = API.graphql(
       graphqlOperation(newOnCreateMessage)
     ).subscribe({
       next: async (data) => {
         const newMsgObj = data.value.data.newOnCreateMessage;
-        console.log(newMsgObj);
+        console.log("subscribeCreateMsg", newMsgObj);
         setNewMessage(newMsgObj);
         if (newMsgObj) {
-          // setChat({
-          //   idGroup: newMsgObj.group.id,
-          //   name: newMsgObj.group.name,
-          //   sender: newMsgObj.user.username,
-          //   content: newMsgObj.message,
-          //   time: "50:80",
-          //   ISOtime: newMsgObj.createdAt,
-          //   theirUser: newMsgObj.user,
-          //   messages: newMsgObj.group.messages,
-          // });
           const token = await getToken();
           sendRequestPost(
             token,
@@ -238,15 +242,26 @@ const Dashboard = ({ match }) => {
             newMsgObj
           );
         }
+      },
+    });
 
-        // if (Notification.permission === "granted") {
-        //   showNotification(newMsgObj.group.id, dispatch, newMsgObj);
-        // } else if (Notification.permission !== "denied") {
-        //   Notification.requestPermission().then((permission) => {
-        //     if (permission == " granted")
-        //       showNotification(newMsgObj.group.id, dispatch, newMsgObj);
-        //   });
-        // }
+    subscriptionOnUpdateMsg = API.graphql(
+      graphqlOperation(newOnUpdateMessage)
+    ).subscribe({
+      next: async (data) => {
+        const newMsgUpdateObj = data.value.data.newOnUpdateMessage;
+        setNewMessage(newMsgUpdateObj);
+        console.log("subscribeUpdateMsg", newMsgUpdateObj);
+      },
+    });
+
+    subscriptionOnUpdateUser = API.graphql(
+      graphqlOperation(newOnUpdateUser)
+    ).subscribe({
+      next: async (data) => {
+        const newUserUpdateObj = data.value.data.newOnUpdateUser;
+        setNewMessage(newUserUpdateObj);
+        console.log("subscribeUpdateUser", newUserUpdateObj);
       },
     });
   };
@@ -254,14 +269,14 @@ const Dashboard = ({ match }) => {
   const checkUserCurrent = async () => {
     // Get id by checking user current auth
     const auth = await Auth.currentAuthenticatedUser();
-    console.log(auth);
+    console.log("cognitocheck", auth);
     const id = auth.attributes.sub;
 
     // Get User by id
     try {
       const userById = await getUserById(id);
       setMyUser(userById);
-      console.log(userById);
+      console.log("dd", userById);
       setUser(userById);
     } catch (err) {
       console.log(err);
@@ -269,52 +284,65 @@ const Dashboard = ({ match }) => {
   };
 
   const fetchChatList = async () => {
-    console.log(myUser);
+    console.log("tt", myUser);
     if (myUser) {
+      // console.log(myUser);
       let noti = 0;
       const fetchFriendList = myUser.groups.items.filter((obj) => {
         return obj.group.isDirect === true;
       });
       setFriendList(fetchFriendList);
-      console.log("Hello shijie", fetchFriendList);
-      await myUser.groups.items.map(async (group) => {
-        if (group.group.isDirect && group.group.messages.items.length != 0) {
-          const fetchAllMessage = await getMessagesByDate(group.group.id);
-          const theirUser = findFriendForChatlist(
-            myUser,
-            group.group.users.items
-          );
-          const resultFilterTheirUser = countHasUnRead(fetchAllMessage);
-          noti += resultFilterTheirUser.length;
+      if (myUser.groups.items.length === 0) {
+        setCountNoti(noti);
+      } else {
+        await myUser.groups.items.map(async (group) => {
+          if (group.group.isDirect && group.group.messages.items.length != 0) {
+            const fetchAllMessage = await getMessagesByDate(group.group.id);
+            const theirUser = findFriendForChatlist(
+              myUser,
+              group.group.users.items
+            );
+            console.log("fetchall", fetchAllMessage);
+            const resultFilterTheirUser = countHasUnRead(fetchAllMessage);
+            noti += resultFilterTheirUser.length;
 
-          const localtime = setLocalTimeZone(
-            fetchAllMessage.items[
-              fetchAllMessage.items.length - 1
-            ].createdAt.toString()
-          );
-          // console.log("lastMsg", fetchAllMessage.items);
+            const localtime = setLocalTimeZone(
+              fetchAllMessage.items[
+                fetchAllMessage.items.length - 1
+              ].createdAt.toString()
+            );
+            // console.log("lastMsg", fetchAllMessage.items);
 
-          let newChatInfo = {
-            idGroup: group.group.id,
-            name: group.group.name,
-            sender:
-              fetchAllMessage.items[fetchAllMessage.items.length - 1].user
-                .username,
-            content:
-              fetchAllMessage.items[fetchAllMessage.items.length - 1].message,
-            time: localtime,
-            ISOtime:
-              fetchAllMessage.items[fetchAllMessage.items.length - 1].createdAt,
-            theirUser: theirUser,
-            messages: fetchAllMessage.items,
-            unread: resultFilterTheirUser.length,
-          };
-          // console.log("fetch chatlist");
-          setChat(newChatInfo);
-          setChatList((previouschat) => [...previouschat, newChatInfo]);
-          setCountNoti(noti);
-        }
-      });
+            let newChatInfo = {
+              idGroup: group.group.id,
+              name: group.group.name,
+              sender:
+                fetchAllMessage.items[fetchAllMessage.items.length - 1].user
+                  .username,
+              content:
+                fetchAllMessage.items[fetchAllMessage.items.length - 1].message,
+              time: localtime,
+              ISOtime:
+                fetchAllMessage.items[fetchAllMessage.items.length - 1]
+                  .createdAt,
+              theirUser: theirUser,
+              messages: fetchAllMessage.items,
+              unread: resultFilterTheirUser.length,
+              idLastMsg:
+                fetchAllMessage.items[fetchAllMessage.items.length - 1].id,
+            };
+
+            // console.log("fetch chatlist");
+            if (group.group.id === paramsId) {
+              setChat(newChatInfo);
+            }
+            setChatList((previouschat) => [...previouschat, newChatInfo]);
+            setCountNoti(noti);
+          } else {
+            setCountNoti(noti);
+          }
+        });
+      }
     }
   };
 
@@ -396,7 +424,7 @@ const Dashboard = ({ match }) => {
     <>
       <div style={{ display: "flex" }}>
         {/* {console.log(match.url)} */}
-        {console.log(chat)}
+        {/* {console.log(chat)} */}
         <DrawerMenu
           match={match}
           setSelection={setSelection}
@@ -417,6 +445,7 @@ const Dashboard = ({ match }) => {
                   selection={selection}
                   setMyUser={setMyUser}
                   setCaller={setCaller}
+                  setParamsId={setParamsId}
                 />
               </Route>
             </Switch>
@@ -443,6 +472,7 @@ const Dashboard = ({ match }) => {
               callee={callee}
               setCallee={setCallee}
               call={call}
+              idLastMsg={chat.idLastMsg}
             />
           )
         )

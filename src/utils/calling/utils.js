@@ -68,6 +68,10 @@ export async function createCall(
 
   room.onSnapshot(async (snapshot) => {
     const data = snapshot.data();
+    if (!data) {
+      hangup(peerConnection, localStream, remoteStream, idCall, onclose);
+      return;
+    }
     if (peerConnection.iceConnectionState !== "closed") {
       if (!peerConnection.currentRemoteDescription && data?.answer) {
         const answerDescription = new RTCSessionDescription(data.answer);
@@ -252,8 +256,10 @@ export async function hangup(
   idCall,
   onclose
 ) {
-  const tracks = localStream.getTracks();
-  tracks.forEach((track) => track.stop());
+  if (localStream) {
+    const tracks = localStream.getTracks();
+    tracks.forEach((track) => track.stop());
+  }
 
   if (remoteStream) {
     remoteStream.getTracks().forEach((track) => track.stop());

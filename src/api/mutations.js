@@ -1,21 +1,11 @@
 import { API, graphqlOperation } from "aws-amplify";
 import {
   createGroup,
-  createUserFriends,
   createUserGroups,
   updateUser,
   createMessage,
   updateMessage,
 } from "./../graphql/mutations";
-
-export async function createFriends(userId, friendId) {
-  const success = await API.graphql(
-    graphqlOperation(createUserFriends, { input: { userId, friendId } })
-  )
-    .then(() => true)
-    .catch(() => false);
-  return success;
-}
 
 export async function createNewGroup(name, isDirect) {
   const group = await API.graphql(
@@ -85,3 +75,16 @@ export const updateMessageHasRead = async (id, hasRead) => {
   );
   return data;
 };
+
+export async function updateMessageAcceptCall(id) {
+  const data = await API.graphql(
+    graphqlOperation(updateMessage, {
+      input: {
+        id: id,
+        isDeclineCall: true,
+      },
+    })
+  );
+  console.log("updatefunc", data);
+  return data.data.updateMessage;
+}

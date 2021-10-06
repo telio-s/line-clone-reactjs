@@ -67,11 +67,11 @@ const DrawerMenu = (props) => {
           />
           <div className={countNoti == 0 ? null : classes.notiBox}>
             <Typography className={countNoti == 0 ? null : classes.noti}>
+              {console.log(countNoti)}
               {countNoti == 0 ? null : countNoti}
             </Typography>
           </div>
         </IconButton>
-
         <IconButton
           disableRipple={true}
           className={classes.iconButton}

@@ -5,20 +5,25 @@ import {
 } from "./../../api/mutations";
 import { getUserById, getUserByUsername } from "./../../api/queries";
 
-export async function findFriendByUsername(username, friends, myUser) {
+export async function findFriendByUsername(username, groups, myUser) {
   let isFriend = false;
-  let index = null;
+  let indexG = null;
+  let indexF = null;
   if (myUser.username === username) {
     return;
   }
-  for (let i = 0; i < friends.length; i++) {
-    if (friends[i].friend.username === username) {
-      isFriend = true;
-      index = i;
-      break;
+  for (let i = 0; i < groups.length; i++) {
+    const users = groups[i].group.users.items;
+    for (let j = 0; j < users.length; j++) {
+      if (users[j].user.username === username) {
+        isFriend = true;
+        indexG = i;
+        indexF = j;
+        break;
+      }
     }
   }
-  if (isFriend) return `already-friend-${index}`;
+  if (isFriend) return `already-friend-${indexG}-${indexF}`;
   const user = await getUserByUsername(username);
   return user;
 }
@@ -52,30 +57,14 @@ export function getGroupId(user, friendUserName) {
 }
 
 export async function addFriend(userId, friendId, userName, friendName) {
-  const success = await createFriends(userId, friendId);
+  // const success = await createFriends(userId, friendId);
   const group = await createNewGroup(`${userName}${friendName}`, true);
   const gu = await createUserstoGroup(group.id, userId);
   const gf = await createUserstoGroup(group.id, friendId);
-  return [success & gu & gf, group];
+  return [gu & gf, group];
 }
 
-export function setChatRoom(setChat, group, friend, type) {
-  if (type === "new-friend") {
-    console.log(friend);
-    setChat({
-      idGroup: group.id,
-      name: group.name,
-      sender: "",
-      content: "",
-      time: "",
-      ISOtime: "",
-      theirUser: friend,
-      messages: [],
-      unread: 0,
-    });
-    return;
-  }
-  console.log(friend);
+export function setChatRoom(setChat, group, friend) {
   setChat({
     idGroup: group.id,
     name: group.name,
@@ -84,7 +73,7 @@ export function setChatRoom(setChat, group, friend, type) {
     time: "",
     ISOtime: "",
     theirUser: friend,
-    messages: group.messages,
+    messages: group.message ? group.messages : [],
     unread: 0,
   });
 }

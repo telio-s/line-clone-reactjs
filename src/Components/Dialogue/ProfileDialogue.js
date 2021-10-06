@@ -21,8 +21,8 @@ function ProfileDialogue(props) {
   const hiddenUploadCoverPhoto = useRef(null);
   const [editStatus, setEditStatus] = useState(false);
 
-  console.log(user.profilePhoto);
-  console.log(user.coverPhoto);
+  // console.log(user.profilePhoto);
+  // console.log(user.coverPhoto);
 
   function handleEditProfile() {
     if (!editProfile) onClose();

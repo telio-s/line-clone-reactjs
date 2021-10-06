@@ -5,7 +5,7 @@ import firebase from "../firebase";
 const messaging = firebase.messaging();
 
 export const sendRequestPost = (token, title, body, dispatch, newMsgObj) => {
-  console.log(token, title, body, newMsgObj);
+  // console.log(token, title, body, newMsgObj);
   // dispatch
   dispatch({ type: "add", payload: newMsgObj, onClick: "noClick" });
 

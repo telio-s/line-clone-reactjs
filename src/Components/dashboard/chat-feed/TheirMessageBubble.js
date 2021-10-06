@@ -14,18 +14,18 @@ const TheirMessageBubble = (props) => {
   const [open, setOpen] = useState(false);
   const [openProfile, setOpenProfile] = useState(false);
 
-  // useEffect(() => {
-  //   function getMedia() {
-  //     message.media &&
-  //       message.media.map((media) => {
-  //         setPhotos((prevPhotos) => [...prevPhotos, media]);
-  //       });
-  //   }
-  //   if (photos.length) {
-  //     return;
-  //   }
-  //   getMedia();
-  // }, []);
+  useEffect(() => {
+    function getMedia() {
+      message.media &&
+        message.media.map((media) => {
+          setPhotos((prevPhotos) => [...prevPhotos, media]);
+        });
+    }
+    if (photos.length) {
+      return;
+    }
+    getMedia();
+  }, []);
 
   function handleFullView(index) {
     setOpen(!open);

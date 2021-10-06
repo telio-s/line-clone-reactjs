@@ -1,5 +1,7 @@
 import { Storage } from "aws-amplify";
 import aws_exports from "./../../aws-exports";
+const bucket = aws_exports.aws_user_files_s3_bucket;
+const region = aws_exports.aws_user_files_s3_bucket_region;
 
 export async function uploadFiles(files) {
   const bucket = aws_exports.aws_user_files_s3_bucket;
@@ -40,4 +42,14 @@ export async function handleImgError(e, count, photo) {
 
 function sleep(ms) {
   return new Promise((resolve) => setTimeout(resolve, ms));
+}
+
+export function setImagesLocation(files) {
+  let locations = [];
+  files.forEach((file) => {
+    const _file = `${file.name}`;
+    const addr = `https://${bucket}.s3.${region}.amazonaws.com/public/${_file}`;
+    locations.push(addr);
+  });
+  return locations;
 }

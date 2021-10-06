@@ -13,13 +13,13 @@
     },
     "categories": {
       "function": {
-        "lineclone7ec4df0d7ec4df0dPostConfirmation": {
+        "lineclone9f180b549f180b54PostConfirmation": {
           "deploymentBucketName": "amplify-lineclone-dev-152718-deployment",
-          "s3Key": "amplify-builds/lineclone7ec4df0d7ec4df0dPostConfirmation-376c306d732f4b7a6d31-build.zip"
+          "s3Key": "amplify-builds/lineclone9f180b549f180b54PostConfirmation-3239596d487462756b54-build.zip"
         }
       },
       "auth": {
-        "lineclone7ec4df0d7ec4df0d": {},
+        "lineclone9f180b549f180b54": {},
         "userPoolGroups": {}
       }
     }

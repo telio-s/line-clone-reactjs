@@ -26,7 +26,91 @@ export const newOnCreateMessage = /* GraphQL */ `
         groups {
           nextToken
         }
-        friends {
+        blocked {
+          id
+          username
+          email
+          lineID
+          displayName
+          statusMessage
+          phoneNumber
+          createdAt
+          updatedAt
+        }
+        favourites {
+          id
+          username
+          email
+          lineID
+          displayName
+          statusMessage
+          phoneNumber
+          createdAt
+          updatedAt
+        }
+        createdAt
+        updatedAt
+      }
+      group {
+        id
+        name
+        users {
+          nextToken
+        }
+        messages {
+          nextToken
+        }
+        isDirect
+        announce {
+          nextToken
+        }
+        files {
+          bucket
+          region
+          key
+        }
+        createdAt
+        updatedAt
+      }
+      type
+      message
+      media
+      createdAt
+      isBlock
+      hasRead
+      isCall
+      isDeclineCall
+      receiver {
+        id
+        displayName
+      }
+      updatedAt
+    }
+  }
+`;
+export const newOnUpdateMessage = /* GraphQL */ `
+  subscription NewOnUpdateMessage {
+    newOnUpdateMessage {
+      id
+      user {
+        id
+        username
+        email
+        lineID
+        displayName
+        statusMessage
+        profilePhoto {
+          bucket
+          region
+          key
+        }
+        coverPhoto {
+          bucket
+          region
+          key
+        }
+        phoneNumber
+        groups {
           nextToken
         }
         blocked {
@@ -82,13 +166,18 @@ export const newOnCreateMessage = /* GraphQL */ `
       isBlock
       hasRead
       isCall
+      isDeclineCall
+      receiver {
+        id
+        displayName
+      }
       updatedAt
     }
   }
 `;
-export const onCreateUser = /* GraphQL */ `
-  subscription OnCreateUser {
-    onCreateUser {
+export const newOnUpdateUser = /* GraphQL */ `
+  subscription newOnUpdateUser {
+    newOnUpdateUser {
       id
       username
       email
@@ -109,17 +198,52 @@ export const onCreateUser = /* GraphQL */ `
       groups {
         items {
           id
-          createdAt
-          updatedAt
-        }
-        nextToken
-      }
-      friends {
-        items {
-          id
-          userId
-          friendId
-          displayName
+          group {
+            id
+            name
+            isDirect
+            messages {
+              items {
+                message
+                user {
+                  id
+                  username
+                  displayName
+                  statusMessage
+                  profilePhoto {
+                    bucket
+                    region
+                    key
+                  }
+                  coverPhoto {
+                    bucket
+                    region
+                    key
+                  }
+                }
+              }
+            }
+            users {
+              items {
+                user {
+                  id
+                  username
+                  displayName
+                  statusMessage
+                  profilePhoto {
+                    bucket
+                    region
+                    key
+                  }
+                  coverPhoto {
+                    bucket
+                    region
+                    key
+                  }
+                }
+              }
+            }
+          }
           createdAt
           updatedAt
         }
@@ -144,9 +268,6 @@ export const onCreateUser = /* GraphQL */ `
         }
         phoneNumber
         groups {
-          nextToken
-        }
-        friends {
           nextToken
         }
         blocked {
@@ -195,7 +316,129 @@ export const onCreateUser = /* GraphQL */ `
         groups {
           nextToken
         }
-        friends {
+        blocked {
+          id
+          username
+          email
+          lineID
+          displayName
+          statusMessage
+          phoneNumber
+          createdAt
+          updatedAt
+        }
+        favourites {
+          id
+          username
+          email
+          lineID
+          displayName
+          statusMessage
+          phoneNumber
+          createdAt
+          updatedAt
+        }
+        createdAt
+        updatedAt
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onCreateUser = /* GraphQL */ `
+  subscription OnCreateUser {
+    onCreateUser {
+      id
+      username
+      email
+      lineID
+      displayName
+      statusMessage
+      profilePhoto {
+        bucket
+        region
+        key
+      }
+      coverPhoto {
+        bucket
+        region
+        key
+      }
+      phoneNumber
+      groups {
+        items {
+          id
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      blocked {
+        id
+        username
+        email
+        lineID
+        displayName
+        statusMessage
+        profilePhoto {
+          bucket
+          region
+          key
+        }
+        coverPhoto {
+          bucket
+          region
+          key
+        }
+        phoneNumber
+        groups {
+          nextToken
+        }
+        blocked {
+          id
+          username
+          email
+          lineID
+          displayName
+          statusMessage
+          phoneNumber
+          createdAt
+          updatedAt
+        }
+        favourites {
+          id
+          username
+          email
+          lineID
+          displayName
+          statusMessage
+          phoneNumber
+          createdAt
+          updatedAt
+        }
+        createdAt
+        updatedAt
+      }
+      favourites {
+        id
+        username
+        email
+        lineID
+        displayName
+        statusMessage
+        profilePhoto {
+          bucket
+          region
+          key
+        }
+        coverPhoto {
+          bucket
+          region
+          key
+        }
+        phoneNumber
+        groups {
           nextToken
         }
         blocked {
@@ -256,17 +499,6 @@ export const onUpdateUser = /* GraphQL */ `
         }
         nextToken
       }
-      friends {
-        items {
-          id
-          userId
-          friendId
-          displayName
-          createdAt
-          updatedAt
-        }
-        nextToken
-      }
       blocked {
         id
         username
@@ -286,9 +518,6 @@ export const onUpdateUser = /* GraphQL */ `
         }
         phoneNumber
         groups {
-          nextToken
-        }
-        friends {
           nextToken
         }
         blocked {
@@ -335,9 +564,6 @@ export const onUpdateUser = /* GraphQL */ `
         }
         phoneNumber
         groups {
-          nextToken
-        }
-        friends {
           nextToken
         }
         blocked {
@@ -398,17 +624,7 @@ export const onDeleteUser = /* GraphQL */ `
         }
         nextToken
       }
-      friends {
-        items {
-          id
-          userId
-          friendId
-          displayName
-          createdAt
-          updatedAt
-        }
-        nextToken
-      }
+
       blocked {
         id
         username
@@ -428,9 +644,6 @@ export const onDeleteUser = /* GraphQL */ `
         }
         phoneNumber
         groups {
-          nextToken
-        }
-        friends {
           nextToken
         }
         blocked {
@@ -477,9 +690,6 @@ export const onDeleteUser = /* GraphQL */ `
         }
         phoneNumber
         groups {
-          nextToken
-        }
-        friends {
           nextToken
         }
         blocked {
@@ -690,9 +900,6 @@ export const onCreateUserGroups = /* GraphQL */ `
         groups {
           nextToken
         }
-        friends {
-          nextToken
-        }
         blocked {
           id
           username
@@ -767,9 +974,6 @@ export const onUpdateUserGroups = /* GraphQL */ `
         }
         phoneNumber
         groups {
-          nextToken
-        }
-        friends {
           nextToken
         }
         blocked {
@@ -848,9 +1052,6 @@ export const onDeleteUserGroups = /* GraphQL */ `
         groups {
           nextToken
         }
-        friends {
-          nextToken
-        }
         blocked {
           id
           username
@@ -902,336 +1103,6 @@ export const onDeleteUserGroups = /* GraphQL */ `
     }
   }
 `;
-export const onCreateUserFriends = /* GraphQL */ `
-  subscription OnCreateUserFriends {
-    onCreateUserFriends {
-      id
-      userId
-      friendId
-      user {
-        id
-        username
-        email
-        lineID
-        displayName
-        statusMessage
-        profilePhoto {
-          bucket
-          region
-          key
-        }
-        coverPhoto {
-          bucket
-          region
-          key
-        }
-        phoneNumber
-        groups {
-          nextToken
-        }
-        friends {
-          nextToken
-        }
-        blocked {
-          id
-          username
-          email
-          lineID
-          displayName
-          statusMessage
-          phoneNumber
-          createdAt
-          updatedAt
-        }
-        favourites {
-          id
-          username
-          email
-          lineID
-          displayName
-          statusMessage
-          phoneNumber
-          createdAt
-          updatedAt
-        }
-        createdAt
-        updatedAt
-      }
-      friend {
-        id
-        username
-        email
-        lineID
-        displayName
-        statusMessage
-        profilePhoto {
-          bucket
-          region
-          key
-        }
-        coverPhoto {
-          bucket
-          region
-          key
-        }
-        phoneNumber
-        groups {
-          nextToken
-        }
-        friends {
-          nextToken
-        }
-        blocked {
-          id
-          username
-          email
-          lineID
-          displayName
-          statusMessage
-          phoneNumber
-          createdAt
-          updatedAt
-        }
-        favourites {
-          id
-          username
-          email
-          lineID
-          displayName
-          statusMessage
-          phoneNumber
-          createdAt
-          updatedAt
-        }
-        createdAt
-        updatedAt
-      }
-      displayName
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const onUpdateUserFriends = /* GraphQL */ `
-  subscription OnUpdateUserFriends {
-    onUpdateUserFriends {
-      id
-      userId
-      friendId
-      user {
-        id
-        username
-        email
-        lineID
-        displayName
-        statusMessage
-        profilePhoto {
-          bucket
-          region
-          key
-        }
-        coverPhoto {
-          bucket
-          region
-          key
-        }
-        phoneNumber
-        groups {
-          nextToken
-        }
-        friends {
-          nextToken
-        }
-        blocked {
-          id
-          username
-          email
-          lineID
-          displayName
-          statusMessage
-          phoneNumber
-          createdAt
-          updatedAt
-        }
-        favourites {
-          id
-          username
-          email
-          lineID
-          displayName
-          statusMessage
-          phoneNumber
-          createdAt
-          updatedAt
-        }
-        createdAt
-        updatedAt
-      }
-      friend {
-        id
-        username
-        email
-        lineID
-        displayName
-        statusMessage
-        profilePhoto {
-          bucket
-          region
-          key
-        }
-        coverPhoto {
-          bucket
-          region
-          key
-        }
-        phoneNumber
-        groups {
-          nextToken
-        }
-        friends {
-          nextToken
-        }
-        blocked {
-          id
-          username
-          email
-          lineID
-          displayName
-          statusMessage
-          phoneNumber
-          createdAt
-          updatedAt
-        }
-        favourites {
-          id
-          username
-          email
-          lineID
-          displayName
-          statusMessage
-          phoneNumber
-          createdAt
-          updatedAt
-        }
-        createdAt
-        updatedAt
-      }
-      displayName
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const onDeleteUserFriends = /* GraphQL */ `
-  subscription OnDeleteUserFriends {
-    onDeleteUserFriends {
-      id
-      userId
-      friendId
-      user {
-        id
-        username
-        email
-        lineID
-        displayName
-        statusMessage
-        profilePhoto {
-          bucket
-          region
-          key
-        }
-        coverPhoto {
-          bucket
-          region
-          key
-        }
-        phoneNumber
-        groups {
-          nextToken
-        }
-        friends {
-          nextToken
-        }
-        blocked {
-          id
-          username
-          email
-          lineID
-          displayName
-          statusMessage
-          phoneNumber
-          createdAt
-          updatedAt
-        }
-        favourites {
-          id
-          username
-          email
-          lineID
-          displayName
-          statusMessage
-          phoneNumber
-          createdAt
-          updatedAt
-        }
-        createdAt
-        updatedAt
-      }
-      friend {
-        id
-        username
-        email
-        lineID
-        displayName
-        statusMessage
-        profilePhoto {
-          bucket
-          region
-          key
-        }
-        coverPhoto {
-          bucket
-          region
-          key
-        }
-        phoneNumber
-        groups {
-          nextToken
-        }
-        friends {
-          nextToken
-        }
-        blocked {
-          id
-          username
-          email
-          lineID
-          displayName
-          statusMessage
-          phoneNumber
-          createdAt
-          updatedAt
-        }
-        favourites {
-          id
-          username
-          email
-          lineID
-          displayName
-          statusMessage
-          phoneNumber
-          createdAt
-          updatedAt
-        }
-        createdAt
-        updatedAt
-      }
-      displayName
-      createdAt
-      updatedAt
-    }
-  }
-`;
 export const onCreateMessage = /* GraphQL */ `
   subscription OnCreateMessage {
     onCreateMessage {
@@ -1255,9 +1126,6 @@ export const onCreateMessage = /* GraphQL */ `
         }
         phoneNumber
         groups {
-          nextToken
-        }
-        friends {
           nextToken
         }
         blocked {
@@ -1342,9 +1210,6 @@ export const onUpdateMessage = /* GraphQL */ `
         groups {
           nextToken
         }
-        friends {
-          nextToken
-        }
         blocked {
           id
           username
@@ -1425,9 +1290,6 @@ export const onDeleteMessage = /* GraphQL */ `
         }
         phoneNumber
         groups {
-          nextToken
-        }
-        friends {
           nextToken
         }
         blocked {
