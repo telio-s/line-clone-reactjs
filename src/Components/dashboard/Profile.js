@@ -35,7 +35,7 @@ const Profile = (props) => {
 
   return (
     <div className={classes.root}>
-      {/* {console.log(friendList)} */}
+      {console.log(friendList)}
       {/* {console.log(user)}  */}
       {user && (
         <>

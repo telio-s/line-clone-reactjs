@@ -155,6 +155,52 @@ export const updateUser = /* GraphQL */ `
       groups {
         items {
           id
+          group {
+            id
+            name
+            isDirect
+            messages {
+              items {
+                message
+                user {
+                  id
+                  username
+                  displayName
+                  statusMessage
+                  profilePhoto {
+                    bucket
+                    region
+                    key
+                  }
+                  coverPhoto {
+                    bucket
+                    region
+                    key
+                  }
+                }
+              }
+            }
+            users {
+              items {
+                user {
+                  id
+                  username
+                  displayName
+                  statusMessage
+                  profilePhoto {
+                    bucket
+                    region
+                    key
+                  }
+                  coverPhoto {
+                    bucket
+                    region
+                    key
+                  }
+                }
+              }
+            }
+          }
           createdAt
           updatedAt
         }

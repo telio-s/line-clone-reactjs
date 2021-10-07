@@ -140,6 +140,62 @@ function reducer(state, action) {
   }
 }
 
+function reducerUser(state, action) {
+  switch (action.type) {
+    case "set":
+      console.log("set");
+      return [action.payload];
+    case "add":
+      let allUser = [];
+      let theirUser;
+      for (let i = 0; i < state[0].friendList.length; i++) {
+        for (let j = 0; j < action.payload.groups.items.length; j++) {
+          if (
+            state[0].friendList[i].group.id ===
+            action.payload.groups.items[j].group.id
+          ) {
+            console.log("test yy");
+            state[0].friendList[i].group.users.items.map((user) => {
+              if (user.user.id !== action.payload.id) {
+                allUser.push({ user: user.user });
+              } else {
+                theirUser = action.payload.groups.items[j].group.id;
+                allUser.push({
+                  user: {
+                    coverPhoto: action.payload.coverPhoto,
+                    displayName: action.payload.displayName,
+                    id: action.payload.id,
+                    profilePhoto: action.payload.profilePhoto,
+                    statusMessage: action.payload.statusMessage,
+                    username: action.payload.username,
+                  },
+                });
+              }
+            });
+
+            console.log(allUser, theirUser);
+          }
+        }
+      }
+      console.log("setfriendlist");
+      state[0].setFriendList(
+        state[0].friendList.map((obj) =>
+          obj.group.id === theirUser
+            ? {
+                createdAt: obj.id,
+                updatedAt: obj.updatedAt,
+                id: obj.id,
+                group: {
+                  ...obj.group,
+                  users: { items: allUser },
+                },
+              }
+            : obj
+        )
+      );
+  }
+}
+
 const Dashboard = ({ match }) => {
   const history = useHistory();
   const [selection, setSelection] = useState("");
@@ -160,7 +216,8 @@ const Dashboard = ({ match }) => {
   const [callee, setCallee] = useState({ type: "audio" });
   const messaging = firebase.messaging();
   const dummy = useRef();
-  const [state, dispatch] = useReducer(reducer, { user: myUser });
+  const [state, dispatch] = useReducer(reducer, {});
+  const [stateUser, dispatchUser] = useReducer(reducerUser, {});
   const [isDeclineCall, setIsDeclineCall] = useState(true);
   const [paramsId, setParamsId] = useState();
 
@@ -225,6 +282,14 @@ const Dashboard = ({ match }) => {
         setCall,
       },
     });
+    dispatchUser({
+      type: "set",
+      payload: {
+        friendList: friendList,
+        setFriendList: setFriendList,
+        user: myUser,
+      },
+    });
 
     // console.log(chatList);
     updateSordteChatList(chatList);
@@ -284,6 +349,7 @@ const Dashboard = ({ match }) => {
         const newUserUpdateObj = data.value.data.newOnUpdateUser;
         setNewMessage(newUserUpdateObj);
         console.log("subscribeUpdateUser", newUserUpdateObj);
+        dispatchUser({ type: "add", payload: newUserUpdateObj });
       },
     });
   };
@@ -308,7 +374,7 @@ const Dashboard = ({ match }) => {
     try {
       const userById = await getUserById(id);
       setMyUser(userById);
-      console.log("dd", userById);
+      // console.log("dd", userById);
       setUser(userById);
     } catch (err) {
       console.log(err);
@@ -454,7 +520,7 @@ const Dashboard = ({ match }) => {
 
   return (
     <>
-      {console.log("stateT", state)}
+      {console.log("freind", friendList)}
       <div style={{ display: "flex" }}>
         {/* {console.log(match.url)} */}
         {/* {console.log(chat)} */}

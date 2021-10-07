@@ -27,6 +27,14 @@ const ChatList = (props) => {
   } = props;
   const classes = useStyles();
 
+  // const findChat = (e) => {
+  //   e.preventDefault();
+  //   console.log(e.target.value);
+  //   const chatFind = chatListArr.find((obj) => {
+  //     return obj.name == message.idGroup;
+  //   });
+  // };
+
   return (
     <div className={classes.root}>
       {/* {console.log(match.url)} */}
@@ -36,6 +44,7 @@ const ChatList = (props) => {
             fullWidth
             className={classes.searchInput}
             placeholder="Search for chats and messages"
+            // onKeyUp={(e) => findChat(e)}
             startAdornment={
               <InputAdornment position="start" variant="filled">
                 <SearchOutlined className={classes.iconSearch} />

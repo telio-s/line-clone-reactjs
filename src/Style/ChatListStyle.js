@@ -10,7 +10,7 @@ const useStyles = makeStyles((theme) => ({
     overflowY: "auto",
     // overflow: "hidden",
     height: `calc(98vh - 64px)`,
-    marginLeft: "80px",
+    marginLeft: "5%",
     minWidth: "400px",
   },
   appbar: {
