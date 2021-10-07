@@ -27,24 +27,24 @@ const ChatList = (props) => {
   } = props;
   const classes = useStyles();
 
-  // useEffect(() => {
-  //   console.log(chatListArr);
-  //   chatListArr.sort(function sort(b, a) {
-  //     console.log("chat list 2");
-  //     return new Date(a.ISOtime).getTime() - new Date(b.ISOtime).getTime();
+  // const findChat = (e) => {
+  //   e.preventDefault();
+  //   console.log(e.target.value);
+  //   const chatFind = chatListArr.find((obj) => {
+  //     return obj.name == message.idGroup;
   //   });
-  //   return () => {};
-  // }, [chatListArr]);
+  // };
 
   return (
     <div className={classes.root}>
-      {console.log(match.url)}
+      {/* {console.log(match.url)} */}
       <AppBar elevation={0} position="static" className={classes.appbar}>
         <Toolbar>
           <InputBase
             fullWidth
             className={classes.searchInput}
             placeholder="Search for chats and messages"
+            // onKeyUp={(e) => findChat(e)}
             startAdornment={
               <InputAdornment position="start" variant="filled">
                 <SearchOutlined className={classes.iconSearch} />
@@ -55,7 +55,7 @@ const ChatList = (props) => {
       </AppBar>
       {chatListArr.map((message, index) => (
         <div key={index}>
-          {console.log(message.theirUser)}
+          {/* {console.log(message.theirUser)} */}
           <Link
             to={`${match.url}/${message.idGroup}`}
             style={{ textDecoration: "none" }}
@@ -64,12 +64,12 @@ const ChatList = (props) => {
               disableRipple={true}
               className={classes.chatRoom}
               onClick={() => {
-                // console.log(chatListArr);
+                // console.log("chatlist", chatListArr);
                 const chat = chatListArr.find((obj) => {
                   return obj.idGroup == message.idGroup;
                 });
                 // console.log(match.url);
-                // console.log(chat);
+                console.log(chat);
                 setChat({
                   idGroup: chat.idGroup,
                   name: chat.name,
@@ -90,20 +90,29 @@ const ChatList = (props) => {
 
                 // update count unread to true on cloud
                 const result = chat.messages.filter(
-                  (item) => item.hasRead === false
+                  (item) => item.hasRead == false
                 );
+                console.log("result", result);
                 const resultFilterTheirUser = result.filter(
                   (item) => item.user.username !== myUser.username
                 );
+                console.log("resultFil", resultFilterTheirUser);
+
+                // updated hasRead on dynamodb
                 resultFilterTheirUser.map(async (data) => {
                   await updateMessageHasRead(data.id, true);
                 });
                 // console.log(resultFilterTheirUser.length);
 
+                const updateReadObjs = chat.messages.map((item) =>
+                  item.hasRead == false ? { ...item, hasRead: true } : item
+                );
+                // console.log(updateReadObjs);
                 // update count unread and hasRead in last message on chatlist UI
                 setChatList(
                   chatList.map((obj) =>
-                    obj.idGroup === chat.idGroup
+                    obj.idGroup === chat.idGroup &&
+                    resultFilterTheirUser.length > 0
                       ? {
                           idGroup: chat.idGroup,
                           name: chat.name,
@@ -112,13 +121,7 @@ const ChatList = (props) => {
                           time: chat.time,
                           ISOtime: chat.ISOtime,
                           theirUser: chat.theirUser,
-                          messages: [
-                            ...chat.messages.slice(0, chat.messages.length - 1),
-                            {
-                              ...chat.messages[chat.messages.length - 1],
-                              hasRead: true,
-                            },
-                          ],
+                          messages: updateReadObjs,
                           unread: 0,
                         }
                       : obj

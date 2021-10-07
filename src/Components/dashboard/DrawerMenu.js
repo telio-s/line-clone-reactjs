@@ -67,11 +67,11 @@ const DrawerMenu = (props) => {
           />
           <div className={countNoti == 0 ? null : classes.notiBox}>
             <Typography className={countNoti == 0 ? null : classes.noti}>
+              {console.log(countNoti)}
               {countNoti == 0 ? null : countNoti}
             </Typography>
           </div>
         </IconButton>
-
         <IconButton
           disableRipple={true}
           className={classes.iconButton}
@@ -81,20 +81,8 @@ const DrawerMenu = (props) => {
         >
           <PersonAdd className={classes.iconMtDrawer} />
         </IconButton>
-        <IconButton disableRipple={true} className={classes.iconButton}>
-          <WatchLater className={classes.iconMtDrawer} />
-        </IconButton>
-        <IconButton disableRipple={true} className={classes.iconButton}>
-          <FontAwesomeIcon
-            className={classes.iconAweDrawer}
-            icon={faNewspaper}
-          />
-        </IconButton>
 
         <div className={classes.drawerIconBottom}>
-          <IconButton disableRipple={true} className={classes.iconButton}>
-            <VolumeDownOutlined className={classes.iconMtDrawer} />
-          </IconButton>
           <IconButton
             disableRipple={true}
             className={classes.iconButton}

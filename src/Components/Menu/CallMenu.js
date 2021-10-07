@@ -3,7 +3,7 @@ import { CallRounded, VideocamRounded } from "@material-ui/icons";
 import { handleCall } from "./../../utils/chat-room/utils";
 
 function CallMenu(props) {
-  const { setCaller, idGroup, user, onclose, anchorEl } = props;
+  const { setCaller, idGroup, user, onclose, anchorEl, theirUser } = props;
   return (
     <>
       <Menu
@@ -12,7 +12,11 @@ function CallMenu(props) {
         onClose={onclose}
         keepMounted
       >
-        <MenuItem onClick={() => handleCall("audio", setCaller, idGroup, user)}>
+        <MenuItem
+          onClick={() =>
+            handleCall("audio", setCaller, idGroup, user, theirUser)
+          }
+        >
           <div
             style={{
               display: "flex",
@@ -24,7 +28,11 @@ function CallMenu(props) {
             <Typography>Voice Call</Typography>
           </div>
         </MenuItem>
-        <MenuItem onClick={() => handleCall("video", setCaller, idGroup, user)}>
+        <MenuItem
+          onClick={() =>
+            handleCall("video", setCaller, idGroup, user, theirUser)
+          }
+        >
           <div
             style={{
               display: "flex",

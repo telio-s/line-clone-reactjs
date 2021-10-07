@@ -1,23 +1,23 @@
 {
     "AWSTemplateFormatVersion": "2010-09-09",
     "Parameters": {
-        "authlineclone7ec4df0d7ec4df0dUserPoolId": {
+        "authlineclone9f180b549f180b54UserPoolId": {
             "Type": "String",
-            "Default": "authlineclone7ec4df0d7ec4df0dUserPoolId"
+            "Default": "authlineclone9f180b549f180b54UserPoolId"
         },
         
-        "authlineclone7ec4df0d7ec4df0dIdentityPoolId": {
+        "authlineclone9f180b549f180b54IdentityPoolId": {
             "Type": "String",
-            "Default": "authlineclone7ec4df0d7ec4df0dIdentityPoolId"
+            "Default": "authlineclone9f180b549f180b54IdentityPoolId"
         },
         
-        "authlineclone7ec4df0d7ec4df0dAppClientID": {
+        "authlineclone9f180b549f180b54AppClientID": {
             "Type": "String",
-            "Default": "authlineclone7ec4df0d7ec4df0dAppClientID"
+            "Default": "authlineclone9f180b549f180b54AppClientID"
         },
-        "authlineclone7ec4df0d7ec4df0dAppClientIDWeb": {
+        "authlineclone9f180b549f180b54AppClientIDWeb": {
             "Type": "String",
-            "Default": "authlineclone7ec4df0d7ec4df0dAppClientIDWeb"
+            "Default": "authlineclone9f180b549f180b54AppClientIDWeb"
         },
         "AuthRoleArn": {
             "Type": "String"
@@ -55,7 +55,7 @@
               },
               
               "UserPoolId" : {
-                "Ref": "authlineclone7ec4df0d7ec4df0dUserPoolId"
+                "Ref": "authlineclone9f180b549f180b54UserPoolId"
               }
             }
         },
@@ -68,7 +68,7 @@
                         "",
                         [
                           {
-                            "Ref": "authlineclone7ec4df0d7ec4df0dUserPoolId"
+                            "Ref": "authlineclone9f180b549f180b54UserPoolId"
                           },
                           "-AdminGroupRole"
                         ]
@@ -85,7 +85,7 @@
                             },
                             "Action": "sts:AssumeRoleWithWebIdentity",
                             "Condition": {
-                              "StringEquals": {"cognito-identity.amazonaws.com:aud": {"Ref":"authlineclone7ec4df0d7ec4df0dIdentityPoolId"}},
+                              "StringEquals": {"cognito-identity.amazonaws.com:aud": {"Ref":"authlineclone9f180b549f180b54IdentityPoolId"}},
                               "ForAnyValue:StringLike": {"cognito-identity.amazonaws.com:amr": "authenticated"}
                             }
                         }
@@ -111,7 +111,7 @@
                                 "",
                                 [
 
-                                  "lineclone7ec4df0d7ec4df0d",
+                                  "lineclone9f180b549f180b54",
                                   "-ExecutionRole-",
                                   {
                                     "Ref": "env"
@@ -272,16 +272,16 @@
                     "Ref": "UnauthRoleArn"
                 },
                 "identityPoolId": {
-                    "Ref": "authlineclone7ec4df0d7ec4df0dIdentityPoolId"
+                    "Ref": "authlineclone9f180b549f180b54IdentityPoolId"
                 },
                 "userPoolId": {
-                    "Ref": "authlineclone7ec4df0d7ec4df0dUserPoolId"
+                    "Ref": "authlineclone9f180b549f180b54UserPoolId"
                 },
                 "appClientIDWeb": {
-                    "Ref": "authlineclone7ec4df0d7ec4df0dAppClientIDWeb"
+                    "Ref": "authlineclone9f180b549f180b54AppClientIDWeb"
                 },
                 "appClientID": {
-                    "Ref": "authlineclone7ec4df0d7ec4df0dAppClientID"
+                    "Ref": "authlineclone9f180b549f180b54AppClientID"
                 },
                 "region": {
                     "Ref": "AWS::Region"

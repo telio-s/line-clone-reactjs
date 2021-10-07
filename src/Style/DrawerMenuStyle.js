@@ -1,7 +1,7 @@
 import React from "react";
 import { makeStyles } from "@material-ui/styles";
 
-const drawerWidth = "80px";
+const drawerWidth = "5%";
 const appbarHeight = 64;
 
 const useStyles = makeStyles((theme) => ({
@@ -12,7 +12,7 @@ const useStyles = makeStyles((theme) => ({
   },
   iconMtDrawer: {
     color: "#4e5870",
-    fontSize: "140%",
+    fontSize: "130%",
     "&:focus": {
       color: "#ffffff",
       backgroundColor: "transparent",
@@ -23,7 +23,7 @@ const useStyles = makeStyles((theme) => ({
   },
   iconAweDrawer: {
     color: "#4e5870",
-    fontSize: "120%",
+    fontSize: "110%",
     "&:focus": {
       color: "#ffffff",
       backgroundColor: "transparent",
@@ -34,7 +34,8 @@ const useStyles = makeStyles((theme) => ({
   },
   drawerIconBottom: {
     marginTop: "auto",
-    marginLeft: "10px",
+    // marginLeft: "10px",
+    alignSelf: "center",
   },
   iconButton: {
     "&:hover": {

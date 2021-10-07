@@ -75,31 +75,6 @@ export const getUser = /* GraphQL */ `
         }
         nextToken
       }
-      friends {
-        items {
-          id
-          userId
-          friendId
-          displayName
-          createdAt
-          updatedAt
-          friend {
-            username
-            displayName
-            profilePhoto {
-              bucket
-              region
-              key
-            }
-            coverPhoto {
-              bucket
-              region
-              key
-            }
-          }
-        }
-        nextToken
-      }
       blocked {
         id
         username
@@ -119,9 +94,6 @@ export const getUser = /* GraphQL */ `
         }
         phoneNumber
         groups {
-          nextToken
-        }
-        friends {
           nextToken
         }
         blocked {
@@ -168,9 +140,6 @@ export const getUser = /* GraphQL */ `
         }
         phoneNumber
         groups {
-          nextToken
-        }
-        friends {
           nextToken
         }
         blocked {
@@ -245,14 +214,6 @@ export const listUsers = /* GraphQL */ `
                 }
                 nextToken
               }
-            }
-          }
-        }
-        friends {
-          items {
-            friend {
-              id
-              username
             }
           }
         }
@@ -399,9 +360,6 @@ export const getMessage = /* GraphQL */ `
         groups {
           nextToken
         }
-        friends {
-          nextToken
-        }
         blocked {
           id
           username
@@ -543,6 +501,11 @@ export const messageByDate = /* GraphQL */ `
         isBlock
         hasRead
         isCall
+        isDeclineCall
+        receiver {
+          id
+          displayName
+        }
         updatedAt
       }
       nextToken

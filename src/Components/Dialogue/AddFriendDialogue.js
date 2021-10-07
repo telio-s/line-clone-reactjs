@@ -24,7 +24,7 @@ import { Link } from "react-router-dom";
 import { getImg } from "../../utils/profile/utils";
 
 function AddFriendDialogue(props) {
-  const { user, onClose, isOpen, match, chatRoom, setChat, setFriendList } =
+  const { user, onClose, isOpen, match, chatList, setChat, setFriendList } =
     props;
   const classes = useStyles();
   const [friend, setFriend] = useState(null);
@@ -57,18 +57,19 @@ function AddFriendDialogue(props) {
     setFriend(null);
     const data = await findFriendByUsername(
       e.target.value,
-      user.friends.items,
+      user.groups.items,
       user
     );
     console.log(data);
     if (typeof data === "string") {
-      const index = data.split("-")[2];
+      const indexs = data.split("-");
+      const indexG = indexs[2];
+      const indexF = indexs[3];
       setIsFound(false);
-      console.log(user.friends.items[index]);
-      setFriend(user.friends.items[index]);
+      console.log(user.groups.items[indexG].group.users.items[indexF].user);
+      setFriend(user.groups.items[indexG].group.users.items[indexF].user);
       const [groupId, groupName, messages] = getGroupId(user, e.target.value);
       setGroup({ ...group, id: groupId, name: groupName, messages });
-      console.log(user.friends.items[index]);
       return;
     }
     if (!data) {
@@ -90,31 +91,35 @@ function AddFriendDialogue(props) {
       friend.username
     );
     console.log(friend);
+    console.log("success", success);
     if (success) {
       setAdded(true);
       setGroup({ ...group, id: group.id, name: group.name });
+      console.log(group);
       setFriendList((prevState) => [
         ...prevState,
         {
           createdAt: group.createdAt,
           updatedAt: group.updatedAt,
           id: "",
-          group,
+          group: {
+            id: group.id,
+            isDirect: group.isDirect,
+            messages: group.messages,
+            name: group.name,
+            users: {
+              items: [{ user: friend }],
+            },
+          },
         },
       ]);
     }
   }
 
-  function goToChat(type) {
+  function goToChat() {
     console.log("go to chat feed");
-    if (type === "new-friend") {
-      console.log(friend);
-      setChatRoom(setChat, group, friend, type);
-      handleCloseDialogue();
-      return;
-    }
     console.log(friend);
-    setChatRoom(setChat, group, friend.friend, type);
+    setChatRoom(setChat, group, friend);
     handleCloseDialogue();
   }
 
@@ -178,12 +183,12 @@ function AddFriendDialogue(props) {
                       style={{ height: "30px" }}
                       disabled={false}
                       onClick={() => {
-                        goToChat("new-friend");
+                        goToChat();
                       }}
                     >
                       <Link
                         to={`${match.url}/${group.id}`}
-                        style={{ textDecoration: "none" }}
+                        style={{ textDecoration: "none", color: "white" }}
                       >
                         chat
                       </Link>
@@ -212,21 +217,19 @@ function AddFriendDialogue(props) {
                 group && (
                   <>
                     <Avatar
-                      src={
-                        friend.friend.profilePhoto &&
-                        getImg(friend.friend, "profile")
-                      }
+                      src={friend.profilePhoto && getImg(friend, "profile")}
                       style={{ width: "90px", height: "90px" }}
                     />
-                    <h3>{friend.friend.displayName}</h3>
+                    <h3>{friend.displayName}</h3>
                     <Typography style={{ color: "rgb(109,118,134)" }}>
                       This user is already your friend.
                     </Typography>
                     <LineButton
+                      id="alreadychatBtn"
                       style={{ height: "30px" }}
                       disabled={false}
                       onClick={() => {
-                        goToChat("already-friend");
+                        goToChat();
                       }}
                     >
                       <Link

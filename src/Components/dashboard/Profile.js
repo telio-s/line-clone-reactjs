@@ -16,7 +16,7 @@ import FriendProfileDialogue from "../Dialogue/FriendProfileDialogue";
 const Profile = (props) => {
   const { match, user, setUser, friendList, setChat, setCaller } = props;
   const classes = useStyles();
-  const [showFriends, setShowFriends] = useState(false);
+  const [showFriends, setShowFriends] = useState(true);
   const [showProfile, setShowProfile] = useState(false);
   const [showFriendProfile, setShowFriendProfile] = useState(false);
   const [friend, setFriend] = useState(null);
@@ -36,7 +36,7 @@ const Profile = (props) => {
   return (
     <div className={classes.root}>
       {console.log(friendList)}
-      {console.log(user)}
+      {/* {console.log(user)}  */}
       {user && (
         <>
           <ListItem button onClick={() => handleProfile()}>
@@ -74,7 +74,7 @@ const Profile = (props) => {
                 const their = frind.group.users.items.find(
                   (obj) => obj.user.displayName !== user.displayName
                 );
-                console.log(their);
+                // console.log(their);
                 return (
                   <Link
                     key={index}
