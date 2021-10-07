@@ -42,99 +42,99 @@ function reducer(state, action) {
       return [action.payload];
     case "add":
       console.log("add");
-      let notiForChatlist = 0;
-      const time = setLocalTimeZone(action.payload.createdAt);
-      if (action.payload.user.username !== state[0].user.username) {
-        console.log("reducer", state[0].countNoti);
-        state[0].setCountNoti(state[0].countNoti + 1);
-        notiForChatlist = 1;
-      }
-      // for Calling
-      if (action.payload.isCall) {
-        console.log(action.payload);
-        state[0].setCall({
-          isCall: true,
-          caller: action.payload.user,
-          callerType: action.payload.message,
-        });
-      }
-
-      // Set for chatfeed UI
-      if (state[0].chat) {
-        // console.log(state[0].chat);
-        // Id of new msg in And id of chat at that time Are compatible.
-        if (state[0].chat.idGroup === action.payload.group.id) {
-          console.log("setchat");
-          state[0].setChat((prevState) => ({
-            idGroup: prevState.idGroup,
-            name: prevState.name,
-            sender: action.payload.user.username,
-            content: action.payload.message,
-            time: time,
-            ISOtime: action.payload.createdAt,
-            theirUser: { ...prevState.theirUser },
-            messages: [...prevState.messages, action.payload],
-            idLastMsg: action.payload.id,
-          }));
-        }
-        // clicked And ids are NOT compatible, need open chat ..cause clicked
-        else if (
-          action.onClick === "onClick" &&
-          state[0].chat.idGroup !== action.payload.group.id
-        ) {
-          console.log("clicked in");
-          const chat = state[0].chatList.find((obj) => {
-            return obj.idGroup == action.payload.group.id;
-          });
-          console.log(chat);
-          state[0].setChat(chat);
-        }
-      }
-
-      // Set for chatlist UI
-      if (action.onClick === "noClick") {
-        console.log("chatlist... editing");
-        const chatExisting = state[0].chatList.some(
-          (chat) => chat.idGroup === action.payload.group.id
+      if (
+        state[0].user.id === action.payload.receiver.id ||
+        state[0].user.id === action.payload.user.id
+      ) {
+        // send request noti
+        sendRequestPost(
+          action.token,
+          `${action.payload.user.username} sent`,
+          action.payload.message,
+          action.payload
         );
-        if (chatExisting === false) {
-          let theirUser;
-          if (action.payload.user.username === state[0].user.username) {
-            theirUser = action.payload.receiver;
-          } else {
-            theirUser = action.payload.user;
-          }
-          state[0].setChatList((preState) => [
-            ...preState,
-            {
-              idGroup: action.payload.group.id,
-              name: action.payload.group.name,
+        let notiForChatlist = 0;
+        const time = setLocalTimeZone(action.payload.createdAt);
+        if (action.payload.user.username !== state[0].user.username) {
+          console.log("reducer", state[0].countNoti);
+          state[0].setCountNoti(state[0].countNoti + 1);
+          notiForChatlist = 1;
+        }
+        // for Calling
+        if (action.payload.isCall) {
+          console.log(action.payload);
+          state[0].setCall({
+            isCall: true,
+            caller: action.payload.user,
+            callerType: action.payload.message,
+          });
+        }
+
+        // Set for chatfeed UI
+        if (state[0].chat) {
+          // console.log(state[0].chat);
+          // Id of new msg in And id of chat at that time Are compatible.
+          if (state[0].chat.idGroup === action.payload.group.id) {
+            console.log("setchat");
+            state[0].setChat((prevState) => ({
+              idGroup: prevState.idGroup,
+              name: prevState.name,
               sender: action.payload.user.username,
               content: action.payload.message,
               time: time,
               ISOtime: action.payload.createdAt,
-              theirUser: theirUser,
-              messages: [action.payload],
-              unread: notiForChatlist,
-            },
-          ]);
-        } else {
-          state[0].setChatList(
-            state[0].chatList.map((obj) =>
-              obj.idGroup === action.payload.type
-                ? {
-                    ...obj,
-                    sender: action.payload.user.username,
-                    content: action.payload.message,
-                    time: time,
-                    ISOtime: action.payload.createdAt,
-                    theirUser: { ...obj.theirUser },
-                    messages: [...obj.messages, action.payload],
-                    unread: obj.unread + notiForChatlist,
-                  }
-                : obj
-            )
+              theirUser: { ...prevState.theirUser },
+              messages: [...prevState.messages, action.payload],
+              idLastMsg: action.payload.id,
+            }));
+          }
+        }
+
+        // Set for chatlist UI
+        if (action.onClick === "noClick") {
+          console.log("chatlist... editing");
+          const chatExisting = state[0].chatList.some(
+            (chat) => chat.idGroup === action.payload.group.id
           );
+          if (chatExisting === false) {
+            let theirUser;
+            if (action.payload.user.username === state[0].user.username) {
+              theirUser = action.payload.receiver;
+            } else {
+              theirUser = action.payload.user;
+            }
+            state[0].setChatList((preState) => [
+              ...preState,
+              {
+                idGroup: action.payload.group.id,
+                name: action.payload.group.name,
+                sender: action.payload.user.username,
+                content: action.payload.message,
+                time: time,
+                ISOtime: action.payload.createdAt,
+                theirUser: theirUser,
+                messages: [action.payload],
+                unread: notiForChatlist,
+              },
+            ]);
+          } else {
+            state[0].setChatList(
+              state[0].chatList.map((obj) =>
+                obj.idGroup === action.payload.type
+                  ? {
+                      ...obj,
+                      sender: action.payload.user.username,
+                      content: action.payload.message,
+                      time: time,
+                      ISOtime: action.payload.createdAt,
+                      theirUser: { ...obj.theirUser },
+                      messages: [...obj.messages, action.payload],
+                      unread: obj.unread + notiForChatlist,
+                    }
+                  : obj
+              )
+            );
+          }
         }
       }
   }
@@ -201,20 +201,6 @@ const Dashboard = ({ match }) => {
     // Fetch for chatList
     setChatList([]);
     fetchChatList();
-    dispatch({
-      type: "set",
-      payload: {
-        chatList: chatList,
-        chat: chat,
-        countNoti: countNoti,
-        setChat: setChat,
-        setChatList: setChatList,
-        setCountNoti: setCountNoti,
-        user: myUser,
-        setCall,
-      },
-    });
-    console.log("test", myUser);
 
     return () => {};
   }, [myUser]);
@@ -251,6 +237,7 @@ const Dashboard = ({ match }) => {
 
   useEffect(() => {
     // Open subscribe
+    console.log("user sub", myUser);
     setupSubscriptions();
     return () => {
       subscriptionOnCreateMsg.unsubscribe();
@@ -269,24 +256,10 @@ const Dashboard = ({ match }) => {
       next: async (data) => {
         const newMsgObj = data.value.data.newOnCreateMessage;
         setNewMessage(newMsgObj);
-        // console.log(myUser);
-        // console.log(newMsgObj.user.id);
-        // console.log(newMsgObj.receiver.id);
-        // setIsDeclineCall(newMsgObj.isDeclineCall);
-        // newMsgObj.user.id === myUser.id ||
-        // newMsgObj.receiver.id === myUser.id
         if (newMsgObj) {
           console.log("subscribeCreateMsg", newMsgObj);
           const token = await getToken();
-          sendRequestPost(
-            token,
-            `${newMsgObj.user.username} sent`,
-            newMsgObj.message,
-            dispatch,
-            newMsgObj,
-            setIsDeclineCall,
-            state
-          );
+          sendReduce(token, dispatch, newMsgObj);
         }
       },
     });
@@ -313,6 +286,16 @@ const Dashboard = ({ match }) => {
         console.log("subscribeUpdateUser", newUserUpdateObj);
       },
     });
+  };
+
+  const sendReduce = (token, dispatch, newMsgObj) => {
+    dispatch({
+      type: "add",
+      payload: newMsgObj,
+      onClick: "noClick",
+      token: token,
+    });
+    setIsDeclineCall(newMsgObj.isDeclineCall);
   };
 
   const checkUserCurrent = async () => {

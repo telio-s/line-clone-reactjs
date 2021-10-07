@@ -4,21 +4,7 @@ import firebase from "../firebase";
 // import { messaging } from "../firebase-messaging-sw";
 const messaging = firebase.messaging();
 
-export const sendRequestPost = (
-  token,
-  title,
-  body,
-  dispatch,
-  newMsgObj,
-  setIsDeclineCall,
-  state
-) => {
-  // console.log(token, title, body, newMsgObj);
-  // dispatch
-  dispatch({ type: "add", payload: newMsgObj, onClick: "noClick" });
-  setIsDeclineCall(newMsgObj.isDeclineCall);
-  console.log("state", state);
-
+export const sendRequestPost = (token, title, body, newMsgObj) => {
   // send notification request
   const apiKey =
     "AAAAPYGtVXI:APA91bEhKY7rh7yjT27dOJESU9GoyYya45_m37ovOxfBLnem_F1xIP5wG0lWwvlfKDXbUR5i6DuM3JFtJewviKaa_g_R8yxaJtXrZEu3VBr2DtP8GJo5MeZXIXilBAFIu2hX6vx4rw_o";
