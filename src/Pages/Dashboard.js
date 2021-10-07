@@ -64,6 +64,7 @@ function reducer(state, action) {
         // console.log(state[0].chat);
         // Id of new msg in And id of chat at that time Are compatible.
         if (state[0].chat.idGroup === action.payload.group.id) {
+          console.log("setchat");
           state[0].setChat((prevState) => ({
             idGroup: prevState.idGroup,
             name: prevState.name,
@@ -93,22 +94,48 @@ function reducer(state, action) {
       // Set for chatlist UI
       if (action.onClick === "noClick") {
         console.log("chatlist... editing");
-        state[0].setChatList(
-          state[0].chatList.map((obj) =>
-            obj.idGroup === action.payload.type
-              ? {
-                  ...obj,
-                  sender: action.payload.user.username,
-                  content: action.payload.message,
-                  time: time,
-                  ISOtime: action.payload.createdAt,
-                  theirUser: { ...obj.theirUser },
-                  messages: [...obj.messages, action.payload],
-                  unread: obj.unread + notiForChatlist,
-                }
-              : obj
-          )
+        const chatExisting = state[0].chatList.some(
+          (chat) => chat.idGroup === action.payload.group.id
         );
+        if (chatExisting === false) {
+          let theirUser;
+          if (action.payload.user.username === state[0].user.username) {
+            theirUser = action.payload.receiver;
+          } else {
+            theirUser = action.payload.user;
+          }
+          state[0].setChatList((preState) => [
+            ...preState,
+            {
+              idGroup: action.payload.group.id,
+              name: action.payload.group.name,
+              sender: action.payload.user.username,
+              content: action.payload.message,
+              time: time,
+              ISOtime: action.payload.createdAt,
+              theirUser: theirUser,
+              messages: [action.payload],
+              unread: notiForChatlist,
+            },
+          ]);
+        } else {
+          state[0].setChatList(
+            state[0].chatList.map((obj) =>
+              obj.idGroup === action.payload.type
+                ? {
+                    ...obj,
+                    sender: action.payload.user.username,
+                    content: action.payload.message,
+                    time: time,
+                    ISOtime: action.payload.createdAt,
+                    theirUser: { ...obj.theirUser },
+                    messages: [...obj.messages, action.payload],
+                    unread: obj.unread + notiForChatlist,
+                  }
+                : obj
+            )
+          );
+        }
       }
   }
 }
@@ -133,11 +160,8 @@ const Dashboard = ({ match }) => {
   const [callee, setCallee] = useState({ type: "audio" });
   const messaging = firebase.messaging();
   const dummy = useRef();
-  const [state, dispatch] = useReducer(reducer, {
-    chatList: [],
-    chat: {},
-  });
-  const [isDeclineCall, setIsDeclineCall] = useState(false);
+  const [state, dispatch] = useReducer(reducer, { user: myUser });
+  const [isDeclineCall, setIsDeclineCall] = useState(true);
   const [paramsId, setParamsId] = useState();
 
   useEffect(async () => {
@@ -177,6 +201,20 @@ const Dashboard = ({ match }) => {
     // Fetch for chatList
     setChatList([]);
     fetchChatList();
+    dispatch({
+      type: "set",
+      payload: {
+        chatList: chatList,
+        chat: chat,
+        countNoti: countNoti,
+        setChat: setChat,
+        setChatList: setChatList,
+        setCountNoti: setCountNoti,
+        user: myUser,
+        setCall,
+      },
+    });
+    console.log("test", myUser);
 
     return () => {};
   }, [myUser]);
@@ -230,16 +268,24 @@ const Dashboard = ({ match }) => {
     ).subscribe({
       next: async (data) => {
         const newMsgObj = data.value.data.newOnCreateMessage;
-        console.log("subscribeCreateMsg", newMsgObj);
         setNewMessage(newMsgObj);
+        // console.log(myUser);
+        // console.log(newMsgObj.user.id);
+        // console.log(newMsgObj.receiver.id);
+        // setIsDeclineCall(newMsgObj.isDeclineCall);
+        // newMsgObj.user.id === myUser.id ||
+        // newMsgObj.receiver.id === myUser.id
         if (newMsgObj) {
+          console.log("subscribeCreateMsg", newMsgObj);
           const token = await getToken();
           sendRequestPost(
             token,
             `${newMsgObj.user.username} sent`,
             newMsgObj.message,
             dispatch,
-            newMsgObj
+            newMsgObj,
+            setIsDeclineCall,
+            state
           );
         }
       },
@@ -250,11 +296,11 @@ const Dashboard = ({ match }) => {
     ).subscribe({
       next: async (data) => {
         const newMsgUpdateObj = data.value.data.newOnUpdateMessage;
-        setNewMessage(newMsgUpdateObj);
+        // setNewMessage(newMsgUpdateObj);
         console.log("subscribeUpdateMsg", newMsgUpdateObj);
-        if (newMsgUpdateObj) {
-          setIsDeclineCall(newMsgUpdateObj.isDeclineCall);
-        }
+        // if (newMsgUpdateObj) {
+        //   setIsDeclineCall(newMsgUpdateObj.isDeclineCall);
+        // }
       },
     });
 
@@ -425,6 +471,7 @@ const Dashboard = ({ match }) => {
 
   return (
     <>
+      {console.log("stateT", state)}
       <div style={{ display: "flex" }}>
         {/* {console.log(match.url)} */}
         {/* {console.log(chat)} */}
@@ -471,9 +518,7 @@ const Dashboard = ({ match }) => {
           call.caller && (
             <CalleeDialogue
               open={call.isCall}
-              onclose={() =>
-                handleCalleeDialogue(setCallee, setCall, isDeclineCall)
-              }
+              onclose={() => handleCalleeDialogue(setCallee, setCall)}
               id={chat.idGroup}
               caller={call.caller}
               callee={callee}

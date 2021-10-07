@@ -24,9 +24,9 @@ export async function confirmRegister(
   const { username, authCode } = form;
   await Auth.confirmSignUp(username, authCode)
     .then(() => {
-      setForm({ ...form, type: "Signed-in" });
+      setForm({ ...form, type: "Sign-in" });
       setShow(false);
-      history.push("/dashboard");
+      history.push("/");
     })
     .catch((err) => setErrMes(err.message));
 }

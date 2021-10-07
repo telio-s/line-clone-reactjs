@@ -14,7 +14,7 @@ export async function handleCall(type, setCaller, idGroup, user, theirUser) {
     isBlock: false,
     hasRead: false,
     isCall: true,
-    isDeclineCall: null,
+    isDeclineCall: true,
     messageReceiverId: theirUser.id,
   };
   console.log("create message#1 ", message);
@@ -31,8 +31,8 @@ export function handleCallerDialogue(setCaller, setCall) {
   setCaller({ type: "audio" });
 }
 
-export function handleCalleeDialogue(setCallee, setCall, isDeclineCall) {
-  setCall({ isCall: isDeclineCall, caller: null });
+export function handleCalleeDialogue(setCallee, setCall) {
+  setCall({ isCall: false, caller: null });
   setCallee({ type: "audio" });
 }
 

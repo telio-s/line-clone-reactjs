@@ -1,3 +1,4 @@
+import React, { useEffect } from "react";
 import { Dialog, IconButton } from "@material-ui/core";
 import {
   CallEndRounded,
@@ -40,6 +41,13 @@ function CalleeDialogue(props) {
   const [dataChannel, setDataChannel] = useState();
   const localVideo = useRef(null);
   const remoteVideo = useRef(null);
+
+  useEffect(() => {
+    if (isDeclineCall === false) {
+      onclose();
+    }
+    return () => {};
+  }, [isDeclineCall]);
 
   async function answerTheCall() {
     if (open) {

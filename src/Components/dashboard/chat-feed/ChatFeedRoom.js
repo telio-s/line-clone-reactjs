@@ -72,7 +72,6 @@ const ChatFeedRoom = (props) => {
 
   const handleSendMessage = async (e) => {
     if (e.keyCode === 13) {
-      console.log("ddg", chat.theirUser);
       let message = {
         type: idGroup.idGroup,
         message: currentMsg,

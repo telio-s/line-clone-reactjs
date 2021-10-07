@@ -83,6 +83,9 @@ export const newOnCreateMessage = /* GraphQL */ `
       receiver {
         id
         displayName
+        username
+
+        statusMessage
       }
       updatedAt
     }
@@ -170,6 +173,9 @@ export const newOnUpdateMessage = /* GraphQL */ `
       receiver {
         id
         displayName
+        username
+
+        statusMessage
       }
       updatedAt
     }

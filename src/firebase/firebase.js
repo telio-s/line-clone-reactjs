@@ -4,10 +4,20 @@ import firebase from "../firebase";
 // import { messaging } from "../firebase-messaging-sw";
 const messaging = firebase.messaging();
 
-export const sendRequestPost = (token, title, body, dispatch, newMsgObj) => {
+export const sendRequestPost = (
+  token,
+  title,
+  body,
+  dispatch,
+  newMsgObj,
+  setIsDeclineCall,
+  state
+) => {
   // console.log(token, title, body, newMsgObj);
   // dispatch
   dispatch({ type: "add", payload: newMsgObj, onClick: "noClick" });
+  setIsDeclineCall(newMsgObj.isDeclineCall);
+  console.log("state", state);
 
   // send notification request
   const apiKey =

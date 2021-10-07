@@ -59,16 +59,13 @@ function CallerDialogue(props) {
   }, []);
 
   async function hangupthecall() {
-    if (isDeclineCall) {
-      await hangup(
-        peerConnection,
-        localVideo.current.srcObject,
-        remoteVideo.current.srcObject,
-        id,
-        onclose
-      );
-      return;
-    }
+    await hangup(
+      peerConnection,
+      localVideo.current.srcObject,
+      remoteVideo.current.srcObject,
+      id,
+      onclose
+    );
 
     // send 'isDeclineCall: true' to callee
     await handleAcceptCall(idLastMsg, false);

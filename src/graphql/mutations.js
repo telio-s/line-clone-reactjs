@@ -874,6 +874,7 @@ export const createMessage = /* GraphQL */ `
       receiver {
         id
         displayName
+        username
       }
       updatedAt
     }
