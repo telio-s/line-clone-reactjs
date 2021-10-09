@@ -6,7 +6,7 @@ import {
   useHistory,
   Switch,
 } from "react-router-dom";
-import { Drawer, IconButton, Typography } from "@material-ui/core";
+import { Drawer, IconButton, Typography, Badge } from "@material-ui/core";
 import {
   Person,
   PersonAdd,
@@ -61,16 +61,12 @@ const DrawerMenu = (props) => {
             setSelection("chats");
           }}
         >
-          <FontAwesomeIcon
-            className={classes.iconAweDrawer}
-            icon={faCommentDots}
-          />
-          <div className={countNoti == 0 ? null : classes.notiBox}>
-            <Typography className={countNoti == 0 ? null : classes.noti}>
-              {console.log(countNoti)}
-              {countNoti == 0 ? null : countNoti}
-            </Typography>
-          </div>
+          <Badge badgeContent={countNoti} color="secondary">
+            <FontAwesomeIcon
+              className={classes.iconAweDrawer}
+              icon={faCommentDots}
+            />
+          </Badge>
         </IconButton>
         <IconButton
           disableRipple={true}
