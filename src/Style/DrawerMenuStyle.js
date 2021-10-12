@@ -8,38 +8,26 @@ const useStyles = makeStyles((theme) => ({
   drawer: {},
   drawerPaper: {
     width: drawerWidth,
-    background: "#1f2b45",
+    background: "rgb(32,42,67)",
   },
   iconMtDrawer: {
-    color: "#4e5870",
     fontSize: "130%",
-    "&:focus": {
-      color: "#ffffff",
-      backgroundColor: "transparent",
-    },
-    "&:hover": {
-      backgroundColor: "transparent",
-    },
   },
   iconAweDrawer: {
-    color: "#4e5870",
     fontSize: "110%",
-    "&:focus": {
-      color: "#ffffff",
-      backgroundColor: "transparent",
-    },
-    "&:hover": {
-      backgroundColor: "transparent",
-    },
   },
   drawerIconBottom: {
     marginTop: "auto",
-    // marginLeft: "10px",
     alignSelf: "center",
   },
   iconButton: {
+    color: "#4e5870",
+    "&:focus": {
+      color: "#ffffff",
+      backgroundColor: "transparent",
+    },
     "&:hover": {
-      color: "transparent",
+      color: "#ffffff",
       backgroundColor: "transparent",
     },
     marginBottom: "5px",

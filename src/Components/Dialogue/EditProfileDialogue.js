@@ -49,7 +49,6 @@ function EditProfileDialogue(props) {
 
   async function handleSelectedFile(e, type) {
     const file = e.target.files[0];
-    console.log("handleSelectedFile");
     const [location, bucket, region, key] = await handleUpdateUserPhoto(
       user.id,
       file,
@@ -57,12 +56,9 @@ function EditProfileDialogue(props) {
       user
     );
     if (location) {
-      console.log(location);
-      console.log("updated photo succesfully");
       setUser({ ...user, profilePhoto: { bucket, region, key } });
       return;
     }
-    console.log(location);
   }
 
   function handleSelectPhoto() {

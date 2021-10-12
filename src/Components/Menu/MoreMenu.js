@@ -1,6 +1,6 @@
-import { Divider, Menu, MenuItem } from "@material-ui/core";
 import React, { useEffect } from "react";
 import { Auth, Hub } from "aws-amplify";
+import { Menu, MenuItem } from "@material-ui/core";
 import { useHistory } from "react-router-dom";
 
 function MoreMenu(props) {
@@ -12,7 +12,6 @@ function MoreMenu(props) {
       Hub.listen("auth", (data) => {
         switch (data.payload.event) {
           case "signOut":
-            console.log("tong", data.payload.event);
             history.push("/");
             break;
           default:
@@ -36,16 +35,12 @@ function MoreMenu(props) {
       >
         <MenuItem
           onClick={() => Auth.signOut()}
-          style={{ fontSize: "15px", height: "20px", marginBottom: "5px" }}
+          style={{
+            fontSize: "15px",
+            height: "20px",
+          }}
         >
           Log Out
-        </MenuItem>
-        <Divider />
-        <MenuItem
-          // onClick={() => signout(setForm)}
-          style={{ fontSize: "15px", height: "20px", marginTop: "5px" }}
-        >
-          Quit
         </MenuItem>
       </Menu>
     </>

@@ -10,9 +10,8 @@ import {
   InputAdornment,
   IconButton,
   Avatar,
-  Button,
 } from "@material-ui/core";
-import { SearchOutlined, AccountCircle } from "@material-ui/icons";
+import { SearchOutlined } from "@material-ui/icons";
 import {
   addFriend,
   findFriendByUsername,
@@ -24,8 +23,7 @@ import { Link } from "react-router-dom";
 import { getImg } from "../../utils/profile/utils";
 
 function AddFriendDialogue(props) {
-  const { user, onClose, isOpen, match, chatList, setChat, setFriendList } =
-    props;
+  const { user, onClose, isOpen, match, setChat, setFriendList } = props;
   const classes = useStyles();
   const [friend, setFriend] = useState(null);
   const [isFound, setIsFound] = useState(false);
@@ -51,22 +49,17 @@ function AddFriendDialogue(props) {
 
   async function findFriend(e) {
     setAdded(false);
-    console.log(user);
-    console.log(e.target.value);
-    console.log(true & true & true);
     setFriend(null);
     const data = await findFriendByUsername(
       e.target.value,
       user.groups.items,
       user
     );
-    console.log(data);
     if (typeof data === "string") {
       const indexs = data.split("-");
       const indexG = indexs[2];
       const indexF = indexs[3];
       setIsFound(false);
-      console.log(user.groups.items[indexG].group.users.items[indexF].user);
       setFriend(user.groups.items[indexG].group.users.items[indexF].user);
       const [groupId, groupName, messages] = getGroupId(user, e.target.value);
       setGroup({ ...group, id: groupId, name: groupName, messages });
@@ -80,7 +73,6 @@ function AddFriendDialogue(props) {
     }
     setIsFound(true);
     setFriend(data);
-    console.log(data);
   }
 
   async function handleAddFriend() {
@@ -90,12 +82,9 @@ function AddFriendDialogue(props) {
       user.username,
       friend.username
     );
-    console.log(friend);
-    console.log("success", success);
     if (success) {
       setAdded(true);
       setGroup({ ...group, id: group.id, name: group.name });
-      console.log(group);
       setFriendList((prevState) => [
         ...prevState,
         {
@@ -116,10 +105,8 @@ function AddFriendDialogue(props) {
     }
   }
 
-  function goToChat() {
-    console.log("go to chat feed");
-    console.log(friend);
-    setChatRoom(setChat, group, friend);
+  async function goToChat() {
+    await setChatRoom(setChat, group, friend);
     handleCloseDialogue();
   }
 
@@ -142,7 +129,7 @@ function AddFriendDialogue(props) {
               onKeyDown={(e) => enterFindFriend(e)}
               fullWidth
               className={classes.searchInput}
-              placeholder="Search for chats and messages"
+              placeholder="Enter your friend's ID"
               startAdornment={
                 <InputAdornment position="start" variant="filled">
                   <IconButton

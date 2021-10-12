@@ -3,7 +3,11 @@ import {
   createUserstoGroup,
   createFriends,
 } from "./../../api/mutations";
-import { getUserById, getUserByUsername } from "./../../api/queries";
+import {
+  getMessagesByDate,
+  getUserById,
+  getUserByUsername,
+} from "./../../api/queries";
 
 export async function findFriendByUsername(username, groups, myUser) {
   let isFriend = false;
@@ -33,17 +37,11 @@ export function getGroupId(user, friendUserName) {
   let groupName = null;
   let messages = [];
   const groups = user.groups.items;
-  console.log(groups);
-  console.log(friendUserName);
   for (let i = 0; i < groups.length; i++) {
-    console.log("loop one ");
     if (groups[i].group.isDirect) {
-      console.log("isDirect");
       const usersIngroup = groups[i].group.users.items;
-      console.log(usersIngroup);
       for (let j = 0; j < usersIngroup.length; j++) {
         if (usersIngroup[j].user.username === friendUserName) {
-          console.log("get group id");
           groupId = groups[i].group.id;
           groupName = groups[i].group.name;
           messages = groups[i].group.messages.items;
@@ -64,7 +62,9 @@ export async function addFriend(userId, friendId, userName, friendName) {
   return [gu & gf, group];
 }
 
-export function setChatRoom(setChat, group, friend) {
+export async function setChatRoom(setChat, group, friend) {
+  const messages = await getMessagesByDate(group.id);
+  console.log(messages);
   setChat({
     idGroup: group.id,
     name: group.name,
@@ -73,7 +73,7 @@ export function setChatRoom(setChat, group, friend) {
     time: "",
     ISOtime: "",
     theirUser: friend,
-    messages: group.message ? group.messages : [],
+    messages: messages.items,
     unread: 0,
   });
 }

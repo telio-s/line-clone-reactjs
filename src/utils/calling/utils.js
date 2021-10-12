@@ -37,12 +37,10 @@ export async function createCall(
   dataChannel.onopen = function (event) {
     const state = dataChannel.readyState;
     if (state === "open") {
-      console.log("data channel open");
     }
   };
   peerConnection.addEventListener("datachannel", (event) => {
     const receiveChannel = event.channel;
-    console.log(receiveChannel);
     receiveChannel.addEventListener("message", (event) => {
       const message = event.data;
       setOtherend(message === "false" ? false : true);
@@ -50,10 +48,7 @@ export async function createCall(
   });
 
   peerConnection.addEventListener("track", (event) => {
-    console.log("Got remote track:", event.streams[0]);
     event.streams[0].getTracks().forEach((track) => {
-      console.log("Add a track to the remoteStream:", track);
-      // setOtherend(isVideoEnable(remoteStream));
       remoteStream.addTrack(track, remoteStream);
     });
   });
@@ -82,13 +77,11 @@ export async function createCall(
 
   answerCandidates.onSnapshot((snapshot) => {
     snapshot.docChanges().forEach(async (change) => {
-      console.log("answerCandidates snapshot", change);
       if (change.type === "added") {
         const candidate = new RTCIceCandidate(change.doc.data());
         await peerConnection.addIceCandidate(candidate);
       }
       if (change.type === "removed") {
-        console.log("answerCandidates removed");
         hangup(peerConnection, localStream, remoteStream, idCall, onclose);
       }
     });
@@ -104,15 +97,12 @@ export async function createAnswer(
   setOtherend,
   setDataChannel
 ) {
-  console.log("create Answer", idCall);
   const room = firestore.collection("calls").doc(idCall);
-  console.log(room);
   const callSnapshot = await room.get();
   const offerCandidates = room.collection("offerCandidates");
   const answerCandidates = room.collection("answerCandidates");
 
   if (callSnapshot.exists) {
-    console.log("call snapshot is exists");
     registerPeerConnectionListeners(peerConnection);
     if (!localStream) {
       localStream = await navigator.mediaDevices.getUserMedia({
@@ -134,39 +124,27 @@ export async function createAnswer(
     dataChannel.onopen = function (event) {
       const state = dataChannel.readyState;
       if (state === "open") {
-        console.log("data channel open");
       }
     };
     peerConnection.addEventListener("datachannel", (event) => {
       const receiveChannel = event.channel;
-      console.log(receiveChannel);
       receiveChannel.addEventListener("message", (event) => {
         const message = event.data;
-        console.log(event.data);
         setOtherend(message === "false" ? false : true);
       });
     });
 
-    //listen to track event when track is added by remote user
     peerConnection.addEventListener("track", (event) => {
-      console.log("Got remote track:", event.streams[0]);
       event.streams[0].getTracks().forEach((track) => {
-        console.log("Add a track to the remoteStream:", track);
         remoteStream.addTrack(track);
-        // setOtherend(isVideoEnable(remoteStream));
       });
     });
 
-    // remoteVideo = remoteStream;
-    // set remote with offer (establish connection ?-?)
-    // and createAnswer
     const offerDescription = callSnapshot.data().offer;
     await peerConnection.setRemoteDescription(offerDescription);
     const answerDescription = await peerConnection.createAnswer();
     await peerConnection.setLocalDescription(answerDescription);
-    //then trigger icecandidate event (?-?)
 
-    // and update to db
     const answer = {
       sdp: answerDescription.sdp,
       type: answerDescription.type,
@@ -175,13 +153,11 @@ export async function createAnswer(
 
     offerCandidates.onSnapshot((snapshot) => {
       snapshot.docChanges().forEach(async (change) => {
-        console.log("offerCandidate snapshot", change);
         if (change.type === "added") {
           const candidate = new RTCIceCandidate(change.doc.data());
           await peerConnection.addIceCandidate(candidate);
         }
         if (change.type === "removed") {
-          console.log("offerCandidates removed");
           hangup(peerConnection, localStream, remoteStream, idCall, onclose);
         }
       });
@@ -190,14 +166,11 @@ export async function createAnswer(
 }
 
 export function switchCallType(localStream, call, setCall, dataChannel) {
-  console.log(call);
   if (call.type === "video") {
     setCall({ type: "audio" });
     localStream.getVideoTracks()[0].enabled = false;
     if (dataChannel) {
-      console.log("datachannel", dataChannel);
       if (dataChannel.readyState === "open") {
-        console.log("open data channel");
         dataChannel.send("false");
       }
     }
@@ -205,9 +178,7 @@ export function switchCallType(localStream, call, setCall, dataChannel) {
     setCall({ type: "video" });
     localStream.getVideoTracks()[0].enabled = true;
     if (dataChannel) {
-      console.log("datachannel", dataChannel);
       if (dataChannel.readyState === "open") {
-        console.log("open data channel");
         dataChannel.send("true");
       }
     }
@@ -218,9 +189,7 @@ export function handleSetCallType(localStream, call, dataChannel) {
   if (call.type === "video") {
     localStream.getVideoTracks()[0].enabled = true;
     if (dataChannel) {
-      console.log("datachannel", dataChannel);
       if (dataChannel.readyState === "open") {
-        console.log("open data channel");
         dataChannel.send("true");
       }
     }
@@ -228,20 +197,15 @@ export function handleSetCallType(localStream, call, dataChannel) {
   }
   localStream.getVideoTracks()[0].enabled = false;
   if (dataChannel) {
-    console.log("datachannel", dataChannel);
     if (dataChannel.readyState === "open") {
-      console.log("open data channel");
       dataChannel.send("false");
     }
   }
-  console.log("localstream", localStream.getVideoTracks()[0]);
 }
 
 export function isVideoEnable(remoteStream) {
-  console.log(remoteStream);
   if (remoteStream) {
     if (remoteStream.getVideoTracks()[0]) {
-      console.log(remoteStream.getVideoTracks()[0]);
       return remoteStream.getVideoTracks()[0].enabled;
     }
     return false;
@@ -285,7 +249,7 @@ export async function hangup(
 function registerPeerConnectionListeners(peerConnection) {
   peerConnection.addEventListener("icegatheringstatechange", () => {
     console.log(
-      `ICE gathering state changed: ${peerConnection.iceGatheringState}`
+      `Ice gathering state change: ${peerConnection.iceGatheringState}`
     );
   });
 

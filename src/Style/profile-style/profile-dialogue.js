@@ -6,7 +6,7 @@ export const useStyles = makeStyles((theme) => ({
     position: "absolute",
     top: "2px",
     left: "255px",
-    color: "whitesmoke",
+    color: "grey",
   },
   imgSize: {
     marginTop: "10px",

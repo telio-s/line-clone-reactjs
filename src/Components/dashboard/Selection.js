@@ -2,11 +2,7 @@ import React from "react";
 import { AppBar, Toolbar, Button, Divider } from "@material-ui/core";
 import useStyles from "../../Style/SelectionStyle";
 
-const chatTypeSection = [
-  { title: "All" },
-  { title: "Friends" },
-  // { title: "Groups" },
-];
+const chatTypeSection = [{ title: "All" }, { title: "Friends" }];
 
 const Selection = (props) => {
   const { type } = props;

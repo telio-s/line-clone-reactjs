@@ -1,14 +1,5 @@
 import React, { useEffect, useState, useRef } from "react";
-import {
-  HashRouter as Router,
-  Route,
-  Link,
-  useHistory,
-  Switch,
-  useRouteMatch,
-  useParams,
-  useLocation,
-} from "react-router-dom";
+import { useRouteMatch, useParams } from "react-router-dom";
 import {
   AppBar,
   Toolbar,
@@ -17,16 +8,7 @@ import {
   Divider,
   InputBase,
 } from "@material-ui/core";
-import { Auth, Hub } from "aws-amplify";
-import { getUserById } from "../../../api/queries";
-import {
-  EventNote,
-  MoreVert,
-  Attachment,
-  CallRounded,
-  VideocamRounded,
-} from "@material-ui/icons";
-import { getGroupById } from "../../../api/queries";
+import { Attachment, CallRounded } from "@material-ui/icons";
 import MyMessageBubble from "./MyMessageBubble";
 import TheirMessageBubble from "./TheirMessageBubble";
 import { createMessageInGroup } from "../../../api/mutations";
@@ -41,16 +23,7 @@ import {
 import useStyles from "../../../Style/ChatFeedRoomStyle";
 
 const ChatFeedRoom = (props) => {
-  const {
-    myUser,
-    chat,
-    setChat,
-    dummy,
-    selection,
-    setMyUser,
-    setCaller,
-    setParamsId,
-  } = props;
+  const { myUser, chat, dummy, selection, setCaller, setParamsId } = props;
   const classes = useStyles();
   const idGroup = useParams();
   const [currentMsg, setCurrentMsg] = useState();
@@ -58,7 +31,6 @@ const ChatFeedRoom = (props) => {
   const [filesUpload, setFilesUpload] = useState([]);
   const hiddenUploadBtn = useRef(null);
   const [anchorEl, setAnchorEl] = useState(null);
-  const location = useLocation();
   const match = useRouteMatch();
 
   useEffect(async () => {
@@ -88,9 +60,6 @@ const ChatFeedRoom = (props) => {
       const msg = await createMessageInGroup(message);
       const time = setLocalTimeZone(msg.createdAt);
       const responses = await uploadFiles(filesUpload);
-      // if (filesUpload.length) {
-      //   // message = { ...message, media: responses };
-      // }
 
       setCurrentMsg("");
       setFilesUpload([]);
@@ -99,10 +68,8 @@ const ChatFeedRoom = (props) => {
 
   function handleSelectedFiles(e) {
     const files = e.target.files;
-    console.log(files);
     // setFilesUpload(files);
     for (let i = 0; i < files.length; i++) {
-      console.log(files[i]);
       setFilesUpload((prevFiles) => [...prevFiles, files[i]]);
       const _img = URL.createObjectURL(files[i]);
       setImgs((prevImgs) => [...prevImgs, _img]);
@@ -110,7 +77,6 @@ const ChatFeedRoom = (props) => {
   }
 
   function handleTriggerUploadPhoto() {
-    console.log("trigger hidden btn");
     hiddenUploadBtn.current.click();
   }
 
@@ -128,17 +94,11 @@ const ChatFeedRoom = (props) => {
               >
                 {chat.theirUser.displayName}
               </Typography>
-              <IconButton className={classes.iconButton}>
-                <EventNote className={classes.iconSection} />
-              </IconButton>
               <IconButton
                 className={classes.iconButton}
                 onClick={(e) => handleCallMenu(e, anchorEl, setAnchorEl)}
               >
                 <CallRounded className={classes.iconSection} />
-              </IconButton>
-              <IconButton className={classes.iconButton}>
-                <MoreVert className={classes.iconSection} />
               </IconButton>
               {anchorEl && (
                 <CallMenu
@@ -159,7 +119,7 @@ const ChatFeedRoom = (props) => {
                 : classes.chatfeedNoAppbar
             }
           >
-            {chat
+            {chat && chat.messages
               ? chat.messages.map((message, index) =>
                   message.user.id === myUser.id ? (
                     <MyMessageBubble key={index} message={message} />

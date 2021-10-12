@@ -1,4 +1,4 @@
-import { Dialog, InputBase, Divider, Typography } from "@material-ui/core";
+import { Dialog, Divider, Typography } from "@material-ui/core";
 import React, { useState } from "react";
 import LineButton from "../../Style/line-button";
 import { handleUpdateChange } from "../../utils/profile/utils";
@@ -9,7 +9,6 @@ function UserStatusDialogue(props) {
   const [status, setStatus] = useState(user.statusMessage);
   const classes = useStyles();
   async function handleSaveChange(field) {
-    console.log(user, status);
     await handleUpdateChange(field, user.id, status);
     setStatus(status);
     setUser({ ...user, statusMessage: status });

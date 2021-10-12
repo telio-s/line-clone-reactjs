@@ -1,22 +1,9 @@
 import React, { useState } from "react";
-import {
-  HashRouter as Router,
-  Route,
-  Link,
-  useHistory,
-  Switch,
-} from "react-router-dom";
-import { Drawer, IconButton, Typography, Badge } from "@material-ui/core";
-import {
-  Person,
-  PersonAdd,
-  WatchLater,
-  MoreHoriz,
-  VolumeDownOutlined,
-} from "@material-ui/icons";
+import { Drawer, IconButton, Badge } from "@material-ui/core";
+import { Person, PersonAdd, MoreHoriz } from "@material-ui/icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import MoreMenu from "../Menu/MoreMenu";
-import { faCommentDots, faNewspaper } from "@fortawesome/free-solid-svg-icons";
+import { faCommentDots } from "@fortawesome/free-solid-svg-icons";
 import useStyles from "../../Style/DrawerMenuStyle";
 
 const DrawerMenu = (props) => {

@@ -24,7 +24,6 @@ export async function handleUpdateUserPhoto(id, file, type, user) {
     type === "profile"
       ? `${id}/profile-pic/${file.name}`
       : `${id}/cover-pic/${file.name}`;
-  console.log(user);
   const del_path =
     type === "profile"
       ? user.profilePhoto
@@ -41,11 +40,8 @@ export async function handleUpdateUserPhoto(id, file, type, user) {
     .catch(() => {
       return false;
     });
-  console.log(location);
   if (location) {
-    console.log(path);
     const obj = { bucket, region, key: path };
-    console.log(obj);
     await updateUserphoto(id, obj, type);
     return [
       `https://${bucket}.s3.${region}.amazonaws.com/public/${obj.key}`,

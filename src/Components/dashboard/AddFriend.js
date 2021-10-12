@@ -35,7 +35,6 @@ function AddFriend(props) {
         onClose={handleAddFriendDialogue}
         isOpen={openAddFriend}
         match={match}
-        chatList={chatList}
         setChat={setChat}
         setFriendList={setFriendList}
       />

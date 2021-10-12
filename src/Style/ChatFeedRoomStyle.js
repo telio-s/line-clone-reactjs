@@ -7,13 +7,11 @@ const appbarStack = 278;
 const useStyles = makeStyles((theme) => ({
   root: {
     backgroundColor: "#ffffff",
-    // width: `100vw`,
     width: `calc(100vw - ${drawerChatListWidth}%)`,
-    height: `calc(98vh - 64px)`,
+    height: `calc(98vh-64px)`,
   },
   rootNoAppbar: {
     backgroundColor: "#ffffff",
-    // width: `100vw`,
     width: `calc(100vw - ${drawerChatListWidth}%)`,
     height: `calc(98vh)`,
   },
@@ -38,12 +36,12 @@ const useStyles = makeStyles((theme) => ({
       backgroundColor: "transparent",
     },
   },
-  chatArea: {
-    overflowY: "auto",
-    height: `calc(100vh - ${appbarStack}px)`,
-    backgroundColor: "#ffffff",
-    overflow: "auto",
-  },
+  // chatArea: {
+  //   overflowY: "auto",
+  //   height: `calc(100vh - ${appbarStack}px)`,
+  //   backgroundColor: "#ffffff",
+  //   overflow: "auto",
+  // },
   textArea: {
     height: "120px",
     backgroundColor: "#ffffff",

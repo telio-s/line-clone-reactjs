@@ -1,5 +1,5 @@
 import React from "react";
-import { HashRouter as Router, Link } from "react-router-dom";
+import { Link } from "react-router-dom";
 import {
   Typography,
   AppBar,
@@ -10,9 +10,9 @@ import {
   Avatar,
 } from "@material-ui/core";
 import { updateMessageHasRead } from "../../api/mutations";
-import { SearchOutlined, AccountCircle } from "@material-ui/icons";
-import useStyles from "../../Style/ChatListStyle";
+import { SearchOutlined } from "@material-ui/icons";
 import { getImg } from "../../utils/profile/utils";
+import useStyles from "../../Style/ChatListStyle";
 
 const ChatList = (props) => {
   const {
@@ -27,17 +27,8 @@ const ChatList = (props) => {
   } = props;
   const classes = useStyles();
 
-  // const findChat = (e) => {
-  //   e.preventDefault();
-  //   console.log(e.target.value);
-  //   const chatFind = chatListArr.find((obj) => {
-  //     return obj.name == message.idGroup;
-  //   });
-  // };
-
   return (
     <div className={classes.root}>
-      {/* {console.log(match.url)} */}
       <AppBar elevation={0} position="static" className={classes.appbar}>
         <Toolbar>
           <InputBase
@@ -55,7 +46,6 @@ const ChatList = (props) => {
       </AppBar>
       {chatListArr.map((message, index) => (
         <div key={index}>
-          {/* {console.log(message.theirUser)} */}
           <Link
             to={`${match.url}/${message.idGroup}`}
             style={{ textDecoration: "none" }}
@@ -64,12 +54,9 @@ const ChatList = (props) => {
               disableRipple={true}
               className={classes.chatRoom}
               onClick={() => {
-                // console.log("chatlist", chatListArr);
                 const chat = chatListArr.find((obj) => {
-                  return obj.idGroup == message.idGroup;
+                  return obj.idGroup === message.idGroup;
                 });
-                // console.log(match.url);
-                console.log(chat);
                 setChat({
                   idGroup: chat.idGroup,
                   name: chat.name,
@@ -90,24 +77,20 @@ const ChatList = (props) => {
 
                 // update count unread to true on cloud
                 const result = chat.messages.filter(
-                  (item) => item.hasRead == false
+                  (item) => item.hasRead === false
                 );
-                console.log("result", result);
                 const resultFilterTheirUser = result.filter(
                   (item) => item.user.username !== myUser.username
                 );
-                console.log("resultFil", resultFilterTheirUser);
 
                 // updated hasRead on dynamodb
                 resultFilterTheirUser.map(async (data) => {
                   await updateMessageHasRead(data.id, true);
                 });
-                // console.log(resultFilterTheirUser.length);
 
                 const updateReadObjs = chat.messages.map((item) =>
-                  item.hasRead == false ? { ...item, hasRead: true } : item
+                  item.hasRead === false ? { ...item, hasRead: true } : item
                 );
-                // console.log(updateReadObjs);
                 // update count unread and hasRead in last message on chatlist UI
                 setChatList(
                   chatList.map((obj) =>
@@ -137,7 +120,7 @@ const ChatList = (props) => {
                   message.theirUser.profilePhoto &&
                   getImg(message.theirUser, "profile")
                 }
-                style={{ width: "60px", height: "60px" }}
+                style={{ width: "50px", height: "50px" }}
               />
               <div className={classes.chatDesc}>
                 <Typography className={classes.nameChat}>
@@ -155,11 +138,11 @@ const ChatList = (props) => {
                 <Typography className={classes.timeChat}>
                   {message.time}
                 </Typography>
-                <div className={message.unread == 0 ? null : classes.notiBox}>
+                <div className={message.unread === 0 ? null : classes.notiBox}>
                   <Typography
-                    className={message.unread == 0 ? null : classes.noti}
+                    className={message.unread === 0 ? null : classes.noti}
                   >
-                    {message.unread == 0 ? null : message.unread}
+                    {message.unread === 0 ? null : message.unread}
                   </Typography>
                 </div>
               </div>

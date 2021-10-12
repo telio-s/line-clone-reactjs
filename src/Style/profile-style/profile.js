@@ -13,8 +13,8 @@ const useStyles = makeStyles((theme) => ({
     minWidth: "400px",
   },
   imgSize: {
-    width: theme.spacing(7),
-    height: theme.spacing(7),
+    width: "50px",
+    height: "50px",
   },
   profileContainer: {
     paddingTop: "5px",

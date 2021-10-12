@@ -256,6 +256,7 @@ export const getGroup = /* GraphQL */ `
           user {
             id
             username
+            displayName
             createdAt
             updatedAt
           }

@@ -11,14 +11,13 @@ export async function uploadFiles(files) {
       contentType: file.type,
     }).then(
       (data) =>
-        `https://${bucket}-resized.s3.${region}.amazonaws.com/public/${data.key}`
+        `https://${bucket}.s3.${region}.amazonaws.com/public/${data.key}`
     );
   });
-  // console.log("uploading files");
 
   const responses = await Promise.all(responsesPromise)
     .then((resolve) => [...resolve])
-    .catch((err) => console.log("Error to upload to the bucket: ", err));
+    .catch(() => null);
 
   return responses;
 }
@@ -30,7 +29,6 @@ export function changeURLImg(resizedPath) {
 }
 
 export async function handleImgError(e, count, photo) {
-  // console.log(count.current);
   if (count.current <= 0) {
     e.target.src = changeURLImg(photo);
     return;

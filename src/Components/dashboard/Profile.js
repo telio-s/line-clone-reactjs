@@ -6,8 +6,8 @@ import {
   Collapse,
   Button,
 } from "@material-ui/core";
-import { HashRouter as Router, Link } from "react-router-dom";
-import { ExpandLess, ExpandMore, AccountCircle } from "@material-ui/icons";
+import { Link } from "react-router-dom";
+import { ExpandLess, ExpandMore } from "@material-ui/icons";
 import ProfileDialogue from "../Dialogue/ProfileDialogue";
 import { getImg } from "../../utils/profile/utils";
 import useStyles from "../../Style/profile-style/profile";
@@ -35,8 +35,6 @@ const Profile = (props) => {
 
   return (
     <div className={classes.root}>
-      {console.log(friendList)}
-      {/* {console.log(user)}  */}
       {user && (
         <>
           <ListItem button onClick={() => handleProfile()}>
@@ -72,9 +70,8 @@ const Profile = (props) => {
             >
               {friendList.map((frind, index) => {
                 const their = frind.group.users.items.find(
-                  (obj) => obj.user.displayName !== user.displayName
+                  (obj) => obj.user.username !== user.username
                 );
-                // console.log(their);
                 return (
                   <Link
                     key={index}
@@ -85,11 +82,11 @@ const Profile = (props) => {
                       className={classes.friendList}
                       onClick={() => {
                         const chat = friendList.find((obj) => {
-                          return obj.group.id == frind.group.id;
+                          return obj.group.id === frind.group.id;
                         });
 
                         const theirUser = frind.group.users.items.find(
-                          (obj) => obj.user.displayName !== user.displayName
+                          (obj) => obj.user.username !== user.username
                         );
                         setChat({
                           idGroup: chat.group.id,
@@ -99,7 +96,7 @@ const Profile = (props) => {
                           time: "",
                           ISOtime: "",
                           theirUser: theirUser.user,
-                          messages: chat.group.messages.items,
+                          messages: chat.group.messages,
                           unread: 0,
                         });
                       }}
@@ -143,7 +140,6 @@ const Profile = (props) => {
             user={user}
             setUser={setUser}
           />
-          {friend && console.log(friend.friend)}
           {friend && (
             <FriendProfileDialogue
               open={showFriendProfile}

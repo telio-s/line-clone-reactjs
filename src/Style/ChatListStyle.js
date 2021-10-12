@@ -29,7 +29,7 @@ const useStyles = makeStyles((theme) => ({
   },
   chatRoom: {
     width: "100%",
-    height: 100,
+    height: 80,
     "&:hover": {
       backgroundColor: "#f3f3f3",
     },

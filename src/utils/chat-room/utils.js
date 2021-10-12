@@ -4,7 +4,6 @@ import {
 } from "../../api/mutations";
 
 export async function handleCall(type, setCaller, idGroup, user, theirUser) {
-  console.log(type);
   setCaller({ type });
   const message = {
     type: idGroup,
@@ -17,22 +16,20 @@ export async function handleCall(type, setCaller, idGroup, user, theirUser) {
     isDeclineCall: true,
     messageReceiverId: theirUser.id,
   };
-  console.log("create message#1 ", message);
   await createMessageInGroup(message);
 }
 
 export async function handleAcceptCall(id, isDeclineCall) {
   const data = await updateMessageAcceptCall(id, isDeclineCall);
-  console.log(data);
 }
 
 export function handleCallerDialogue(setCaller, setCall) {
-  setCall({ isCall: false, caller: null });
+  setCall({ isCall: false, caller: null, callerType: "Voice call" });
   setCaller({ type: "audio" });
 }
 
 export function handleCalleeDialogue(setCallee, setCall) {
-  setCall({ isCall: false, caller: null });
+  setCall({ isCall: false, caller: null, callerType: "Voice call" });
   setCallee({ type: "audio" });
 }
 

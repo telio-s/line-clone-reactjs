@@ -21,16 +21,12 @@ function ProfileDialogue(props) {
   const hiddenUploadCoverPhoto = useRef(null);
   const [editStatus, setEditStatus] = useState(false);
 
-  // console.log(user.profilePhoto);
-  // console.log(user.coverPhoto);
-
   function handleEditProfile() {
     if (!editProfile) onClose();
     setEditProfile(!editProfile);
   }
 
   function handleFullPreview(e) {
-    console.log(e.target.src);
     setFullPreview(!fullPreview);
     if (!fullPreview) setImg(e.target.src);
   }
@@ -48,8 +44,6 @@ function ProfileDialogue(props) {
       user
     );
     if (location) {
-      console.log(location);
-      console.log("upload cover photo successfully");
       setUser({ ...user, coverPhoto: { bucket, region, key } });
     }
   }
@@ -76,6 +70,7 @@ function ProfileDialogue(props) {
             </IconButton>
             <img
               src={user.coverPhoto ? getImg(user, "cover") : ""}
+              alt="cover"
               onClick={(e) => handleFullPreview(e)}
               className={classes.coverPhoto}
             />
@@ -116,6 +111,7 @@ function ProfileDialogue(props) {
         <Dialog open={fullPreview} onClose={handleFullPreview}>
           <img
             src={img}
+            alt="full view"
             style={{ objectFit: "cover", width: "500px", height: "500px" }}
           />
         </Dialog>

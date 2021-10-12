@@ -37,7 +37,6 @@ function CalleeDialogue(props) {
     call.callerType === "Voice call" ? false : true
   );
   const peerConnection = new RTCPeerConnection(servers);
-  // const dataChannel = peerConnection.createDataChannel(id);
   const [dataChannel, setDataChannel] = useState();
   const localVideo = useRef(null);
   const remoteVideo = useRef(null);
@@ -124,16 +123,18 @@ function CalleeDialogue(props) {
         >
           <CallRounded fontSize="large" />
         </IconButton>
-        <IconButton
-          onClick={() => handleSwitchCallType()}
-          className={classes.videocamIcon}
-        >
-          {callee.type === "video" ? (
-            <VideocamRounded fontSize="large" />
-          ) : (
-            <VideocamOffRounded fontSize="large" />
-          )}
-        </IconButton>
+        {isRecieve ? (
+          <IconButton
+            onClick={() => handleSwitchCallType()}
+            className={classes.videocamIcon}
+          >
+            {callee.type === "video" ? (
+              <VideocamRounded fontSize="large" />
+            ) : (
+              <VideocamOffRounded fontSize="large" />
+            )}
+          </IconButton>
+        ) : null}
       </div>
     </Dialog>
   );
