@@ -1,6 +1,5 @@
 import React from "react";
 import useStyles from "../../../Style/calling-content";
-import no_display from "./../../../assets/imgs/no_display.jpeg";
 
 function CallingContent(props) {
   const { localVideo, remoteVideo, call, user, otherend } = props;
@@ -30,11 +29,10 @@ function CallingContent(props) {
           <img
             className={classes.media}
             hidden={otherend}
-            alt="user media"
             src={
               user.profilePhoto
                 ? `https://${user.profilePhoto.bucket}.s3.${user.profilePhoto.region}.amazonaws.com/public/${user.profilePhoto.key}`
-                : no_display
+                : "/no_display.jpeg"
             }
           />
         </div>
