@@ -31,109 +31,113 @@ function reducer(state, action) {
     case "set":
       return [action.payload];
     case "add":
-      if (
-        state[0].user.id === action.payload.receiver.id ||
-        state[0].user.id === action.payload.user.id
-      ) {
-        // send request noti
-        if (action.payload.receiver.username === state[0].user.username) {
-          sendRequestPost(
-            action.token,
-            `${action.payload.user.username} sent`,
-            action.payload.message,
-            action.payload
-          );
-        }
-        let notiForChatlist = 0;
-        const time = setLocalTimeZone(action.payload.createdAt);
-        if (action.payload.user.username !== state[0].user.username) {
-          state[0].setCountNoti(state[0].countNoti + 1);
-          notiForChatlist = 1;
-        }
-        // for Calling
-        if (action.payload.isCall) {
-          state[0].setCall({
-            isCall: true,
-            caller: action.payload.user,
-            callerType: action.payload.message,
-          });
-        }
-
-        // Set for chatfeed UI
-        if (state[0].chat) {
-          // Id of new msg in And id of chat at that time Are compatible.
-          if (state[0].chat.idGroup === action.payload.group.id) {
-            state[0].setChat((prevState) => ({
-              idGroup: prevState.idGroup,
-              name: prevState.name,
-              sender: action.payload.user.username,
-              content: action.payload.message,
-              time: time,
-              ISOtime: action.payload.createdAt,
-              theirUser: { ...prevState.theirUser },
-              messages: [...prevState.messages, action.payload],
-              idLastMsg: action.payload.id,
-            }));
-            state[0].setFriendList(
-              state[0].friendList.map((flist) =>
-                flist.group.id === action.payload.group.id
-                  ? {
-                      ...flist,
-                      group: {
-                        ...flist.group,
-                        messages: [...flist.group.messages, action.payload],
-                      },
-                    }
-                  : flist
-              )
+      if (state) {
+        if (
+          state[0].user.id === action.payload.receiver.id ||
+          state[0].user.id === action.payload.user.id
+        ) {
+          // send request noti
+          if (action.payload.receiver.username === state[0].user.username) {
+            sendRequestPost(
+              action.token,
+              `${action.payload.user.username} sent`,
+              action.payload.message,
+              action.payload
             );
-            console.log(state[0].friendList);
           }
-        }
+          let notiForChatlist = 0;
+          const time = setLocalTimeZone(action.payload.createdAt);
+          if (action.payload.user.username !== state[0].user.username) {
+            state[0].setCountNoti(state[0].countNoti + 1);
+            notiForChatlist = 1;
+          }
+          // for Calling
+          if (action.payload.isCall) {
+            state[0].setCall({
+              isCall: true,
+              caller: action.payload.user,
+              callerType: action.payload.message,
+            });
+          }
 
-        // Set for chatlist UI
-        if (action.onClick === "noClick") {
-          const chatExisting = state[0].chatList.some(
-            (chat) => chat.idGroup === action.payload.group.id
-          );
-          if (chatExisting === false) {
-            let theirUser;
-            if (action.payload.user.username === state[0].user.username) {
-              theirUser = action.payload.receiver;
-            } else {
-              theirUser = action.payload.user;
-            }
-            state[0].setChatList((preState) => [
-              ...preState,
-              {
-                idGroup: action.payload.group.id,
-                name: action.payload.group.name,
+          // Set for chatfeed UI
+          if (state[0].chat) {
+            // Id of new msg in And id of chat at that time Are compatible.
+            if (state[0].chat.idGroup === action.payload.group.id) {
+              state[0].setChat((prevState) => ({
+                idGroup: prevState.idGroup,
+                name: prevState.name,
                 sender: action.payload.user.username,
                 content: action.payload.message,
                 time: time,
                 ISOtime: action.payload.createdAt,
-                theirUser: theirUser,
-                messages: [action.payload],
-                unread: notiForChatlist,
-              },
-            ]);
-          } else {
-            state[0].setChatList(
-              state[0].chatList.map((obj) =>
-                obj.idGroup === action.payload.type
-                  ? {
-                      ...obj,
-                      sender: action.payload.user.username,
-                      content: action.payload.message,
-                      time: time,
-                      ISOtime: action.payload.createdAt,
-                      theirUser: { ...obj.theirUser },
-                      messages: [...obj.messages, action.payload],
-                      unread: obj.unread + notiForChatlist,
-                    }
-                  : obj
-              )
+                theirUser: { ...prevState.theirUser },
+                messages: [...prevState.messages, action.payload],
+                idLastMsg: action.payload.id,
+              }));
+              state[0].setFriendList(
+                state[0].friendList.map((flist) =>
+                  flist.group.id === action.payload.group.id
+                    ? {
+                        ...flist,
+                        group: {
+                          ...flist.group,
+                          messages: flist.group.messages.length
+                            ? [...flist.group.messages, action.payload]
+                            : [action.payload],
+                        },
+                      }
+                    : flist
+                )
+              );
+              console.log(state[0].friendList);
+            }
+          }
+
+          // Set for chatlist UI
+          if (action.onClick === "noClick") {
+            const chatExisting = state[0].chatList.some(
+              (chat) => chat.idGroup === action.payload.group.id
             );
+            if (chatExisting === false) {
+              let theirUser;
+              if (action.payload.user.username === state[0].user.username) {
+                theirUser = action.payload.receiver;
+              } else {
+                theirUser = action.payload.user;
+              }
+              state[0].setChatList((preState) => [
+                ...preState,
+                {
+                  idGroup: action.payload.group.id,
+                  name: action.payload.group.name,
+                  sender: action.payload.user.username,
+                  content: action.payload.message,
+                  time: time,
+                  ISOtime: action.payload.createdAt,
+                  theirUser: theirUser,
+                  messages: [action.payload],
+                  unread: notiForChatlist,
+                },
+              ]);
+            } else {
+              state[0].setChatList(
+                state[0].chatList.map((obj) =>
+                  obj.idGroup === action.payload.type
+                    ? {
+                        ...obj,
+                        sender: action.payload.user.username,
+                        content: action.payload.message,
+                        time: time,
+                        ISOtime: action.payload.createdAt,
+                        theirUser: { ...obj.theirUser },
+                        messages: [...obj.messages, action.payload],
+                        unread: obj.unread + notiForChatlist,
+                      }
+                    : obj
+                )
+              );
+            }
           }
         }
       }
