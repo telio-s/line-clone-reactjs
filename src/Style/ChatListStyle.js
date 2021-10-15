@@ -10,7 +10,7 @@ const useStyles = makeStyles((theme) => ({
     overflowY: "auto",
     // overflow: "hidden",
     height: `calc(98vh - 64px)`,
-    marginLeft: "80px",
+    marginLeft: "5%",
     minWidth: "400px",
   },
   appbar: {
@@ -29,7 +29,7 @@ const useStyles = makeStyles((theme) => ({
   },
   chatRoom: {
     width: "100%",
-    height: 100,
+    height: 80,
     "&:hover": {
       backgroundColor: "#f3f3f3",
     },

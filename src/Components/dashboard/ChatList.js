@@ -1,5 +1,5 @@
 import React from "react";
-import { HashRouter as Router, Link } from "react-router-dom";
+import { Link } from "react-router-dom";
 import {
   Typography,
   AppBar,
@@ -10,9 +10,9 @@ import {
   Avatar,
 } from "@material-ui/core";
 import { updateMessageHasRead } from "../../api/mutations";
-import { SearchOutlined, AccountCircle } from "@material-ui/icons";
-import useStyles from "../../Style/ChatListStyle";
+import { SearchOutlined } from "@material-ui/icons";
 import { getImg } from "../../utils/profile/utils";
+import useStyles from "../../Style/ChatListStyle";
 
 const ChatList = (props) => {
   const {
@@ -27,24 +27,15 @@ const ChatList = (props) => {
   } = props;
   const classes = useStyles();
 
-  // useEffect(() => {
-  //   console.log(chatListArr);
-  //   chatListArr.sort(function sort(b, a) {
-  //     console.log("chat list 2");
-  //     return new Date(a.ISOtime).getTime() - new Date(b.ISOtime).getTime();
-  //   });
-  //   return () => {};
-  // }, [chatListArr]);
-
   return (
     <div className={classes.root}>
-      {console.log(match.url)}
       <AppBar elevation={0} position="static" className={classes.appbar}>
         <Toolbar>
           <InputBase
             fullWidth
             className={classes.searchInput}
             placeholder="Search for chats and messages"
+            // onKeyUp={(e) => findChat(e)}
             startAdornment={
               <InputAdornment position="start" variant="filled">
                 <SearchOutlined className={classes.iconSearch} />
@@ -55,7 +46,6 @@ const ChatList = (props) => {
       </AppBar>
       {chatListArr.map((message, index) => (
         <div key={index}>
-          {console.log(message.theirUser)}
           <Link
             to={`${match.url}/${message.idGroup}`}
             style={{ textDecoration: "none" }}
@@ -64,12 +54,9 @@ const ChatList = (props) => {
               disableRipple={true}
               className={classes.chatRoom}
               onClick={() => {
-                // console.log(chatListArr);
                 const chat = chatListArr.find((obj) => {
-                  return obj.idGroup == message.idGroup;
+                  return obj.idGroup === message.idGroup;
                 });
-                // console.log(match.url);
-                // console.log(chat);
                 setChat({
                   idGroup: chat.idGroup,
                   name: chat.name,
@@ -95,15 +82,20 @@ const ChatList = (props) => {
                 const resultFilterTheirUser = result.filter(
                   (item) => item.user.username !== myUser.username
                 );
+
+                // updated hasRead on dynamodb
                 resultFilterTheirUser.map(async (data) => {
                   await updateMessageHasRead(data.id, true);
                 });
-                // console.log(resultFilterTheirUser.length);
 
+                const updateReadObjs = chat.messages.map((item) =>
+                  item.hasRead === false ? { ...item, hasRead: true } : item
+                );
                 // update count unread and hasRead in last message on chatlist UI
                 setChatList(
                   chatList.map((obj) =>
-                    obj.idGroup === chat.idGroup
+                    obj.idGroup === chat.idGroup &&
+                    resultFilterTheirUser.length > 0
                       ? {
                           idGroup: chat.idGroup,
                           name: chat.name,
@@ -112,13 +104,7 @@ const ChatList = (props) => {
                           time: chat.time,
                           ISOtime: chat.ISOtime,
                           theirUser: chat.theirUser,
-                          messages: [
-                            ...chat.messages.slice(0, chat.messages.length - 1),
-                            {
-                              ...chat.messages[chat.messages.length - 1],
-                              hasRead: true,
-                            },
-                          ],
+                          messages: updateReadObjs,
                           unread: 0,
                         }
                       : obj
@@ -134,7 +120,7 @@ const ChatList = (props) => {
                   message.theirUser.profilePhoto &&
                   getImg(message.theirUser, "profile")
                 }
-                style={{ width: "60px", height: "60px" }}
+                style={{ width: "50px", height: "50px" }}
               />
               <div className={classes.chatDesc}>
                 <Typography className={classes.nameChat}>
@@ -152,11 +138,11 @@ const ChatList = (props) => {
                 <Typography className={classes.timeChat}>
                   {message.time}
                 </Typography>
-                <div className={message.unread == 0 ? null : classes.notiBox}>
+                <div className={message.unread === 0 ? null : classes.notiBox}>
                   <Typography
-                    className={message.unread == 0 ? null : classes.noti}
+                    className={message.unread === 0 ? null : classes.noti}
                   >
-                    {message.unread == 0 ? null : message.unread}
+                    {message.unread === 0 ? null : message.unread}
                   </Typography>
                 </div>
               </div>

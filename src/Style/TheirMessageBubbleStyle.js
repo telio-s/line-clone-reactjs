@@ -1,4 +1,3 @@
-import React from "react";
 import { makeStyles } from "@material-ui/styles";
 
 const useStyles = makeStyles((theme) => ({
@@ -37,8 +36,13 @@ const useStyles = makeStyles((theme) => ({
     backgroundPosition: "center",
   },
   pic_zero: {
+<<<<<<< HEAD
     width: "200px",
     height: "100px",
+=======
+    width: "15vw",
+    height: "7.4vw",
+>>>>>>> efea1875000213347109ffbad87426c5904e5895
     objectFit: "cover",
     borderRadius: "2px",
   },

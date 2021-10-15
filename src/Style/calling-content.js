@@ -15,7 +15,7 @@ const useStyles = makeStyles(() => ({
   media: {
     objectFit: "cover",
     width: "480px",
-    height: "480px",
+    height: "380px",
   },
   videocamIcon: {
     backgroundColor: "rgb(42,51,74)",
@@ -35,7 +35,6 @@ const useStyles = makeStyles(() => ({
   callIcon: {
     backgroundColor: "rgb(0,200,49)",
     color: "whitesmoke",
-    marginRight: "40px",
     "&:hover": {
       backgroundColor: "rgb(0,200,49)",
     },

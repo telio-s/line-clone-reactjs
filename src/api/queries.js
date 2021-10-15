@@ -9,7 +9,7 @@ import {
 export async function getLoggedInUser(id) {
   const user = await API.graphql(graphqlOperation(getUser, { id }))
     .then((data) => data.data.getUser)
-    .catch((err) => console.log(err));
+    .catch(() => null);
   return user;
 }
 

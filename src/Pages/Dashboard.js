@@ -1,19 +1,16 @@
 import React, { useState, useEffect, useReducer, useRef } from "react";
-import {
-  Router as Router,
-  Route,
-  Link,
-  useHistory,
-  Switch,
-  useLocation,
-} from "react-router-dom";
+import { Route, useHistory, Switch } from "react-router-dom";
 import AddFriend from "../Components/dashboard/AddFriend";
-import { Divider, Button } from "@material-ui/core";
-import { Auth, Hub } from "aws-amplify";
+import { Divider } from "@material-ui/core";
+import { Auth } from "aws-amplify";
 import { getUserById, getMessagesByDate } from "../api/queries";
 import { setLocalTimeZone } from "../service/Localtime";
 import { API, graphqlOperation } from "aws-amplify";
-import { newOnCreateMessage } from "../graphql/subscriptions";
+import {
+  newOnCreateMessage,
+  newOnUpdateMessage,
+  newOnUpdateUser,
+} from "../graphql/subscriptions";
 import DrawerMenu from "../Components/dashboard/DrawerMenu";
 import ChatList from "../Components/dashboard/ChatList";
 import Selection from "../Components/dashboard/Selection";
@@ -30,79 +27,171 @@ import {
 import firebase from "../firebase";
 
 function reducer(state, action) {
-  // console.log("switch");
   switch (action.type) {
     case "set":
-      console.log("set");
       return [action.payload];
     case "add":
-      console.log("add");
-      let notiForChatlist = 0;
-      const time = setLocalTimeZone(action.payload.createdAt);
-      if (action.payload.user.username !== state[0].user.username) {
-        state[0].setCountNoti(state[0].countNoti + 1);
-        notiForChatlist = 1;
-      }
-      // for Calling
-      if (action.payload.isCall) {
-        console.log(action.payload);
-        state[0].setCall({
-          isCall: true,
-          caller: action.payload.user,
-          callerType: action.payload.message,
-        });
-      }
-
-      // Set for chatfeed UI
-      if (state[0].chat) {
-        // console.log(state[0].chat);
-        // Id of new msg in And id of chat at that time Are compatible.
-        if (state[0].chat.idGroup === action.payload.group.id) {
-          state[0].setChat((prevState) => ({
-            idGroup: prevState.idGroup,
-            name: prevState.name,
-            sender: action.payload.user.username,
-            content: action.payload.message,
-            time: time,
-            ISOtime: action.payload.createdAt,
-            theirUser: { ...prevState.theirUser },
-            messages: [...prevState.messages, action.payload],
-          }));
-        }
-        // clicked And ids are NOT compatible, need open chat ..cause clicked
-        else if (
-          action.onClick === "onClick" &&
-          state[0].chat.idGroup !== action.payload.group.id
+      if (state) {
+        if (
+          state[0].user.id === action.payload.receiver.id ||
+          state[0].user.id === action.payload.user.id
         ) {
-          console.log("clicked in");
-          const chat = state[0].chatList.find((obj) => {
-            return obj.idGroup == action.payload.group.id;
-          });
-          console.log(chat);
-          state[0].setChat(chat);
-        }
-      }
+          // send request noti
+          if (action.payload.receiver.username === state[0].user.username) {
+            sendRequestPost(
+              action.token,
+              `${action.payload.user.username} sent`,
+              action.payload.message,
+              action.payload
+            );
+          }
+          let notiForChatlist = 0;
+          const time = setLocalTimeZone(action.payload.createdAt);
+          if (action.payload.user.username !== state[0].user.username) {
+            state[0].setCountNoti(state[0].countNoti + 1);
+            notiForChatlist = 1;
+          }
+          // for Calling
+          if (action.payload.isCall) {
+            state[0].setCall({
+              isCall: true,
+              caller: action.payload.user,
+              callerType: action.payload.message,
+            });
+          }
 
-      // Set for chatlist UI
-      if (action.onClick === "noClick") {
-        console.log("chatlist... editing");
-        state[0].setChatList(
-          state[0].chatList.map((obj) =>
-            obj.idGroup === action.payload.type
-              ? {
-                  ...obj,
+          // Set for chatfeed UI
+          if (state[0].chat) {
+            // Id of new msg in And id of chat at that time Are compatible.
+            if (state[0].chat.idGroup === action.payload.group.id) {
+              state[0].setChat((prevState) => ({
+                idGroup: prevState.idGroup,
+                name: prevState.name,
+                sender: action.payload.user.username,
+                content: action.payload.message,
+                time: time,
+                ISOtime: action.payload.createdAt,
+                theirUser: { ...prevState.theirUser },
+                messages: [...prevState.messages, action.payload],
+                idLastMsg: action.payload.id,
+              }));
+              state[0].setFriendList(
+                state[0].friendList.map((flist) =>
+                  flist.group.id === action.payload.group.id
+                    ? {
+                        ...flist,
+                        group: {
+                          ...flist.group,
+                          messages: flist.group.messages.length
+                            ? [...flist.group.messages, action.payload]
+                            : [action.payload],
+                        },
+                      }
+                    : flist
+                )
+              );
+              console.log(state[0].friendList);
+            }
+          }
+
+          // Set for chatlist UI
+          if (action.onClick === "noClick") {
+            const chatExisting = state[0].chatList.some(
+              (chat) => chat.idGroup === action.payload.group.id
+            );
+            if (chatExisting === false) {
+              let theirUser;
+              if (action.payload.user.username === state[0].user.username) {
+                theirUser = action.payload.receiver;
+              } else {
+                theirUser = action.payload.user;
+              }
+              state[0].setChatList((preState) => [
+                ...preState,
+                {
+                  idGroup: action.payload.group.id,
+                  name: action.payload.group.name,
                   sender: action.payload.user.username,
                   content: action.payload.message,
                   time: time,
                   ISOtime: action.payload.createdAt,
-                  theirUser: { ...obj.theirUser },
-                  messages: [...obj.messages, action.payload],
-                  unread: obj.unread + notiForChatlist,
-                }
-              : obj
-          )
-        );
+                  theirUser: theirUser,
+                  messages: [action.payload],
+                  unread: notiForChatlist,
+                },
+              ]);
+            } else {
+              state[0].setChatList(
+                state[0].chatList.map((obj) =>
+                  obj.idGroup === action.payload.type
+                    ? {
+                        ...obj,
+                        sender: action.payload.user.username,
+                        content: action.payload.message,
+                        time: time,
+                        ISOtime: action.payload.createdAt,
+                        theirUser: { ...obj.theirUser },
+                        messages: [...obj.messages, action.payload],
+                        unread: obj.unread + notiForChatlist,
+                      }
+                    : obj
+                )
+              );
+            }
+          }
+        }
       }
+  }
+}
+
+function reducerUser(state, action) {
+  switch (action.type) {
+    case "set":
+      return [action.payload];
+    case "add":
+      let allUser = [];
+      let theirUser;
+      for (let i = 0; i < state[0].friendList.length; i++) {
+        for (let j = 0; j < action.payload.groups.items.length; j++) {
+          if (
+            state[0].friendList[i].group.id ===
+            action.payload.groups.items[j].group.id
+          ) {
+            state[0].friendList[i].group.users.items.map((user) => {
+              if (user.user.id !== action.payload.id) {
+                allUser.push({ user: user.user });
+              } else {
+                theirUser = action.payload.groups.items[j].group.id;
+                allUser.push({
+                  user: {
+                    coverPhoto: action.payload.coverPhoto,
+                    displayName: action.payload.displayName,
+                    id: action.payload.id,
+                    profilePhoto: action.payload.profilePhoto,
+                    statusMessage: action.payload.statusMessage,
+                    username: action.payload.username,
+                  },
+                });
+              }
+            });
+          }
+        }
+      }
+      state[0].setFriendList(
+        state[0].friendList.map((obj) =>
+          obj.group.id === theirUser
+            ? {
+                createdAt: obj.id,
+                updatedAt: obj.updatedAt,
+                id: obj.id,
+                group: {
+                  ...obj.group,
+                  users: { items: allUser },
+                },
+              }
+            : obj
+        )
+      );
   }
 }
 
@@ -120,33 +209,28 @@ const Dashboard = ({ match }) => {
   const [call, setCall] = useState({
     isCall: false,
     caller: null,
-    callerType: "audio",
+    callerType: "Voice call",
   });
   const [caller, setCaller] = useState({ type: "audio" });
   const [callee, setCallee] = useState({ type: "audio" });
   const messaging = firebase.messaging();
   const dummy = useRef();
-  const [state, dispatch] = useReducer(reducer, {
-    chatList: [],
-    chat: {},
-  });
+  const [state, dispatch] = useReducer(reducer, {});
+  const [stateUser, dispatchUser] = useReducer(reducerUser, {});
+  const [isDeclineCall, setIsDeclineCall] = useState(true);
+  const [paramsId, setParamsId] = useState();
 
   useEffect(async () => {
     // service worker
     if ("serviceWorker" in navigator) {
       navigator.serviceWorker
         .register("/firebase-messaging-sw.js")
-        .then(function (registration) {
-          console.log("Registration successful, scope is:", registration.scope);
-        })
-        .catch(function (err) {
-          console.log("Service worker registration failed, error:", err);
-        });
+        .then(function (registration) {})
+        .catch(function (err) {});
     }
 
     // manage on messages
     messaging.onMessage((payload) => {
-      console.log("Message received. ", payload);
       const notificationTitle = payload.data.title;
       const notificationOptions = {
         body: payload.data.body,
@@ -165,7 +249,7 @@ const Dashboard = ({ match }) => {
   }, []);
 
   useEffect(() => {
-    // Fetch for chatList
+    // Fetch for chatList\
     setChatList([]);
     fetchChatList();
 
@@ -174,10 +258,8 @@ const Dashboard = ({ match }) => {
 
   useEffect(() => {
     chatList.sort(function sort(b, a) {
-      console.log("...sorting");
       return new Date(a.ISOtime).getTime() - new Date(b.ISOtime).getTime();
     });
-    // console.log(chatList, chat);
 
     dispatch({
       type: "set",
@@ -190,6 +272,16 @@ const Dashboard = ({ match }) => {
         setCountNoti: setCountNoti,
         user: myUser,
         setCall,
+        friendList,
+        setFriendList,
+      },
+    });
+    dispatchUser({
+      type: "set",
+      payload: {
+        friendList: friendList,
+        setFriendList: setFriendList,
+        user: myUser,
       },
     });
 
@@ -199,68 +291,83 @@ const Dashboard = ({ match }) => {
       scrollToBottom(dummy);
     }
     return () => {};
-  }, [chatList, chat, countNoti]);
+  }, [chatList, chat, countNoti, friendList]);
 
   useEffect(() => {
-    // Open subscribe
     setupSubscriptions();
     return () => {
-      subscriptionOnCreate.unsubscribe();
+      subscriptionOnCreateMsg.unsubscribe();
+      subscriptionOnUpdateMsg.unsubscribe();
+      subscriptionOnUpdateUser.unsubscribe();
     };
   }, []);
 
-  let subscriptionOnCreate;
+  let subscriptionOnCreateMsg;
+  let subscriptionOnUpdateMsg;
+  let subscriptionOnUpdateUser;
   const setupSubscriptions = async () => {
-    subscriptionOnCreate = API.graphql(
+    subscriptionOnCreateMsg = API.graphql(
       graphqlOperation(newOnCreateMessage)
     ).subscribe({
       next: async (data) => {
         const newMsgObj = data.value.data.newOnCreateMessage;
-        console.log(newMsgObj);
         setNewMessage(newMsgObj);
         if (newMsgObj) {
-          // setChat({
-          //   idGroup: newMsgObj.group.id,
-          //   name: newMsgObj.group.name,
-          //   sender: newMsgObj.user.username,
-          //   content: newMsgObj.message,
-          //   time: "50:80",
-          //   ISOtime: newMsgObj.createdAt,
-          //   theirUser: newMsgObj.user,
-          //   messages: newMsgObj.group.messages,
-          // });
           const token = await getToken();
-          sendRequestPost(
-            token,
-            `${newMsgObj.user.username} sent`,
-            newMsgObj.message,
-            dispatch,
-            newMsgObj
-          );
+          sendReduce(token, dispatch, newMsgObj);
         }
+      },
+    });
 
-        // if (Notification.permission === "granted") {
-        //   showNotification(newMsgObj.group.id, dispatch, newMsgObj);
-        // } else if (Notification.permission !== "denied") {
-        //   Notification.requestPermission().then((permission) => {
-        //     if (permission == " granted")
-        //       showNotification(newMsgObj.group.id, dispatch, newMsgObj);
-        //   });
+    subscriptionOnUpdateMsg = API.graphql(
+      graphqlOperation(newOnUpdateMessage)
+    ).subscribe({
+      next: async (data) => {
+        const newMsgUpdateObj = data.value.data.newOnUpdateMessage;
+        // setNewMessage(newMsgUpdateObj);
+        // if (newMsgUpdateObj) {
+        //   setIsDeclineCall(newMsgUpdateObj.isDeclineCall);
         // }
+      },
+    });
+
+    subscriptionOnUpdateUser = API.graphql(
+      graphqlOperation(newOnUpdateUser)
+    ).subscribe({
+      next: async (data) => {
+        const newUserUpdateObj = data.value.data.newOnUpdateUser;
+        setNewMessage(newUserUpdateObj);
+        dispatchUser({ type: "add", payload: newUserUpdateObj });
       },
     });
   };
 
+  const sendReduce = (token, dispatch, newMsgObj) => {
+    dispatch({
+      type: "add",
+      payload: newMsgObj,
+      onClick: "noClick",
+      token: token,
+    });
+    setIsDeclineCall(newMsgObj.isDeclineCall);
+  };
+
   const checkUserCurrent = async () => {
     // Get id by checking user current auth
-    const auth = await Auth.currentAuthenticatedUser();
-    console.log(auth);
+    const auth = await Auth.currentAuthenticatedUser()
+      .then((data) => data)
+      .catch(() => null);
+    if (!auth) {
+      history.push("/");
+      return;
+    }
     const id = auth.attributes.sub;
 
     // Get User by id
     try {
       const userById = await getUserById(id);
       setMyUser(userById);
+
       console.log(userById);
       setUser(userById);
     } catch (err) {
@@ -269,17 +376,21 @@ const Dashboard = ({ match }) => {
   };
 
   const fetchChatList = async () => {
-    console.log(myUser);
-    if (myUser) {
-      let noti = 0;
-      const fetchFriendList = myUser.groups.items.filter((obj) => {
-        return obj.group.isDirect === true;
-      });
-      setFriendList(fetchFriendList);
-      console.log(fetchFriendList);
-      await myUser.groups.items.map(async (group) => {
+    if (!myUser) {
+      return;
+    }
+    let noti = 0;
+    const fetchFriendList = myUser.groups.items.filter((obj) => {
+      return obj.group.isDirect === true;
+    });
+    setFriendList(fetchFriendList);
+    if (myUser.groups.items.length === 0) {
+      setCountNoti(noti);
+    } else {
+      await myUser.groups.items.map(async (group, index) => {
         if (group.group.isDirect && group.group.messages.items.length != 0) {
           const fetchAllMessage = await getMessagesByDate(group.group.id);
+          fetchFriendList[index].group.messages = fetchAllMessage.items;
           const theirUser = findFriendForChatlist(
             myUser,
             group.group.users.items
@@ -292,7 +403,6 @@ const Dashboard = ({ match }) => {
               fetchAllMessage.items.length - 1
             ].createdAt.toString()
           );
-          // console.log("lastMsg", fetchAllMessage.items);
 
           let newChatInfo = {
             idGroup: group.group.id,
@@ -308,11 +418,19 @@ const Dashboard = ({ match }) => {
             theirUser: theirUser,
             messages: fetchAllMessage.items,
             unread: resultFilterTheirUser.length,
+            idLastMsg:
+              fetchAllMessage.items[fetchAllMessage.items.length - 1].id,
           };
-          // console.log("fetch chatlist");
-          setChat(newChatInfo);
+
+          if (group.group.id === paramsId) {
+            setChat(newChatInfo);
+          }
           setChatList((previouschat) => [...previouschat, newChatInfo]);
           setCountNoti(noti);
+        } else {
+          setCountNoti(noti);
+          const fetchAllMessage = await getMessagesByDate(group.group.id);
+          fetchFriendList[index].group.messages = fetchAllMessage.items;
         }
       });
     }
@@ -322,11 +440,9 @@ const Dashboard = ({ match }) => {
     const result = fetchAllMessage.items.filter(
       (item) => item.hasRead === false
     );
-    // console.log("result count", result);
     const resultFilterTheirUser = result.filter(
       (item) => item.user.username !== myUser.username
     );
-    // console.log(resultFilterTheirUser);
 
     return resultFilterTheirUser;
   };
@@ -342,7 +458,6 @@ const Dashboard = ({ match }) => {
   const choseMenu = () => {
     switch (selection) {
       case "chats":
-        // console.log(selection);
         return (
           <ChatList
             match={match}
@@ -360,12 +475,12 @@ const Dashboard = ({ match }) => {
           <AddFriend
             user={myUser}
             match={match}
-            chatRoom={sordteChatList}
+            chatList={sordteChatList}
             setChat={setChat}
+            setFriendList={setFriendList}
           />
         );
       case "profile":
-        console.log("profile", user, friendList);
         return (
           <Profile
             match={match}
@@ -377,7 +492,6 @@ const Dashboard = ({ match }) => {
           />
         );
       default:
-        console.log("profile", user, friendList);
         return (
           <Profile
             match={match}
@@ -394,8 +508,6 @@ const Dashboard = ({ match }) => {
   return (
     <>
       <div style={{ display: "flex" }}>
-        {/* {console.log(match.url)} */}
-        {console.log(chat)}
         <DrawerMenu
           match={match}
           setSelection={setSelection}
@@ -411,11 +523,10 @@ const Dashboard = ({ match }) => {
                 <ChatFeedRoom
                   myUser={myUser}
                   chat={chat}
-                  setChat={setChat}
                   dummy={dummy}
                   selection={selection}
-                  setMyUser={setMyUser}
                   setCaller={setCaller}
+                  setParamsId={setParamsId}
                 />
               </Route>
             </Switch>
@@ -431,6 +542,7 @@ const Dashboard = ({ match }) => {
             callee={chat.theirUser}
             caller={caller}
             setCaller={setCaller}
+            idLastMsg={chat.idLastMsg}
           />
         ) : (
           call.caller && (
@@ -442,6 +554,8 @@ const Dashboard = ({ match }) => {
               callee={callee}
               setCallee={setCallee}
               call={call}
+              isDeclineCall={isDeclineCall}
+              idLastMsg={chat.idLastMsg}
             />
           )
         )

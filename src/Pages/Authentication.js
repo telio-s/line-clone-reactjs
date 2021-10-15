@@ -1,11 +1,10 @@
 import React, { useEffect, useState } from "react";
-import { Grid, Divider, Typography } from "@material-ui/core";
+import { Grid } from "@material-ui/core";
 import { checkCurrentUser } from "../utils/authentication/utils";
 import LoginForm from "../Components/Form/LoginForm";
 import RegisterForm from "../Components/Form/RegisterForm";
 import ConfirmRegisterDialogue from "../Components/Dialogue/ConfirmRegisterDialogue";
-import { HashRouter as Router, useHistory } from "react-router-dom";
-import mockQRCode from "./../assets/imgs/mockQRCode.png";
+import { useHistory } from "react-router-dom";
 import useStyles from "../Style/authentication/authentication-form";
 import { Hub } from "aws-amplify";
 
@@ -24,7 +23,6 @@ function Authentication() {
   useEffect(() => {
     checkAuthenticatedUser();
     setAuthListener();
-    console.log("Authentication");
   }, []);
 
   const setAuthListener = () => {
@@ -79,18 +77,7 @@ function Authentication() {
   return (
     <>
       {form.type !== "Signed-in" && (
-        <Grid className={classes.container}>
-          {page()}
-          <Divider orientation="vertical" flexItem />
-          <Grid className={classes.gridItem} item md={4}>
-            <img src={mockQRCode} width="250" height="250" />
-            <Typography className={classes.textHead}>QR code login</Typography>
-            <Typography className={classes.textDescript}>
-              To scan your QR code, open LINE on your mobile device
-              <br /> and tap the QR code icon in the search box.
-            </Typography>
-          </Grid>{" "}
-        </Grid>
+        <Grid className={classes.container}>{page()}</Grid>
       )}
     </>
   );

@@ -1,22 +1,9 @@
 import React, { useState } from "react";
-import {
-  HashRouter as Router,
-  Route,
-  Link,
-  useHistory,
-  Switch,
-} from "react-router-dom";
-import { Drawer, IconButton, Typography } from "@material-ui/core";
-import {
-  Person,
-  PersonAdd,
-  WatchLater,
-  MoreHoriz,
-  VolumeDownOutlined,
-} from "@material-ui/icons";
+import { Drawer, IconButton, Badge } from "@material-ui/core";
+import { Person, PersonAdd, MoreHoriz } from "@material-ui/icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import MoreMenu from "../Menu/MoreMenu";
-import { faCommentDots, faNewspaper } from "@fortawesome/free-solid-svg-icons";
+import { faCommentDots } from "@fortawesome/free-solid-svg-icons";
 import useStyles from "../../Style/DrawerMenuStyle";
 
 const DrawerMenu = (props) => {
@@ -61,17 +48,13 @@ const DrawerMenu = (props) => {
             setSelection("chats");
           }}
         >
-          <FontAwesomeIcon
-            className={classes.iconAweDrawer}
-            icon={faCommentDots}
-          />
-          <div className={countNoti == 0 ? null : classes.notiBox}>
-            <Typography className={countNoti == 0 ? null : classes.noti}>
-              {countNoti == 0 ? null : countNoti}
-            </Typography>
-          </div>
+          <Badge badgeContent={countNoti} color="secondary">
+            <FontAwesomeIcon
+              className={classes.iconAweDrawer}
+              icon={faCommentDots}
+            />
+          </Badge>
         </IconButton>
-
         <IconButton
           disableRipple={true}
           className={classes.iconButton}
@@ -81,20 +64,8 @@ const DrawerMenu = (props) => {
         >
           <PersonAdd className={classes.iconMtDrawer} />
         </IconButton>
-        <IconButton disableRipple={true} className={classes.iconButton}>
-          <WatchLater className={classes.iconMtDrawer} />
-        </IconButton>
-        <IconButton disableRipple={true} className={classes.iconButton}>
-          <FontAwesomeIcon
-            className={classes.iconAweDrawer}
-            icon={faNewspaper}
-          />
-        </IconButton>
 
         <div className={classes.drawerIconBottom}>
-          <IconButton disableRipple={true} className={classes.iconButton}>
-            <VolumeDownOutlined className={classes.iconMtDrawer} />
-          </IconButton>
           <IconButton
             disableRipple={true}
             className={classes.iconButton}

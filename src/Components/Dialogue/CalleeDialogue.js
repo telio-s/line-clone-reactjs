@@ -1,3 +1,4 @@
+import React, { useEffect } from "react";
 import { Dialog, IconButton } from "@material-ui/core";
 import {
   CallEndRounded,
@@ -8,6 +9,7 @@ import {
 import { useRef, useState } from "react";
 import useStyles from "../../Style/calling-content";
 import { servers } from "../../utils/calling/stun-servers";
+import { handleAcceptCall } from "../../utils/chat-room/utils";
 import {
   createAnswer,
   handleSetCallType,
@@ -18,17 +20,33 @@ import {
 import CallingContent from "./DialogueContent/CallingContent";
 
 function CalleeDialogue(props) {
-  const { open, onclose, id, caller, callee, setCallee, call } = props;
+  const {
+    open,
+    onclose,
+    id,
+    caller,
+    callee,
+    setCallee,
+    call,
+    isDeclineCall,
+    idLastMsg,
+  } = props;
   const classes = useStyles();
   const [isRecieve, setIsRecieve] = useState(false);
   const [otherend, setOtherend] = useState(
     call.callerType === "Voice call" ? false : true
   );
   const peerConnection = new RTCPeerConnection(servers);
-  // const dataChannel = peerConnection.createDataChannel(id);
   const [dataChannel, setDataChannel] = useState();
   const localVideo = useRef(null);
   const remoteVideo = useRef(null);
+
+  useEffect(() => {
+    if (isDeclineCall === false) {
+      onclose();
+    }
+    return () => {};
+  }, [isDeclineCall]);
 
   async function answerTheCall() {
     if (open) {
@@ -38,6 +56,9 @@ function CalleeDialogue(props) {
       remoteVideo.current.srcObject = remoteStream;
 
       handleSetCallType(localStream, callee, dataChannel);
+
+      // send 'isDeclineCall: true' to caller
+      await handleAcceptCall(idLastMsg, true);
 
       await createAnswer(
         peerConnection,
@@ -82,7 +103,7 @@ function CalleeDialogue(props) {
           remoteVideo={remoteVideo}
           call={callee}
           user={caller}
-          otherend={isRecieve ? otherend : !otherend}
+          otherend={otherend}
         />
       )}
       <div className={classes.details}>
@@ -102,16 +123,18 @@ function CalleeDialogue(props) {
         >
           <CallRounded fontSize="large" />
         </IconButton>
-        <IconButton
-          onClick={() => handleSwitchCallType()}
-          className={classes.videocamIcon}
-        >
-          {callee.type === "video" ? (
-            <VideocamRounded fontSize="large" />
-          ) : (
-            <VideocamOffRounded fontSize="large" />
-          )}
-        </IconButton>
+        {isRecieve ? (
+          <IconButton
+            onClick={() => handleSwitchCallType()}
+            className={classes.videocamIcon}
+          >
+            {callee.type === "video" ? (
+              <VideocamRounded fontSize="large" />
+            ) : (
+              <VideocamOffRounded fontSize="large" />
+            )}
+          </IconButton>
+        ) : null}
       </div>
     </Dialog>
   );

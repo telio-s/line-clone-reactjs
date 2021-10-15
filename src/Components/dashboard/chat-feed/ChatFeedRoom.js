@@ -1,14 +1,5 @@
 import React, { useEffect, useState, useRef } from "react";
-import {
-  HashRouter as Router,
-  Route,
-  Link,
-  useHistory,
-  Switch,
-  useRouteMatch,
-  useParams,
-  useLocation,
-} from "react-router-dom";
+import { useRouteMatch, useParams } from "react-router-dom";
 import {
   AppBar,
   Toolbar,
@@ -17,16 +8,7 @@ import {
   Divider,
   InputBase,
 } from "@material-ui/core";
-import { Auth, Hub } from "aws-amplify";
-import { getUserById } from "../../../api/queries";
-import {
-  EventNote,
-  MoreVert,
-  Attachment,
-  CallRounded,
-  VideocamRounded,
-} from "@material-ui/icons";
-import { getGroupById } from "../../../api/queries";
+import { Attachment, CallRounded } from "@material-ui/icons";
 import MyMessageBubble from "./MyMessageBubble";
 import TheirMessageBubble from "./TheirMessageBubble";
 import { createMessageInGroup } from "../../../api/mutations";
@@ -34,12 +16,14 @@ import { setLocalTimeZone } from "../../../service/Localtime";
 import { handleCallMenu } from "../../../utils/chat-room/utils";
 import CallMenu from "../../Menu/CallMenu";
 import { scrollToBottom } from "../../../service/ScrollView";
-import { uploadFiles } from "./../../../utils/sending-media/utils";
+import {
+  setImagesLocation,
+  uploadFiles,
+} from "./../../../utils/sending-media/utils";
 import useStyles from "../../../Style/ChatFeedRoomStyle";
 
 const ChatFeedRoom = (props) => {
-  const { myUser, chat, setChat, dummy, selection, setMyUser, setCaller } =
-    props;
+  const { myUser, chat, dummy, selection, setCaller, setParamsId } = props;
   const classes = useStyles();
   const idGroup = useParams();
   const [currentMsg, setCurrentMsg] = useState();
@@ -47,19 +31,13 @@ const ChatFeedRoom = (props) => {
   const [filesUpload, setFilesUpload] = useState([]);
   const hiddenUploadBtn = useRef(null);
   const [anchorEl, setAnchorEl] = useState(null);
-  const location = useLocation();
   const match = useRouteMatch();
-  useEffect(() => {
-    checkUserCurrent();
 
+  useEffect(async () => {
     if (dummy.current) {
       scrollToBottom(dummy);
     }
-
-    if (!chat) {
-      console.log("no chat");
-      fetch(match.params.idGroup);
-    }
+    setParamsId(match.params.idGroup);
 
     return () => {};
   }, []);
@@ -74,59 +52,24 @@ const ChatFeedRoom = (props) => {
         isBlock: false,
         hasRead: false,
         isCall: false,
+        messageReceiverId: chat.theirUser.id,
       };
-      if (filesUpload.length) {
-        console.log(filesUpload);
-        setImgs([]);
-        const responses = await uploadFiles(filesUpload);
-        console.log(responses);
-        message = { ...message, media: responses };
-      }
+      setImgs([]);
+      const locations = setImagesLocation(filesUpload);
+      message = { ...message, media: locations };
       const msg = await createMessageInGroup(message);
       const time = setLocalTimeZone(msg.createdAt);
+      const responses = await uploadFiles(filesUpload);
+
       setCurrentMsg("");
       setFilesUpload([]);
     }
   };
 
-  const checkUserCurrent = async () => {
-    // Get id by checking user current auth
-    const auth = await Auth.currentAuthenticatedUser();
-    console.log(auth);
-    const id = auth.attributes.sub;
-
-    // Get User by id
-    try {
-      const userById = await getUserById(id);
-      setMyUser(userById);
-    } catch (err) {
-      console.log(err);
-    }
-  };
-
-  const fetch = async (id) => {
-    console.log(id);
-    const group = await getGroupById(id);
-    // console.log(group);
-    // console.log(group.messages.items.length);
-    setChat({
-      idGroup: group.id,
-      name: group.name,
-      sender: "",
-      content: "",
-      time: "",
-      ISOtime: group.createdAt,
-      theirUser: group.messages.items[group.messages.items.length - 1].user,
-      messages: group.messages.items,
-    });
-  };
-
   function handleSelectedFiles(e) {
     const files = e.target.files;
-    console.log(files);
     // setFilesUpload(files);
     for (let i = 0; i < files.length; i++) {
-      console.log(files[i]);
       setFilesUpload((prevFiles) => [...prevFiles, files[i]]);
       const _img = URL.createObjectURL(files[i]);
       setImgs((prevImgs) => [...prevImgs, _img]);
@@ -134,7 +77,6 @@ const ChatFeedRoom = (props) => {
   }
 
   function handleTriggerUploadPhoto() {
-    console.log("trigger hidden btn");
     hiddenUploadBtn.current.click();
   }
 
@@ -142,9 +84,6 @@ const ChatFeedRoom = (props) => {
     <div
       className={selection === "chats" ? classes.root : classes.rootNoAppbar}
     >
-      {/* {console.log(location.pathname, match)} */}
-      {/* {chat ? fetch(match.params.idGroup) : console.log(chat, "no have chat")} */}
-      {console.log("chat", chat)}
       {chat && myUser && (
         <>
           <AppBar elevation={0} position="static" className={classes.appbar}>
@@ -155,17 +94,11 @@ const ChatFeedRoom = (props) => {
               >
                 {chat.theirUser.displayName}
               </Typography>
-              <IconButton className={classes.iconButton}>
-                <EventNote className={classes.iconSection} />
-              </IconButton>
               <IconButton
                 className={classes.iconButton}
                 onClick={(e) => handleCallMenu(e, anchorEl, setAnchorEl)}
               >
                 <CallRounded className={classes.iconSection} />
-              </IconButton>
-              <IconButton className={classes.iconButton}>
-                <MoreVert className={classes.iconSection} />
               </IconButton>
               {anchorEl && (
                 <CallMenu
@@ -174,6 +107,7 @@ const ChatFeedRoom = (props) => {
                   user={myUser}
                   onclose={() => handleCallMenu(null, anchorEl, setAnchorEl)}
                   anchorEl={anchorEl}
+                  theirUser={chat.theirUser}
                 />
               )}
             </Toolbar>
@@ -185,8 +119,7 @@ const ChatFeedRoom = (props) => {
                 : classes.chatfeedNoAppbar
             }
           >
-            {console.log(myUser)}
-            {chat
+            {chat && chat.messages
               ? chat.messages.map((message, index) =>
                   message.user.id === myUser.id ? (
                     <MyMessageBubble key={index} message={message} />
@@ -209,7 +142,7 @@ const ChatFeedRoom = (props) => {
       )}
       <form className={classes.textArea}>
         <InputBase
-          placeholder={!imgs ? "Enter a message" : ""}
+          placeholder={imgs.length ? "" : "Enter a message"}
           fullWidth
           multiline
           rowsMin={1}

@@ -10,6 +10,7 @@ import { CallRounded, VideocamRounded } from "@material-ui/icons";
 import { getImg } from "../../utils/profile/utils";
 import { handleCall } from "./../../utils/chat-room/utils";
 import { useStyles } from "../../Style/profile-style/profile-dialogue";
+import no_cover from "./../../assets/imgs/white_cover.jpeg";
 
 function FriendProfileDialogue(props) {
   const { open, onclose, friend, setCaller, idGroup, user } = props;
@@ -18,19 +19,16 @@ function FriendProfileDialogue(props) {
   const [img, setImg] = useState(null);
 
   function handleFullPreview(e) {
-    console.log(e.target.src);
     setFullPreview(!fullPreview);
     if (!fullPreview) setImg(e.target.src);
   }
-  console.log(friend);
 
   return (
     <Dialog open={open} onClose={onclose}>
       <div style={{ width: "300px", height: "400px" }}>
         <>
-          {console.log(friend)}
           <img
-            src={friend.coverPhoto ? getImg(friend, "cover") : ""}
+            src={friend.coverPhoto ? getImg(friend, "cover") : no_cover}
             onClick={(e) => handleFullPreview(e)}
             className={classes.coverPhoto}
           />
@@ -55,7 +53,6 @@ function FriendProfileDialogue(props) {
           <div style={{ display: "flex" }}>
             <IconButton
               onClick={() => {
-                console.log("audio call");
                 handleCall("audio", setCaller, idGroup, user);
               }}
               style={{ color: "rgb(56,62,80)" }}
@@ -64,7 +61,6 @@ function FriendProfileDialogue(props) {
             </IconButton>
             <IconButton
               onClick={() => {
-                console.log("video call");
                 handleCall("video", setCaller, idGroup, user);
               }}
               style={{ color: "rgb(56,62,80)" }}
@@ -76,6 +72,7 @@ function FriendProfileDialogue(props) {
         <Dialog open={fullPreview} onClose={handleFullPreview}>
           <img
             src={img}
+            alt="friend media full view"
             style={{ objectFit: "cover", width: "500px", height: "500px" }}
           />
         </Dialog>

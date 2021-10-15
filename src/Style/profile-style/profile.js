@@ -9,12 +9,12 @@ const useStyles = makeStyles((theme) => ({
     overflowY: "auto",
     // overflow: "hidden",
     height: `calc(99vh)`,
-    marginLeft: "80px",
+    marginLeft: "5%",
     minWidth: "400px",
   },
   imgSize: {
-    width: theme.spacing(7),
-    height: theme.spacing(7),
+    width: "50px",
+    height: "50px",
   },
   profileContainer: {
     paddingTop: "5px",

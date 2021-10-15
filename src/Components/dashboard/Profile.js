@@ -16,7 +16,7 @@ import FriendProfileDialogue from "../Dialogue/FriendProfileDialogue";
 const Profile = (props) => {
   const { match, user, setUser, friendList, setChat, setCaller } = props;
   const classes = useStyles();
-  const [showFriends, setShowFriends] = useState(false);
+  const [showFriends, setShowFriends] = useState(true);
   const [showProfile, setShowProfile] = useState(false);
   const [showFriendProfile, setShowFriendProfile] = useState(false);
   const [friend, setFriend] = useState(null);
@@ -35,8 +35,6 @@ const Profile = (props) => {
 
   return (
     <div className={classes.root}>
-      {console.log(friendList)}
-      {console.log(user)}
       {user && (
         <>
           <ListItem button onClick={() => handleProfile()}>
@@ -72,9 +70,8 @@ const Profile = (props) => {
             >
               {friendList.map((frind, index) => {
                 const their = frind.group.users.items.find(
-                  (obj) => obj.user.displayName !== user.displayName
+                  (obj) => obj.user.username !== user.username
                 );
-                console.log(their);
                 return (
                   <Link
                     key={index}
@@ -85,11 +82,11 @@ const Profile = (props) => {
                       className={classes.friendList}
                       onClick={() => {
                         const chat = friendList.find((obj) => {
-                          return obj.group.id == frind.group.id;
+                          return obj.group.id === frind.group.id;
                         });
 
                         const theirUser = frind.group.users.items.find(
-                          (obj) => obj.user.displayName !== user.displayName
+                          (obj) => obj.user.username !== user.username
                         );
                         setChat({
                           idGroup: chat.group.id,
@@ -99,7 +96,7 @@ const Profile = (props) => {
                           time: "",
                           ISOtime: "",
                           theirUser: theirUser.user,
-                          messages: chat.group.messages.items,
+                          messages: chat.group.messages,
                           unread: 0,
                         });
                       }}
@@ -126,6 +123,7 @@ const Profile = (props) => {
                           noWrap={false}
                           gutterBottom
                           className={classes.multiLineEllipsis}
+                          style={{ fontSize: "12px" }}
                         >
                           {their.user.statusMessage}
                         </Typography>
@@ -142,8 +140,6 @@ const Profile = (props) => {
             user={user}
             setUser={setUser}
           />
-          {console.log(friend)}
-          {/* {friend && console.log(friend.friend)}
           {friend && (
             <FriendProfileDialogue
               open={showFriendProfile}
@@ -153,7 +149,7 @@ const Profile = (props) => {
               idGroup={friend.groupId}
               user={user}
             />
-          )} */}
+          )}
         </>
       )}
     </div>

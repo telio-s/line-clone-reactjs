@@ -10,9 +10,8 @@ import {
   InputAdornment,
   IconButton,
   Avatar,
-  Button,
 } from "@material-ui/core";
-import { SearchOutlined, AccountCircle } from "@material-ui/icons";
+import { SearchOutlined } from "@material-ui/icons";
 import {
   addFriend,
   findFriendByUsername,
@@ -24,7 +23,7 @@ import { Link } from "react-router-dom";
 import { getImg } from "../../utils/profile/utils";
 
 function AddFriendDialogue(props) {
-  const { user, onClose, isOpen, match, chatRoom, setChat } = props;
+  const { user, onClose, isOpen, match, setChat, setFriendList } = props;
   const classes = useStyles();
   const [friend, setFriend] = useState(null);
   const [isFound, setIsFound] = useState(false);
@@ -50,24 +49,20 @@ function AddFriendDialogue(props) {
 
   async function findFriend(e) {
     setAdded(false);
-    console.log(user);
-    console.log(e.target.value);
-    console.log(true & true & true);
     setFriend(null);
     const data = await findFriendByUsername(
       e.target.value,
-      user.friends.items,
+      user.groups.items,
       user
     );
-    console.log(data);
     if (typeof data === "string") {
-      const index = data.split("-")[2];
+      const indexs = data.split("-");
+      const indexG = indexs[2];
+      const indexF = indexs[3];
       setIsFound(false);
-      console.log(user.friends.items[index]);
-      setFriend(user.friends.items[index]);
+      setFriend(user.groups.items[indexG].group.users.items[indexF].user);
       const [groupId, groupName, messages] = getGroupId(user, e.target.value);
       setGroup({ ...group, id: groupId, name: groupName, messages });
-      console.log(user.friends.items[index]);
       return;
     }
     if (!data) {
@@ -81,7 +76,7 @@ function AddFriendDialogue(props) {
   }
 
   async function handleAddFriend() {
-    const [success, groupID, groupName] = await addFriend(
+    const [success, group] = await addFriend(
       user.id,
       friend.id,
       user.username,
@@ -89,19 +84,29 @@ function AddFriendDialogue(props) {
     );
     if (success) {
       setAdded(true);
-      setGroup({ ...group, id: groupID, name: groupName });
-      console.log("friend added groupid: ", groupID);
+      setGroup({ ...group, id: group.id, name: group.name });
+      setFriendList((prevState) => [
+        ...prevState,
+        {
+          createdAt: group.createdAt,
+          updatedAt: group.updatedAt,
+          id: "",
+          group: {
+            id: group.id,
+            isDirect: group.isDirect,
+            messages: group.messages,
+            name: group.name,
+            users: {
+              items: [{ user: friend }],
+            },
+          },
+        },
+      ]);
     }
   }
 
-  function goToChat(type) {
-    console.log("go to chat feed");
-    if (type === "new-friend") {
-      setChatRoom(setChat, group, friend.friend, type);
-      handleCloseDialogue();
-      return;
-    }
-    setChatRoom(setChat, group, friend.friend, type);
+  async function goToChat() {
+    await setChatRoom(setChat, group, friend);
     handleCloseDialogue();
   }
 
@@ -124,7 +129,7 @@ function AddFriendDialogue(props) {
               onKeyDown={(e) => enterFindFriend(e)}
               fullWidth
               className={classes.searchInput}
-              placeholder="Search for chats and messages"
+              placeholder="Enter your friend's ID"
               startAdornment={
                 <InputAdornment position="start" variant="filled">
                   <IconButton
@@ -165,12 +170,12 @@ function AddFriendDialogue(props) {
                       style={{ height: "30px" }}
                       disabled={false}
                       onClick={() => {
-                        goToChat("new-friend");
+                        goToChat();
                       }}
                     >
                       <Link
                         to={`${match.url}/${group.id}`}
-                        style={{ textDecoration: "none" }}
+                        style={{ textDecoration: "none", color: "white" }}
                       >
                         chat
                       </Link>
@@ -199,21 +204,19 @@ function AddFriendDialogue(props) {
                 group && (
                   <>
                     <Avatar
-                      src={
-                        friend.friend.profilePhoto &&
-                        getImg(friend.friend, "profile")
-                      }
+                      src={friend.profilePhoto && getImg(friend, "profile")}
                       style={{ width: "90px", height: "90px" }}
                     />
-                    <h3>{friend.friend.displayName}</h3>
+                    <h3>{friend.displayName}</h3>
                     <Typography style={{ color: "rgb(109,118,134)" }}>
                       This user is already your friend.
                     </Typography>
                     <LineButton
+                      id="alreadychatBtn"
                       style={{ height: "30px" }}
                       disabled={false}
                       onClick={() => {
-                        goToChat("already-friend");
+                        goToChat();
                       }}
                     >
                       <Link

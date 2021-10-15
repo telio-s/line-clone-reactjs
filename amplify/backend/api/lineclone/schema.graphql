@@ -21,16 +21,9 @@ type User
   coverPhoto: S3Object
   phoneNumber: String
   groups: [UserGroups] @connection(name: "UserGroups")
-  # friends: [UserFriends] @connection(name: "UserFriends")
-  friends: [UserFriends] @connection(keyName: "byUser", fields: ["id"])
   blocked: [User]
   favourites: [User]
-  posts: [Post] @connection(keyName: "UserPosts")
 }
-
-# type FriendUser @model @connection(name: "FriendUser") {
-#   user: User @connection(name: )
-# }
 
 type Group @model {
   id: ID!
@@ -40,28 +33,12 @@ type Group @model {
   isDirect: Boolean!
   announce: [Message] @connection(name: "GroupUsers")
   files: S3Object
-  albums: [Album]
 }
 
 type UserGroups @model(queries: null) {
   id: ID!
   user: User @connection(name: "UserGroups")
   group: Group @connection(name: "GroupUsers")
-  # isPending: Boolean!
-}
-
-type UserFriends
-  @model(queries: null)
-  @key(name: "byUser", fields: ["userId", "friendId"]) {
-  id: ID!
-  # user: User @connection(name: "UserFriends")
-  # friendUser: FriendUser @connection(name: "FriendUser")
-  userId: ID
-  friendId: ID
-  user: User @connection(fields: ["userId"])
-  friend: User @connection(fields: ["friendId"])
-  # isFriend: Boolean!
-  displayName: String
 }
 
 type Message
@@ -81,30 +58,8 @@ type Message
   isBlock: Boolean!
   hasRead: Boolean
   isCall: Boolean
-}
-
-type Post @model {
-  id: ID!
-  name: String!
-  description: String
-  comments: [Comment] @connection(keyName: "PostComments")
-  likes: [Like] @connection(keyName: "PostLikes")
-}
-
-type Comment @model {
-  id: ID!
-  comment: String!
-}
-
-type Like @model {
-  id: ID!
-  emoji: S3Object
-}
-
-type Album @model {
-  id: ID!
-  albumName: String
-  file: S3Object
+  isDeclineCall: Boolean
+  receiver: User @connection
 }
 
 type S3Object {
@@ -115,4 +70,6 @@ type S3Object {
 
 type Subscription {
   newOnCreateMessage: Message @aws_subscribe(mutations: ["createMessage"])
+  newOnUpdateMessage: Message @aws_subscribe(mutations: ["updateMessage"])
+  newOnUpdateUser: User @aws_subscribe(mutations: ["updateUser"])
 }

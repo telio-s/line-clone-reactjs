@@ -3,22 +3,31 @@ import {
   createUserstoGroup,
   createFriends,
 } from "./../../api/mutations";
-import { getUserByUsername } from "./../../api/queries";
+import {
+  getMessagesByDate,
+  getUserById,
+  getUserByUsername,
+} from "./../../api/queries";
 
-export async function findFriendByUsername(username, friends, myUser) {
+export async function findFriendByUsername(username, groups, myUser) {
   let isFriend = false;
-  let index = null;
+  let indexG = null;
+  let indexF = null;
   if (myUser.username === username) {
     return;
   }
-  for (let i = 0; i < friends.length; i++) {
-    if (friends[i].friend.username === username) {
-      isFriend = true;
-      index = i;
-      break;
+  for (let i = 0; i < groups.length; i++) {
+    const users = groups[i].group.users.items;
+    for (let j = 0; j < users.length; j++) {
+      if (users[j].user.username === username) {
+        isFriend = true;
+        indexG = i;
+        indexF = j;
+        break;
+      }
     }
   }
-  if (isFriend) return `already-friend-${index}`;
+  if (isFriend) return `already-friend-${indexG}-${indexF}`;
   const user = await getUserByUsername(username);
   return user;
 }
@@ -28,17 +37,11 @@ export function getGroupId(user, friendUserName) {
   let groupName = null;
   let messages = [];
   const groups = user.groups.items;
-  console.log(groups);
-  console.log(friendUserName);
   for (let i = 0; i < groups.length; i++) {
-    console.log("loop one ");
     if (groups[i].group.isDirect) {
-      console.log("isDirect");
       const usersIngroup = groups[i].group.users.items;
-      console.log(usersIngroup);
       for (let j = 0; j < usersIngroup.length; j++) {
         if (usersIngroup[j].user.username === friendUserName) {
-          console.log("get group id");
           groupId = groups[i].group.id;
           groupName = groups[i].group.name;
           messages = groups[i].group.messages.items;
@@ -51,31 +54,17 @@ export function getGroupId(user, friendUserName) {
   return [groupId, groupName, messages];
 }
 
-// assume it success
 export async function addFriend(userId, friendId, userName, friendName) {
-  const success = await createFriends(userId, friendId);
+  // const success = await createFriends(userId, friendId);
   const group = await createNewGroup(`${userName}${friendName}`, true);
   const gu = await createUserstoGroup(group.id, userId);
   const gf = await createUserstoGroup(group.id, friendId);
-  const messages = group.messages.items;
-  return [success & gu & gf, group.id, `${userName}${friendName}`, messages];
+  return [gu & gf, group];
 }
 
-export function setChatRoom(setChat, group, friend, type) {
-  if (type === "new-friend") {
-    setChat({
-      idGroup: group.id,
-      name: group.name,
-      sender: "",
-      content: "",
-      time: "",
-      ISOtime: "",
-      theirUser: friend,
-      messages: [],
-      unread: 0,
-    });
-    return;
-  }
+export async function setChatRoom(setChat, group, friend) {
+  const messages = await getMessagesByDate(group.id);
+  console.log(messages);
   setChat({
     idGroup: group.id,
     name: group.name,
@@ -84,7 +73,7 @@ export function setChatRoom(setChat, group, friend, type) {
     time: "",
     ISOtime: "",
     theirUser: friend,
-    messages: group.messages,
+    messages: messages.items,
     unread: 0,
   });
 }

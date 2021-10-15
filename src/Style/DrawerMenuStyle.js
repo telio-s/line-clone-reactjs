@@ -1,44 +1,33 @@
 import React from "react";
 import { makeStyles } from "@material-ui/styles";
 
-const drawerWidth = "80px";
+const drawerWidth = "5%";
 const appbarHeight = 64;
 
 const useStyles = makeStyles((theme) => ({
   drawer: {},
   drawerPaper: {
     width: drawerWidth,
-    background: "#1f2b45",
+    background: "rgb(32,42,67)",
   },
   iconMtDrawer: {
-    color: "#4e5870",
-    fontSize: "140%",
-    "&:focus": {
-      color: "#ffffff",
-      backgroundColor: "transparent",
-    },
-    "&:hover": {
-      backgroundColor: "transparent",
-    },
+    fontSize: "130%",
   },
   iconAweDrawer: {
-    color: "#4e5870",
-    fontSize: "120%",
-    "&:focus": {
-      color: "#ffffff",
-      backgroundColor: "transparent",
-    },
-    "&:hover": {
-      backgroundColor: "transparent",
-    },
+    fontSize: "110%",
   },
   drawerIconBottom: {
     marginTop: "auto",
-    marginLeft: "10px",
+    alignSelf: "center",
   },
   iconButton: {
+    color: "#4e5870",
+    "&:focus": {
+      color: "#ffffff",
+      backgroundColor: "transparent",
+    },
     "&:hover": {
-      color: "transparent",
+      color: "#ffffff",
       backgroundColor: "transparent",
     },
     marginBottom: "5px",
@@ -52,7 +41,7 @@ const useStyles = makeStyles((theme) => ({
     display: "flex",
     margin: "auto",
     position: "absolute",
-    left: "50px",
+    left: "30px",
     top: "10px",
   },
   noti: {

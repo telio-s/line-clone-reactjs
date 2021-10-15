@@ -18,6 +18,7 @@ function ConfirmRegisterDialogue(props) {
       <div className={classes.dialog} style={{ width: "300px" }}>
         <InputBase
           className={classes.confirmInput}
+          style={{ fontSize: form.authCode.length ? "40px" : "20px" }}
           placeholder="Confirmation code"
           name="authCode"
           type="text"

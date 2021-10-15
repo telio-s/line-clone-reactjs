@@ -1,27 +1,36 @@
-import { createMessageInGroup } from "../../api/mutations";
+import {
+  createMessageInGroup,
+  updateMessageAcceptCall,
+} from "../../api/mutations";
 
-export async function handleCall(type, setCaller, idGroup, user) {
-  console.log(type);
+export async function handleCall(type, setCaller, idGroup, user, theirUser) {
   setCaller({ type });
   const message = {
     type: idGroup,
-    message: "Calling",
+    message: type === "audio" ? "Voice call" : "Video call",
     messageUserId: user.id,
     messageGroupId: idGroup,
     isBlock: false,
+    hasRead: false,
     isCall: true,
+    isDeclineCall: true,
+    messageReceiverId: theirUser.id,
   };
-  console.log("create message#1 ", message);
   await createMessageInGroup(message);
 }
+
+export async function handleAcceptCall(id, isDeclineCall) {
+  const data = await updateMessageAcceptCall(id, isDeclineCall);
+}
+
 export function handleCallerDialogue(setCaller, setCall) {
-  setCall({ isCall: false, caller: null });
+  setCall({ isCall: false, caller: null, callerType: "Voice call" });
   setCaller({ type: "audio" });
 }
 
 export function handleCalleeDialogue(setCallee, setCall) {
-  setCall({ isCall: false, caller: null });
-  setCallee({ itype: "audio" });
+  setCall({ isCall: false, caller: null, callerType: "Voice call" });
+  setCallee({ type: "audio" });
 }
 
 export function handleCallMenu(e, anchorEl, setAnchorEl) {

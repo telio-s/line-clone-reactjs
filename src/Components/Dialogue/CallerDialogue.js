@@ -14,38 +14,40 @@ import {
 } from "../../utils/calling/utils";
 import { servers } from "../../utils/calling/stun-servers";
 import CallingContent from "./DialogueContent/CallingContent";
+import { handleAcceptCall } from "../../utils/chat-room/utils";
 import useStyles from "./../../Style/calling-content";
 
 function CallerDialogue(props) {
-  const { open, onclose, id, callee, caller, setCaller } = props;
+  const { open, onclose, id, callee, caller, setCaller, idLastMsg } = props;
   const [otherend, setOtherend] = useState(false);
   const classes = useStyles();
   const peerConnection = new RTCPeerConnection(servers);
   const [dataChannel, setDataChannel] = useState(null);
   const localVideo = useRef(null);
   const remoteVideo = useRef(null);
-  console.log("caller dialogue ID: ", id);
 
   useEffect(async () => {
-    console.log("id group: ", id);
-    if (open) {
-      const [localStream, remoteStream] = await openMediaDevices();
-      localVideo.current.srcObject = localStream;
-      remoteVideo.current.srcObject = remoteStream;
+    async function setup() {
+      if (open) {
+        const [localStream, remoteStream] = await openMediaDevices();
+        localVideo.current.srcObject = localStream;
+        remoteVideo.current.srcObject = remoteStream;
 
-      handleSetCallType(localStream, caller, dataChannel);
+        handleSetCallType(localStream, caller, dataChannel);
 
-      await createCall(
-        peerConnection,
-        localStream,
-        remoteStream,
-        id,
-        onclose,
-        setOtherend,
-        setDataChannel
-      );
-      return;
+        await createCall(
+          peerConnection,
+          localStream,
+          remoteStream,
+          id,
+          onclose,
+          setOtherend,
+          setDataChannel
+        );
+        return;
+      }
     }
+    setup();
   }, []);
 
   async function hangupthecall() {
@@ -56,6 +58,9 @@ function CallerDialogue(props) {
       id,
       onclose
     );
+
+    // send 'isDeclineCall: true' to callee
+    await handleAcceptCall(idLastMsg, false);
   }
   function handleSwitchCallType() {
     switchCallType(

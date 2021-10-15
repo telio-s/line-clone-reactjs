@@ -12,7 +12,6 @@ const MyMessageBubble = (props) => {
   const [open, setOpen] = useState(false);
 
   useEffect(() => {
-    console.log("my-message bubble");
     function getMedia() {
       message.media &&
         message.media.map((media) => {
@@ -39,7 +38,7 @@ const MyMessageBubble = (props) => {
       )}
       {!isEmpty(message.media) && (
         <Typography
-          className={classes.bubble}
+          className={classes.bubble_pics}
           style={{ backgroundColor: "transparent" }}
           name="nomessage"
         >
