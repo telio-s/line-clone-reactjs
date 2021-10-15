@@ -13,7 +13,7 @@ import MyMessageBubble from "./MyMessageBubble";
 import TheirMessageBubble from "./TheirMessageBubble";
 import { createMessageInGroup } from "../../../api/mutations";
 import { setLocalTimeZone } from "../../../service/Localtime";
-import { handleCallMenu } from "../../../utils/chat-room/utils";
+import { handleCallMenu, isEmpty } from "../../../utils/chat-room/utils";
 import CallMenu from "../../Menu/CallMenu";
 import { scrollToBottom } from "../../../service/ScrollView";
 import {
@@ -44,6 +44,10 @@ const ChatFeedRoom = (props) => {
 
   const handleSendMessage = async (e) => {
     if (e.keyCode === 13) {
+      if (isEmpty(currentMsg)) {
+        setCurrentMsg("");
+        return;
+      }
       let message = {
         type: idGroup.idGroup,
         message: currentMsg,

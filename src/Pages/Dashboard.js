@@ -193,6 +193,32 @@ function reducerUser(state, action) {
             : obj
         )
       );
+      const theirObj = {
+        coverPhoto: action.payload.coverPhoto,
+        displayName: action.payload.displayName,
+        id: action.payload.id,
+        profilePhoto: action.payload.profilePhoto,
+        statusMessage: action.payload.statusMessage,
+        username: action.payload.username,
+      };
+      state[0].setChatList(
+        state[0].chatList.map((chat) =>
+          chat.idGroup === theirUser
+            ? {
+                ...chat,
+                theirUser: theirObj,
+              }
+            : chat
+        )
+      );
+      if (state[0].chat) {
+        if (state[0].chat.idGroup === theirUser) {
+          state[0].setChat((prevState) => ({
+            ...prevState,
+            theirUser: theirObj,
+          }));
+        }
+      }
   }
 }
 
@@ -283,6 +309,10 @@ const Dashboard = ({ match }) => {
         friendList: friendList,
         setFriendList: setFriendList,
         user: myUser,
+        setChatList,
+        chatList,
+        chat,
+        setChat,
       },
     });
 
