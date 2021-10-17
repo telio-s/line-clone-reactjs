@@ -44,7 +44,7 @@ const ChatFeedRoom = (props) => {
 
   const handleSendMessage = async (e) => {
     if (e.keyCode === 13) {
-      if (isEmpty(currentMsg)) {
+      if (isEmpty(currentMsg) && isEmpty(imgs)) {
         setCurrentMsg("");
         return;
       }
