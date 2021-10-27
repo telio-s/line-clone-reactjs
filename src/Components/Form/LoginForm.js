@@ -35,6 +35,7 @@ function LoginForm(props) {
           <InputBase
             className={classes.textField}
             name="email"
+            id="email-login"
             fullWidth
             placeholder="Email address"
             onChange={(e) => {
@@ -49,6 +50,7 @@ function LoginForm(props) {
           <InputBase
             className={classes.textField}
             name="password"
+            id="password-login"
             fullWidth
             placeholder="Password"
             type={show ? "text" : "password"}
@@ -77,6 +79,7 @@ function LoginForm(props) {
 
         <LineButton
           fullWidth
+          id="login"
           disabled={form.email === "" || form.password === "" ? true : false}
           onClick={() => signin(form, setForm, setErrMes, history)}
         >

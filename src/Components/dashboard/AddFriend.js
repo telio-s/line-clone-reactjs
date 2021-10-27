@@ -18,6 +18,7 @@ function AddFriend(props) {
       <Button
         disableRipple={true}
         className={classes.feature}
+        id="searchfriend"
         onClick={() => handleAddFriendDialogue()}
       >
         <PersonAdd className={classes.icon} />
