@@ -69,8 +69,9 @@ function ProfileDialogue(props) {
               <CameraAltOutlined fontSize="small" />
             </IconButton>
             <img
-              src={user.coverPhoto ? getImg(user, "cover") : ""}
-              alt="cover"
+              src={
+                user.coverPhoto ? getImg(user, "cover") : "/white_cover.jpeg"
+              }
               onClick={(e) => handleFullPreview(e)}
               className={classes.coverPhoto}
             />
@@ -111,7 +112,6 @@ function ProfileDialogue(props) {
         <Dialog open={fullPreview} onClose={handleFullPreview}>
           <img
             src={img}
-            alt="full view"
             style={{ objectFit: "cover", width: "500px", height: "500px" }}
           />
         </Dialog>

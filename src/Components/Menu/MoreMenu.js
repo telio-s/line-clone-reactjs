@@ -35,6 +35,7 @@ function MoreMenu(props) {
       >
         <MenuItem
           onClick={() => Auth.signOut()}
+          id="logout"
           style={{
             fontSize: "15px",
             height: "20px",

@@ -58,6 +58,7 @@ const DrawerMenu = (props) => {
         <IconButton
           disableRipple={true}
           className={classes.iconButton}
+          id="addfriend"
           onClick={() => {
             setSelection("addfriends");
           }}
@@ -70,6 +71,7 @@ const DrawerMenu = (props) => {
             disableRipple={true}
             className={classes.iconButton}
             onClick={(e) => handleMoreIconClick(e)}
+            id="menu"
           >
             <MoreHoriz className={classes.iconMtDrawer} />
           </IconButton>

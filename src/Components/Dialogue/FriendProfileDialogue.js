@@ -10,7 +10,6 @@ import { CallRounded, VideocamRounded } from "@material-ui/icons";
 import { getImg } from "../../utils/profile/utils";
 import { handleCall } from "./../../utils/chat-room/utils";
 import { useStyles } from "../../Style/profile-style/profile-dialogue";
-import no_cover from "./../../assets/imgs/white_cover.jpeg";
 
 function FriendProfileDialogue(props) {
   const { open, onclose, friend, setCaller, idGroup, user } = props;
@@ -28,7 +27,9 @@ function FriendProfileDialogue(props) {
       <div style={{ width: "300px", height: "400px" }}>
         <>
           <img
-            src={friend.coverPhoto ? getImg(friend, "cover") : no_cover}
+            src={
+              friend.coverPhoto ? getImg(friend, "cover") : "/white_cover.jpeg"
+            }
             onClick={(e) => handleFullPreview(e)}
             className={classes.coverPhoto}
           />
@@ -72,7 +73,6 @@ function FriendProfileDialogue(props) {
         <Dialog open={fullPreview} onClose={handleFullPreview}>
           <img
             src={img}
-            alt="friend media full view"
             style={{ objectFit: "cover", width: "500px", height: "500px" }}
           />
         </Dialog>
