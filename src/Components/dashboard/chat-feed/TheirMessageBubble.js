@@ -37,15 +37,9 @@ const TheirMessageBubble = (props) => {
   function handleProfileDialogue() {
     setOpenProfile(!openProfile);
   }
-<<<<<<< HEAD
-  // console.log(user);
+
   return (
     <div className={classes.root}>
-      {/* {console.log(user)} */}
-=======
-  return (
-    <div className={classes.root}>
->>>>>>> efea1875000213347109ffbad87426c5904e5895
       <Avatar
         src={user.profilePhoto ? getImg(user, "profile") : ""}
         style={{ width: "40px", height: "40px", marginLeft: "10px" }}

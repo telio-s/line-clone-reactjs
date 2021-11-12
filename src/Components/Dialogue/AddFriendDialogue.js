@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import LineButton from "../../Style/line-button";
 import {
   Dialog,
@@ -10,6 +10,7 @@ import {
   InputAdornment,
   IconButton,
   Avatar,
+  Button,
 } from "@material-ui/core";
 import { SearchOutlined } from "@material-ui/icons";
 import {
@@ -30,6 +31,7 @@ function AddFriendDialogue(props) {
   const [mes, setMes] = useState(null);
   const [added, setAdded] = useState(false);
   const [group, setGroup] = useState({});
+  const [search, setSearch] = useState(null);
 
   function handleCloseDialogue() {
     // for clear all information
@@ -41,27 +43,24 @@ function AddFriendDialogue(props) {
   }
 
   function enterFindFriend(e) {
+    console.log(e.target.value);
     if (e.keyCode === 13) {
       setFriend(null);
-      findFriend(e);
+      findFriend(e.target.value);
     }
   }
 
-  async function findFriend(e) {
+  async function findFriend(username) {
     setAdded(false);
     setFriend(null);
-    const data = await findFriendByUsername(
-      e.target.value,
-      user.groups.items,
-      user
-    );
+    const data = await findFriendByUsername(username, user.groups.items, user);
     if (typeof data === "string") {
       const indexs = data.split("-");
       const indexG = indexs[2];
       const indexF = indexs[3];
       setIsFound(false);
       setFriend(user.groups.items[indexG].group.users.items[indexF].user);
-      const [groupId, groupName, messages] = getGroupId(user, e.target.value);
+      const [groupId, groupName, messages] = getGroupId(user, username);
       setGroup({ ...group, id: groupId, name: groupName, messages });
       return;
     }
@@ -107,7 +106,7 @@ function AddFriendDialogue(props) {
 
   async function goToChat() {
     await setChatRoom(setChat, group, friend);
-    handleCloseDialogue();
+    // handleCloseDialogue();
   }
 
   return (
@@ -129,12 +128,13 @@ function AddFriendDialogue(props) {
               onKeyDown={(e) => enterFindFriend(e)}
               fullWidth
               id="friendusername"
+              onChange={(e) => setSearch(e.target.value)}
               className={classes.searchInput}
               placeholder="Enter your friend's ID"
               startAdornment={
                 <InputAdornment position="start" variant="filled">
                   <IconButton
-                    onClick={(e) => findFriend(e)}
+                    onClick={() => findFriend(search)}
                     className={classes.iconBtn}
                   >
                     <SearchOutlined className={classes.iconSearch} />
@@ -234,6 +234,17 @@ function AddFriendDialogue(props) {
               )}
             </Grid>
           )}
+          <div>
+            <Button
+              id="close-addfriend-dialogue"
+              onClick={() => handleCloseDialogue()}
+            >
+              Close Dialogue
+            </Button>
+            <Button id="search-friend" onClick={() => findFriend(search)}>
+              Search
+            </Button>
+          </div>
         </Box>
       </div>
     </Dialog>
