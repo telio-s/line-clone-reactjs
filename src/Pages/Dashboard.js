@@ -106,7 +106,6 @@ function reducer(state, action) {
               } else {
                 theirUser = action.payload.user;
               }
-              console.log(theirUser);
               state[0].setChatList((preState) => [
                 ...preState,
                 {
