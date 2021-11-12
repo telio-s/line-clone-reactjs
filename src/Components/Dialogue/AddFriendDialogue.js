@@ -128,6 +128,7 @@ function AddFriendDialogue(props) {
             <InputBase
               onKeyDown={(e) => enterFindFriend(e)}
               fullWidth
+              id="friendusername"
               className={classes.searchInput}
               placeholder="Enter your friend's ID"
               startAdornment={
@@ -212,7 +213,7 @@ function AddFriendDialogue(props) {
                       This user is already your friend.
                     </Typography>
                     <LineButton
-                      id="alreadychatBtn"
+                      id="alreadyfriend-gotochat"
                       style={{ height: "30px" }}
                       disabled={false}
                       onClick={() => {

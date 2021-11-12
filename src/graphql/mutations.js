@@ -921,6 +921,17 @@ export const createMessage = /* GraphQL */ `
         id
         displayName
         username
+        statusMessage
+        profilePhoto {
+          bucket
+          region
+          key
+        }
+        coverPhoto {
+          bucket
+          region
+          key
+        }
       }
       updatedAt
     }
