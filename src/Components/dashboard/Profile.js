@@ -88,6 +88,7 @@ const Profile = (props) => {
                         const theirUser = frind.group.users.items.find(
                           (obj) => obj.user.username !== user.username
                         );
+                        console.log("nz", chat.group.messages);
                         setChat({
                           idGroup: chat.group.id,
                           name: chat.group.name,
