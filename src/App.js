@@ -22,7 +22,6 @@ function App() {
       <Switch>
         <Route path="/dashboard" component={Dashboard} />
         <Route path="/" component={Authentication} />
-        <Route component={Dashboard} />
       </Switch>
     </Router>
   );

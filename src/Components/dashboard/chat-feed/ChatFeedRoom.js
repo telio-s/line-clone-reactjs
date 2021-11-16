@@ -123,6 +123,27 @@ const ChatFeedRoom = (props) => {
                 : classes.chatfeedNoAppbar
             }
           >
+            {/* {Number.isInteger(load) ? (
+              chat && chat.messages ? (
+                chat.messages.map((message, index) =>
+                  message.user.id === myUser.id ? (
+                    <MyMessageBubble key={index} message={message} />
+                  ) : (
+                    <TheirMessageBubble
+                      key={index}
+                      message={message}
+                      user={chat.theirUser}
+                      setCaller={setCaller}
+                      idGroup={idGroup.idGroup}
+                      myUser={myUser}
+                    />
+                  )
+                )
+              ) : null
+            ) : (
+              <h1> Tong Ton Tonmg</h1>
+            )} */}
+            {console.log("telios", chat)}
             {chat && chat.messages
               ? chat.messages.map((message, index) =>
                   message.user.id === myUser.id ? (
