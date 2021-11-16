@@ -12,6 +12,7 @@ import ProfileDialogue from "../Dialogue/ProfileDialogue";
 import { getImg } from "../../utils/profile/utils";
 import useStyles from "../../Style/profile-style/profile";
 import FriendProfileDialogue from "../Dialogue/FriendProfileDialogue";
+import { getMessagesByDate } from "../../api/queries";
 
 const Profile = (props) => {
   const { match, user, setUser, friendList, setChat, setCaller } = props;
@@ -31,6 +32,30 @@ const Profile = (props) => {
 
   function handleFriendProfile() {
     setShowFriendProfile(!showFriendProfile);
+  }
+
+  async function testMessages(friendList, frind) {
+    const chat = friendList.find((obj) => {
+      return obj.group.id === frind.group.id;
+    });
+
+    const theirUser = frind.group.users.items.find(
+      (obj) => obj.user.username !== user.username
+    );
+
+    const messages = await getMessagesByDate(frind.group.id);
+    console.log("nz", messages.items);
+    setChat({
+      idGroup: chat.group.id,
+      name: chat.group.name,
+      sender: "",
+      content: "",
+      time: "",
+      ISOtime: "",
+      theirUser: theirUser.user,
+      messages: messages.items,
+      unread: 0,
+    });
   }
 
   return (
@@ -80,27 +105,7 @@ const Profile = (props) => {
                   >
                     <Button
                       className={classes.friendList}
-                      onClick={() => {
-                        const chat = friendList.find((obj) => {
-                          return obj.group.id === frind.group.id;
-                        });
-
-                        const theirUser = frind.group.users.items.find(
-                          (obj) => obj.user.username !== user.username
-                        );
-                        console.log("nz", chat.group.messages);
-                        setChat({
-                          idGroup: chat.group.id,
-                          name: chat.group.name,
-                          sender: "",
-                          content: "",
-                          time: "",
-                          ISOtime: "",
-                          theirUser: theirUser.user,
-                          messages: chat.group.messages,
-                          unread: 0,
-                        });
-                      }}
+                      onClick={() => testMessages(friendList, frind)}
                     >
                       <Avatar
                         src={
