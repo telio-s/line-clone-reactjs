@@ -145,7 +145,7 @@ const ChatFeedRoom = (props) => {
             )} */}
             {console.log("telios", chat)}
             {chat && chat.messages
-              ? chat.messages.items.map((message, index) =>
+              ? chat.messages.map((message, index) =>
                   message.user.id === myUser.id ? (
                     <MyMessageBubble key={index} message={message} />
                   ) : (
