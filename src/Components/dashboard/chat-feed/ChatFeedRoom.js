@@ -143,7 +143,7 @@ const ChatFeedRoom = (props) => {
             ) : (
               <h1> Tong Ton Tonmg</h1>
             )} */}
-            {console.log("telios", chat)}
+            {console.log("telios347", chat)}
             {chat && chat.messages
               ? chat.messages.map((message, index) =>
                   message.user.id === myUser.id ? (
