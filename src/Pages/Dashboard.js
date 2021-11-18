@@ -413,6 +413,7 @@ const Dashboard = ({ match }) => {
     const fetchFriendList = myUser.groups.items.filter((obj) => {
       return obj.group.isDirect === true;
     });
+    console.log("fetchinDash", fetchFriendList);
     setFriendList(fetchFriendList);
     if (myUser.groups.items.length === 0) {
       setCountNoti(noti);
