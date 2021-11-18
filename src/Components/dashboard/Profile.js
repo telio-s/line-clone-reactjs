@@ -35,6 +35,15 @@ const Profile = (props) => {
   }
 
   async function testMessages(friendList, frind) {
+    console.log(
+      "lantao",
+      "match:",
+      match,
+      "user",
+      user,
+      "friendList",
+      friendList
+    );
     const chat = friendList.find((obj) => {
       return obj.group.id === frind.group.id;
     });
