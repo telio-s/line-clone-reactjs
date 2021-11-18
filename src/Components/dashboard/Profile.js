@@ -69,6 +69,9 @@ const Profile = (props) => {
 
   return (
     <div className={classes.root}>
+      {console.log("profile page on JSX")}
+      {console.log("friendList", friendList[0])}
+      {console.log("userx", user)}
       {user && (
         <>
           <ListItem button onClick={() => handleProfile()}>
