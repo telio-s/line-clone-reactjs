@@ -34,7 +34,7 @@ const ChatFeedRoom = (props) => {
   const match = useRouteMatch();
 
   useEffect(async () => {
-    console.log("tong tong", myUser, chat, selection);
+    console.log("tong tong", myUser, chat);
     if (dummy.current) {
       scrollToBottom(dummy);
     }
@@ -144,7 +144,7 @@ const ChatFeedRoom = (props) => {
             ) : (
               <h1> Tong Ton Tonmg</h1>
             )} */}
-            {console.log("telios347", myUser, chat, selection)}
+            {console.log("telios347", myUser, chat)}
             {chat && chat.messages
               ? chat.messages.map((message, index) =>
                   message.user.id === myUser.id ? (

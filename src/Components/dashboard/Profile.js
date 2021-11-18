@@ -70,105 +70,111 @@ const Profile = (props) => {
   return (
     <div className={classes.root}>
       {console.log("profile page on JSX")}
-      {console.log("friendList", friendList[0])}
-      {console.log("userx", user)}
-      {user && (
-        <>
-          <ListItem button onClick={() => handleProfile()}>
-            <div className={classes.profileContainer}>
-              <Avatar
-                src={user.profilePhoto ? getImg(user, "profile") : ""}
-                className={classes.imgSize}
-                style={{ marginRight: "20px" }}
-              />
-              <div>
-                <h4 style={{ margin: "0px" }}>{user.displayName}</h4>
-                <Typography style={{ fontSize: "14px", color: "grey" }}>
-                  {user.statusMessage}
-                </Typography>
+      {console.log("friendList 1", friendList)}
+      {console.log("userx 1", user)}
+      {user && friendList ? (
+        user && (
+          <>
+            {console.log("friendList 2", friendList)}
+            {console.log("userx 2", user)}
+            <ListItem button onClick={() => handleProfile()}>
+              <div className={classes.profileContainer}>
+                <Avatar
+                  src={user.profilePhoto ? getImg(user, "profile") : ""}
+                  className={classes.imgSize}
+                  style={{ marginRight: "20px" }}
+                />
+                <div>
+                  <h4 style={{ margin: "0px" }}>{user.displayName}</h4>
+                  <Typography style={{ fontSize: "14px", color: "grey" }}>
+                    {user.statusMessage}
+                  </Typography>
+                </div>
               </div>
-            </div>
-          </ListItem>
-          <ListItem
-            button
-            onClick={() => handleShowFriends()}
-            style={{ color: "rgb(83,86,106)" }}
-          >
-            Friends
-            <div style={{ marginLeft: "auto" }}>
-              {showFriends ? <ExpandMore /> : <ExpandLess />}
-            </div>
-          </ListItem>
-          <Collapse in={showFriends} timeout="auto" unmountOnExit>
-            <div
-              style={{
-                display: showFriends ? "" : "none",
-              }}
+            </ListItem>
+            <ListItem
+              button
+              onClick={() => handleShowFriends()}
+              style={{ color: "rgb(83,86,106)" }}
             >
-              {friendList.map((frind, index) => {
-                const their = frind.group.users.items.find(
-                  (obj) => obj.user.username !== user.username
-                );
-                return (
-                  <Link
-                    key={index}
-                    to={`${match.url}/${frind.group.id}`}
-                    style={{ textDecoration: "none", color: "#000000" }}
-                  >
-                    <Button
-                      className={classes.friendList}
-                      onClick={() => testMessages(friendList, frind)}
+              Friends
+              <div style={{ marginLeft: "auto" }}>
+                {showFriends ? <ExpandMore /> : <ExpandLess />}
+              </div>
+            </ListItem>
+            <Collapse in={showFriends} timeout="auto" unmountOnExit>
+              <div
+                style={{
+                  display: showFriends ? "" : "none",
+                }}
+              >
+                {friendList.map((frind, index) => {
+                  const their = frind.group.users.items.find(
+                    (obj) => obj.user.username !== user.username
+                  );
+                  return (
+                    <Link
+                      key={index}
+                      to={`${match.url}/${frind.group.id}`}
+                      style={{ textDecoration: "none", color: "#000000" }}
                     >
-                      <Avatar
-                        src={
-                          their.user.profilePhoto &&
-                          getImg(their.user, "profile")
-                        }
-                        style={{ width: "50px", height: "50px" }}
-                        onClick={() => {
-                          setFriend({
-                            friend: their.user,
-                            groupId: frind.group.id,
-                          });
-                          handleFriendProfile();
-                        }}
-                      />
-                      <div className={classes.listBox}>
-                        <Typography style={{ fontWeight: "bold" }}>
-                          {their.user.displayName}
-                        </Typography>
-                        <Typography
-                          noWrap={false}
-                          gutterBottom
-                          className={classes.multiLineEllipsis}
-                          style={{ fontSize: "12px" }}
-                        >
-                          {their.user.statusMessage}
-                        </Typography>
-                      </div>
-                    </Button>
-                  </Link>
-                );
-              })}
-            </div>
-          </Collapse>
-          <ProfileDialogue
-            isOpen={showProfile}
-            onClose={handleProfile}
-            user={user}
-            setUser={setUser}
-          />
-          {friend && (
-            <FriendProfileDialogue
-              open={showFriendProfile}
-              onclose={handleFriendProfile}
-              friend={friend.friend}
-              setCaller={setCaller}
-              idGroup={friend.groupId}
+                      <Button
+                        className={classes.friendList}
+                        onClick={() => testMessages(friendList, frind)}
+                      >
+                        <Avatar
+                          src={
+                            their.user.profilePhoto &&
+                            getImg(their.user, "profile")
+                          }
+                          style={{ width: "50px", height: "50px" }}
+                          onClick={() => {
+                            setFriend({
+                              friend: their.user,
+                              groupId: frind.group.id,
+                            });
+                            handleFriendProfile();
+                          }}
+                        />
+                        <div className={classes.listBox}>
+                          <Typography style={{ fontWeight: "bold" }}>
+                            {their.user.displayName}
+                          </Typography>
+                          <Typography
+                            noWrap={false}
+                            gutterBottom
+                            className={classes.multiLineEllipsis}
+                            style={{ fontSize: "12px" }}
+                          >
+                            {their.user.statusMessage}
+                          </Typography>
+                        </div>
+                      </Button>
+                    </Link>
+                  );
+                })}
+              </div>
+            </Collapse>
+            <ProfileDialogue
+              isOpen={showProfile}
+              onClose={handleProfile}
               user={user}
+              setUser={setUser}
             />
-          )}
-        </>
+            {friend && (
+              <FriendProfileDialogue
+                open={showFriendProfile}
+                onclose={handleFriendProfile}
+                friend={friend.friend}
+                setCaller={setCaller}
+                idGroup={friend.groupId}
+                user={user}
+              />
+            )}
+          </>
+        )
+      ) : (
+        <h1>No infomationnnnnnnnnnnnnnnnnnnnnnnnnnnn</h1>
       )}
     </div>
   );
