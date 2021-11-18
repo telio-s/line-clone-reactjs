@@ -1,4 +1,5 @@
 import React, { useEffect, useState, useRef } from "react";
+import LoadingLogo from "../../../Spinner-1s-200px.gif";
 import { useRouteMatch, useParams } from "react-router-dom";
 import {
   AppBar,
@@ -89,82 +90,76 @@ const ChatFeedRoom = (props) => {
     <div
       className={selection === "chats" ? classes.root : classes.rootNoAppbar}
     >
-      {chat && myUser && (
-        <>
-          <AppBar elevation={0} position="static" className={classes.appbar}>
-            <Toolbar className={classes.Toolbar}>
-              <Typography
-                className={classes.nameChat}
-                style={{ flexGrow: 1, textAlign: "left" }}
-              >
-                {chat.theirUser.displayName}
-              </Typography>
-              <IconButton
-                className={classes.iconButton}
-                onClick={(e) => handleCallMenu(e, anchorEl, setAnchorEl)}
-              >
-                <CallRounded className={classes.iconSection} />
-              </IconButton>
-              {anchorEl && (
-                <CallMenu
-                  setCaller={setCaller}
-                  idGroup={idGroup.idGroup}
-                  user={myUser}
-                  onclose={() => handleCallMenu(null, anchorEl, setAnchorEl)}
-                  anchorEl={anchorEl}
-                  theirUser={chat.theirUser}
-                />
-              )}
-            </Toolbar>
-          </AppBar>
-          <div
-            className={
-              selection === "chats"
-                ? classes.chatfeed
-                : classes.chatfeedNoAppbar
-            }
-          >
-            {/* {Number.isInteger(load) ? (
-              chat && chat.messages ? (
-                chat.messages.map((message, index) =>
-                  message.user.id === myUser.id ? (
-                    <MyMessageBubble key={index} message={message} />
-                  ) : (
-                    <TheirMessageBubble
-                      key={index}
-                      message={message}
-                      user={chat.theirUser}
-                      setCaller={setCaller}
-                      idGroup={idGroup.idGroup}
-                      myUser={myUser}
-                    />
+      {chat && myUser ? (
+        chat &&
+        myUser && (
+          <>
+            <AppBar elevation={0} position="static" className={classes.appbar}>
+              <Toolbar className={classes.Toolbar}>
+                <Typography
+                  className={classes.nameChat}
+                  style={{ flexGrow: 1, textAlign: "left" }}
+                >
+                  {chat.theirUser.displayName}
+                </Typography>
+                <IconButton
+                  className={classes.iconButton}
+                  onClick={(e) => handleCallMenu(e, anchorEl, setAnchorEl)}
+                >
+                  <CallRounded className={classes.iconSection} />
+                </IconButton>
+                {anchorEl && (
+                  <CallMenu
+                    setCaller={setCaller}
+                    idGroup={idGroup.idGroup}
+                    user={myUser}
+                    onclose={() => handleCallMenu(null, anchorEl, setAnchorEl)}
+                    anchorEl={anchorEl}
+                    theirUser={chat.theirUser}
+                  />
+                )}
+              </Toolbar>
+            </AppBar>
+            <div
+              className={
+                selection === "chats"
+                  ? classes.chatfeed
+                  : classes.chatfeedNoAppbar
+              }
+            >
+              {console.log("telios347", myUser, chat)}
+              {chat && chat.messages
+                ? chat.messages.map((message, index) =>
+                    message.user.id === myUser.id ? (
+                      <MyMessageBubble key={index} message={message} />
+                    ) : (
+                      <TheirMessageBubble
+                        key={index}
+                        message={message}
+                        user={chat.theirUser}
+                        setCaller={setCaller}
+                        idGroup={idGroup.idGroup}
+                        myUser={myUser}
+                      />
+                    )
                   )
-                )
-              ) : null
-            ) : (
-              <h1> Tong Ton Tonmg</h1>
-            )} */}
-            {console.log("telios347", myUser, chat)}
-            {chat && chat.messages
-              ? chat.messages.map((message, index) =>
-                  message.user.id === myUser.id ? (
-                    <MyMessageBubble key={index} message={message} />
-                  ) : (
-                    <TheirMessageBubble
-                      key={index}
-                      message={message}
-                      user={chat.theirUser}
-                      setCaller={setCaller}
-                      idGroup={idGroup.idGroup}
-                      myUser={myUser}
-                    />
-                  )
-                )
-              : null}
-            <div ref={dummy} />
-          </div>
-          <Divider />
-        </>
+                : null}
+              <div ref={dummy} />
+            </div>
+            <Divider />
+          </>
+        )
+      ) : (
+        <div
+          style={{
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            height: "100%",
+          }}
+        >
+          <img src={LoadingLogo}></img>
+        </div>
       )}
       <form className={classes.textArea}>
         <InputBase

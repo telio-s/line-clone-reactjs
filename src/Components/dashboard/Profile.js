@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import LoadingLogo from "../../Spinner-1s-200px.gif";
 import {
   Avatar,
   ListItem,
@@ -174,18 +175,15 @@ const Profile = (props) => {
           </>
         )
       ) : (
-        <div class="divLoader">
-          <svg width="5em" height="5em" style={{ paddingLeft: "20px" }}>
-            <circle
-              cx="50"
-              cy="50"
-              fill="none"
-              stroke="#215d38"
-              stroke-width="10"
-              r="35"
-              stroke-dasharray="164.93361431346415 56.97787143782138"
-            ></circle>
-          </svg>
+        <div
+          style={{
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            height: "100%",
+          }}
+        >
+          <img src={LoadingLogo}></img>
         </div>
       )}
     </div>
