@@ -36,15 +36,15 @@ const Profile = (props) => {
   }
 
   async function testMessages(friendList, frind) {
-    console.log(
-      "|lantao",
-      "match:",
-      match,
-      "user",
-      user,
-      "friendList",
-      friendList
-    );
+    // console.log(
+    //   "|lantao",
+    //   "match:",
+    //   match,
+    //   "user",
+    //   user,
+    //   "friendList",
+    //   friendList
+    // );
     const chat = friendList.find((obj) => {
       return obj.group.id === frind.group.id;
     });
@@ -71,14 +71,14 @@ const Profile = (props) => {
 
   return (
     <div className={classes.root}>
-      {console.log("|profile page on JSX")}
+      {/* {console.log("|profile page on JSX")}
       {console.log("|friendList 1", friendList)}
-      {console.log("|userx 1", user)}
+      {console.log("|userx 1", user)} */}
       {user && friendList ? (
         user && (
           <>
-            {console.log("|friendList 2", friendList)}
-            {console.log("|userx 2", user)}
+            {/* {console.log("|friendList 2", friendList)}
+            {console.log("|userx 2", user)} */}
             <ListItem button onClick={() => handleProfile()}>
               <div className={classes.profileContainer}>
                 <Avatar

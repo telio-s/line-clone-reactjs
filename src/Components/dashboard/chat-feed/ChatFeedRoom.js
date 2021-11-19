@@ -128,20 +128,20 @@ const ChatFeedRoom = (props) => {
                   : classes.chatfeedNoAppbar
               }
             >
-              {console.log(
+              {/* {console.log(
                 "|telios1",
                 chat.idGroup,
                 "|telios2",
                 chat.theirUser
-              )}
+              )} */}
               {chat && chat.messages
                 ? chat.messages.map((message, index) =>
                     message.user.id === myUser.id ? (
                       <>
                         <MyMessageBubble key={index} message={message} />
-                        {console.log(index)}
+                        {/* {console.log(index)}
                         {console.log(message)}
-                        {console.log(message.user)}
+                        {console.log(message.user)} */}
                       </>
                     ) : (
                       <TheirMessageBubble
