@@ -132,14 +132,17 @@ const ChatFeedRoom = (props) => {
                 "|telios1",
                 chat.idGroup,
                 "|telios2",
-                chat.theirUser,
-                "|telios3",
-                chat.messages[0]
+                chat.theirUser
               )}
               {chat && chat.messages
                 ? chat.messages.map((message, index) =>
                     message.user.id === myUser.id ? (
-                      <MyMessageBubble key={index} message={message} />
+                      <>
+                        <MyMessageBubble key={index} message={message} />
+                        {console.log(index)}
+                        {console.log(message)}
+                        {console.log(message.user)}
+                      </>
                     ) : (
                       <TheirMessageBubble
                         key={index}
