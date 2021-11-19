@@ -158,6 +158,7 @@ const ChatFeedRoom = (props) => {
             height: "100%",
           }}
         >
+          {console.log("chatfeed loading")}
           <img src={LoadingLogo}></img>
         </div>
       )}

@@ -452,8 +452,10 @@ const Dashboard = ({ match }) => {
             idLastMsg:
               fetchAllMessage.items[fetchAllMessage.items.length - 1].id,
           };
-
+          console.log("fetch dash board");
           if (group.group.id === paramsId) {
+            console.log("params in dash");
+            console.log("chat in dash", newChatInfo);
             setChat(newChatInfo);
           }
           setChatList((previouschat) => [...previouschat, newChatInfo]);
