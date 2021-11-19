@@ -121,6 +121,7 @@ const Profile = (props) => {
                     >
                       <Button
                         className={classes.friendList}
+                        id={frind.group.id}
                         onClick={() => testMessages(friendList, frind)}
                       >
                         <Avatar
