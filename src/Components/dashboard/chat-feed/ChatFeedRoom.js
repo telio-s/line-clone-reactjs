@@ -35,10 +35,11 @@ const ChatFeedRoom = (props) => {
   const match = useRouteMatch();
 
   useEffect(async () => {
-    console.log("tong tong", myUser, chat);
+    console.log("|tong tong", myUser, chat);
     if (dummy.current) {
       scrollToBottom(dummy);
     }
+    console.log(match.params.idGroup);
     setParamsId(match.params.idGroup);
 
     return () => {};
@@ -127,7 +128,14 @@ const ChatFeedRoom = (props) => {
                   : classes.chatfeedNoAppbar
               }
             >
-              {console.log("telios347", myUser, chat)}
+              {console.log(
+                "|telios1",
+                chat.idGroup,
+                "|telios2",
+                chat.theirUser,
+                "|telios3",
+                chat.messages[0]
+              )}
               {chat && chat.messages
                 ? chat.messages.map((message, index) =>
                     message.user.id === myUser.id ? (

@@ -37,7 +37,7 @@ const Profile = (props) => {
 
   async function testMessages(friendList, frind) {
     console.log(
-      "lantao",
+      "|lantao",
       "match:",
       match,
       "user",
@@ -54,7 +54,7 @@ const Profile = (props) => {
     );
 
     const messages = await getMessagesByDate(frind.group.id);
-    console.log("nz", messages.items);
+    console.log("|nz", messages.items);
     setChat({
       idGroup: chat.group.id,
       name: chat.group.name,
@@ -66,18 +66,19 @@ const Profile = (props) => {
       messages: messages.items,
       unread: 0,
     });
+    console.log("|setchat profile");
   }
 
   return (
     <div className={classes.root}>
-      {console.log("profile page on JSX")}
-      {console.log("friendList 1", friendList)}
-      {console.log("userx 1", user)}
+      {console.log("|profile page on JSX")}
+      {console.log("|friendList 1", friendList)}
+      {console.log("|userx 1", user)}
       {user && friendList ? (
         user && (
           <>
-            {console.log("friendList 2", friendList)}
-            {console.log("userx 2", user)}
+            {console.log("|friendList 2", friendList)}
+            {console.log("|userx 2", user)}
             <ListItem button onClick={() => handleProfile()}>
               <div className={classes.profileContainer}>
                 <Avatar
