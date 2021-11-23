@@ -6,7 +6,19 @@ import reportWebVitals from "./reportWebVitals";
 import * as serviceWorkerRegistration from "./serviceWorkerRegistration";
 import Amplify from "aws-amplify";
 import config from "./aws-exports";
+import AWS from "aws-sdk";
 Amplify.configure(config);
+console.log("nize tao");
+AWS.config.maxRetries = 20;
+AWS.events.on("retry", function (resp) {
+  console.log("nize", resp);
+  // Enable or disable retries completely.
+  // disabling is equivalent to setting maxRetries to 0.
+  if (resp.error) resp.error.retryable = true;
+
+  // retry all requests with a 2sec delay (if they are retryable)
+  if (resp.error) resp.error.retryDelay = 2000;
+});
 
 debugger;
 
