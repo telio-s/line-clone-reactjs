@@ -29,8 +29,10 @@ import firebase from "../firebase";
 function reducer(state, action) {
   switch (action.type) {
     case "set":
+      console.log("state x", action.payload.user);
       return [action.payload];
     case "add":
+      console.log("add x", state);
       if (state) {
         if (
           state[0].user.id === action.payload.receiver.id ||
