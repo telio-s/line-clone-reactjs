@@ -33,7 +33,7 @@ function reducer(state, action) {
       // console.log("state x", action.payload.user);
       return [action.payload];
     case "add":
-      // console.log("add x", state);
+      console.log("add x", state);
       if (state) {
         if (
           state[0].user.id === action.payload.receiver.id ||
