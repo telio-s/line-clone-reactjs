@@ -61,10 +61,10 @@ const Profile = (props) => {
         messages = await getMessagesByDate(frind.group.id);
 
         if (messages) break;
-        await sleep(200 * 2 ** i);
-        i++;
       } catch (err) {
         console.log(err);
+        await sleep(800 * 2 ** i);
+        i++;
       }
     }
     // console.log("|nz", messages.items);

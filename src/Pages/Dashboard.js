@@ -398,7 +398,7 @@ const Dashboard = ({ match }) => {
     let i = 1;
     let userById;
     // console.log("hh");
-    while (true) {
+    for (let j = 0; j < 10; j++) {
       try {
         userById = await getUserById(id);
 
@@ -408,11 +408,11 @@ const Dashboard = ({ match }) => {
           setUser(userById);
           break;
         }
-        // console.log(i);
-        await sleep(200 * 2 ** i);
-        i++;
+        console.log(i);
       } catch (err) {
-        // console.log(err.message);
+        console.log(err);
+        await sleep(800 * 2 ** i);
+        i++;
       }
     }
 
