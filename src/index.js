@@ -9,7 +9,7 @@ import config from "./aws-exports";
 Amplify.configure(config);
 console.log("tong tao");
 
-debugger;
+// debugger;
 
 ReactDOM.render(
   <React.StrictMode>

@@ -394,17 +394,32 @@ const Dashboard = ({ match }) => {
       return;
     }
     const id = auth.attributes.sub;
-
-    // Get User by id
-    try {
-      const userById = await getUserById(id);
-      setMyUser(userById);
-
-      console.log(userById);
-      setUser(userById);
-    } catch (err) {
-      console.log(err);
+    let i = 0;
+    let userById;
+    while (true) {
+      try {
+        console.log("try");
+        userById = await getUserById(id);
+        setMyUser(userById);
+        setUser(userById);
+        console.log("output", userById);
+        console.log("success");
+        if (userById) break;
+      } catch (err) {
+        console.log(err.message);
+      }
     }
+
+    //Get User by id
+    // try {
+    //   const userById = await getUserById(id);
+    //   setMyUser(userById);
+
+    //   console.log(userById);
+    //   setUser(userById);
+    // } catch (err) {
+    //   console.log(err);
+    // }
   };
 
   const fetchChatList = async () => {
