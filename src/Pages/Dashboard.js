@@ -34,6 +34,7 @@ function reducer(state, action) {
       return [action.payload];
     case "add":
       console.log("add x", state);
+      console.log("add y", action.payload);
       if (state) {
         if (
           state[0].user.id === action.payload.receiver.id ||
@@ -396,36 +397,36 @@ const Dashboard = ({ match }) => {
     }
     const id = auth.attributes.sub;
     let i = 1;
-    let userById;
+    // let userById;
     // console.log("hh");
-    for (let j = 0; j < 10; j++) {
-      try {
-        userById = await getUserById(id);
+    // for (let j = 0; j < 10; j++) {
+    //   try {
+    //     userById = await getUserById(id);
 
-        if (userById) {
-          console.log(userById);
-          setMyUser(userById);
-          setUser(userById);
-          break;
-        }
-        console.log(i);
-      } catch (err) {
-        console.log(err);
-        await sleep(800 * 2 ** i);
-        i++;
-      }
-    }
+    //     if (userById) {
+    //       console.log(userById);
+    //       setMyUser(userById);
+    //       setUser(userById);
+    //       break;
+    //     }
+    //     console.log(i);
+    //   } catch (err) {
+    //     console.log(err);
+    //     await sleep(800 * 2 ** i);
+    //     i++;
+    //   }
+    // }
 
     //Get User by id
-    // try {
-    //   const userById = await getUserById(id);
-    //   setMyUser(userById);
+    try {
+      const userById = await getUserById(id);
+      setMyUser(userById);
 
-    //   console.log(userById);
-    //   setUser(userById);
-    // } catch (err) {
-    //   console.log(err);
-    // }
+      console.log(userById);
+      setUser(userById);
+    } catch (err) {
+      console.log(err);
+    }
   };
 
   const fetchChatList = async () => {

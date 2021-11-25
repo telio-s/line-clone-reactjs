@@ -53,20 +53,20 @@ const Profile = (props) => {
     const theirUser = frind.group.users.items.find(
       (obj) => obj.user.username !== user.username
     );
-    let messages;
+    // let messages;
     let i = 1;
-    // const messages = await getMessagesByDate(frind.group.id);
-    while (true) {
-      try {
-        messages = await getMessagesByDate(frind.group.id);
+    const messages = await getMessagesByDate(frind.group.id);
+    // while (true) {
+    //   try {
+    //     messages = await getMessagesByDate(frind.group.id);
 
-        if (messages) break;
-      } catch (err) {
-        console.log(err);
-        await sleep(800 * 2 ** i);
-        i++;
-      }
-    }
+    //     if (messages) break;
+    //   } catch (err) {
+    //     console.log(err);
+    //     await sleep(800 * 2 ** i);
+    //     i++;
+    //   }
+    // }
     // console.log("|nz", messages.items);
     setChat({
       idGroup: chat.group.id,
