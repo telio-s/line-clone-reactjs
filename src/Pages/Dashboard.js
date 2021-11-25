@@ -29,10 +29,10 @@ import firebase from "../firebase";
 function reducer(state, action) {
   switch (action.type) {
     case "set":
-      console.log("state x", action.payload.user);
+      // console.log("state x", action.payload.user);
       return [action.payload];
     case "add":
-      console.log("add x", state);
+      // console.log("add x", state);
       if (state) {
         if (
           state[0].user.id === action.payload.receiver.id ||
@@ -92,7 +92,7 @@ function reducer(state, action) {
                     : flist
                 )
               );
-              console.log(state[0].friendList);
+              // console.log(state[0].friendList);
             }
           }
 
@@ -398,12 +398,12 @@ const Dashboard = ({ match }) => {
     let userById;
     while (true) {
       try {
-        console.log("try");
+        // console.log("try");
         userById = await getUserById(id);
         setMyUser(userById);
         setUser(userById);
-        console.log("output", userById);
-        console.log("success");
+        // console.log("output", userById);
+        // console.log("success");
         if (userById) break;
       } catch (err) {
         console.log(err.message);
@@ -430,7 +430,7 @@ const Dashboard = ({ match }) => {
     const fetchFriendList = myUser.groups.items.filter((obj) => {
       return obj.group.isDirect === true;
     });
-    console.log("fetchinDash", fetchFriendList);
+    // console.log("fetchinDash", fetchFriendList);
     setFriendList(fetchFriendList);
     if (myUser.groups.items.length === 0) {
       setCountNoti(noti);
@@ -469,11 +469,11 @@ const Dashboard = ({ match }) => {
             idLastMsg:
               fetchAllMessage.items[fetchAllMessage.items.length - 1].id,
           };
-          console.log("|fetch dash board");
+          // console.log("|fetch dash board");
           if (group.group.id === paramsId) {
-            console.log("|params in dash");
+            // console.log("|params in dash");
             setChat(newChatInfo);
-            console.log("|setchat dashboard", newChatInfo);
+            // console.log("|setchat dashboard", newChatInfo);
           }
           setChatList((previouschat) => [...previouschat, newChatInfo]);
           setCountNoti(noti);

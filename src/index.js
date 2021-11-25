@@ -7,7 +7,7 @@ import * as serviceWorkerRegistration from "./serviceWorkerRegistration";
 import Amplify from "aws-amplify";
 import config from "./aws-exports";
 Amplify.configure(config);
-console.log("tong tao");
+// console.log("tong tao");
 
 // debugger;
 

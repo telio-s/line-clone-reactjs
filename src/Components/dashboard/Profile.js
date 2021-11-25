@@ -54,7 +54,7 @@ const Profile = (props) => {
     );
 
     const messages = await getMessagesByDate(frind.group.id);
-    console.log("|nz", messages.items);
+    // console.log("|nz", messages.items);
     setChat({
       idGroup: chat.group.id,
       name: chat.group.name,
@@ -66,7 +66,7 @@ const Profile = (props) => {
       messages: messages.items,
       unread: 0,
     });
-    console.log("|setchat profile");
+    // console.log("|setchat profile");
   }
 
   return (

@@ -43,7 +43,7 @@ function AddFriendDialogue(props) {
   }
 
   function enterFindFriend(e) {
-    console.log(e.target.value);
+    // console.log(e.target.value);
     if (e.keyCode === 13) {
       setFriend(null);
       findFriend(e.target.value);

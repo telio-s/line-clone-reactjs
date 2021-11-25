@@ -81,7 +81,7 @@ const TheirMessageBubble = (props) => {
           />
         </div>
       </Dialog>
-      {console.log(user)}
+      {/* {console.log(user)} */}
       <FriendProfileDialogue
         open={openProfile}
         onclose={handleProfileDialogue}

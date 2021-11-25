@@ -64,7 +64,7 @@ export async function addFriend(userId, friendId, userName, friendName) {
 
 export async function setChatRoom(setChat, group, friend) {
   const messages = await getMessagesByDate(group.id);
-  console.log(messages);
+  // console.log(messages);
   setChat({
     idGroup: group.id,
     name: group.name,

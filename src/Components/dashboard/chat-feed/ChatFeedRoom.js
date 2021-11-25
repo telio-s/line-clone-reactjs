@@ -35,11 +35,11 @@ const ChatFeedRoom = (props) => {
   const match = useRouteMatch();
 
   useEffect(async () => {
-    console.log("|tong tong", myUser, chat);
+    // console.log("|tong tong", myUser, chat);
     if (dummy.current) {
       scrollToBottom(dummy);
     }
-    console.log(match.params.idGroup);
+    // console.log(match.params.idGroup);
     setParamsId(match.params.idGroup);
 
     return () => {};
@@ -169,7 +169,7 @@ const ChatFeedRoom = (props) => {
             height: "100%",
           }}
         >
-          {console.log("chatfeed loading")}
+          {/* {console.log("chatfeed loading")} */}
           <img src={LoadingLogo}></img>
         </div>
       )}
