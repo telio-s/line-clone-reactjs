@@ -73,7 +73,7 @@ function EditProfileDialogue(props) {
           <div className={classes.container}>
             <Typography style={{ fontSize: "15px" }}>Settings</Typography>
           </div>
-          <Grid container direction="row" xs={12}>
+          <Grid container direction="row">
             <Grid item xs={3} className={classes.gridContainer}>
               <Avatar
                 src={user.profilePhoto ? getImg(user, "profile") : ""}
