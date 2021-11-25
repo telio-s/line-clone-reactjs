@@ -25,6 +25,7 @@ import {
   handleCallerDialogue,
 } from "../utils/chat-room/utils";
 import firebase from "../firebase";
+import { sleep } from "../utils/sending-media/utils";
 
 function reducer(state, action) {
   switch (action.type) {
@@ -394,19 +395,24 @@ const Dashboard = ({ match }) => {
       return;
     }
     const id = auth.attributes.sub;
-    let i = 0;
+    let i = 1;
     let userById;
+    // console.log("hh");
     while (true) {
       try {
-        // console.log("try");
         userById = await getUserById(id);
-        setMyUser(userById);
-        setUser(userById);
-        // console.log("output", userById);
-        // console.log("success");
-        if (userById) break;
+
+        if (userById) {
+          console.log(userById);
+          setMyUser(userById);
+          setUser(userById);
+          break;
+        }
+        // console.log(i);
+        await sleep(200 * 2 ** i);
+        i++;
       } catch (err) {
-        console.log(err.message);
+        // console.log(err.message);
       }
     }
 

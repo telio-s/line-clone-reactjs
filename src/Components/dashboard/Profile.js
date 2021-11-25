@@ -14,6 +14,7 @@ import { getImg } from "../../utils/profile/utils";
 import useStyles from "../../Style/profile-style/profile";
 import FriendProfileDialogue from "../Dialogue/FriendProfileDialogue";
 import { getMessagesByDate } from "../../api/queries";
+import { sleep } from "../../utils/sending-media/utils";
 
 const Profile = (props) => {
   const { match, user, setUser, friendList, setChat, setCaller } = props;
@@ -53,12 +54,15 @@ const Profile = (props) => {
       (obj) => obj.user.username !== user.username
     );
     let messages;
+    let i = 1;
     // const messages = await getMessagesByDate(frind.group.id);
     while (true) {
       try {
         messages = await getMessagesByDate(frind.group.id);
 
         if (messages) break;
+        await sleep(200 * 2 ** i);
+        i++;
       } catch (err) {
         console.log(err);
       }

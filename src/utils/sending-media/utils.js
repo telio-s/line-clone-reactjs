@@ -38,7 +38,8 @@ export async function handleImgError(e, count, photo) {
   e.target.src = photo;
 }
 
-function sleep(ms) {
+export function sleep(ms) {
+  console.log("ms", ms);
   return new Promise((resolve) => setTimeout(resolve, ms));
 }
 
