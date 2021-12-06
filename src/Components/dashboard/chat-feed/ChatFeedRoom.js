@@ -59,6 +59,8 @@ const ChatFeedRoom = (props) => {
         isBlock: false,
         hasRead: false,
         isCall: false,
+        isDeclineCall: null,
+        media: null,
         messageReceiverId: chat.theirUser.id,
       };
       setImgs([]);

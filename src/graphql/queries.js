@@ -23,7 +23,6 @@ export const getUser = /* GraphQL */ `
       phoneNumber
       groups {
         items {
-          id
           group {
             id
             name
@@ -70,8 +69,6 @@ export const getUser = /* GraphQL */ `
               }
             }
           }
-          createdAt
-          updatedAt
         }
         nextToken
       }

@@ -37,7 +37,7 @@ function LoginForm(props) {
             name="email"
             id="email-login"
             fullWidth
-            placeholder="Email address"
+            placeholder="Username"
             onChange={(e) => {
               setErrMes("");
               onChange(e);

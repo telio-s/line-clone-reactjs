@@ -14,6 +14,7 @@ export async function handleCall(type, setCaller, idGroup, user, theirUser) {
     hasRead: false,
     isCall: true,
     isDeclineCall: true,
+    media: null,
     messageReceiverId: theirUser.id,
   };
   await createMessageInGroup(message);

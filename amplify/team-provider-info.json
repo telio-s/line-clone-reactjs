@@ -12,15 +12,14 @@
       "AmplifyAppId": "d2btm0hwj8nguw"
     },
     "categories": {
-      "function": {
-        "lineclone9f180b549f180b54PostConfirmation": {
-          "deploymentBucketName": "amplify-lineclone-dev-152718-deployment",
-          "s3Key": "amplify-builds/lineclone9f180b549f180b54PostConfirmation-3239596d487462756b54-build.zip"
-        }
-      },
       "auth": {
-        "lineclone9f180b549f180b54": {},
-        "userPoolGroups": {}
+        "lineclonef5ad0b78f5ad0b78": {}
+      },
+      "function": {
+        "lineclonef5ad0b78f5ad0b78PostConfirmation": {
+          "deploymentBucketName": "amplify-lineclone-dev-152718-deployment",
+          "s3Key": "amplify-builds/lineclonef5ad0b78f5ad0b78PostConfirmation-48335763583070465765-build.zip"
+        }
       }
     }
   }

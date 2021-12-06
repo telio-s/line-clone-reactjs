@@ -71,6 +71,7 @@ export const updateMessageHasRead = async (id, hasRead) => {
       input: {
         id: id,
         hasRead: hasRead,
+        isDeclineCall: null,
       },
     })
   );
@@ -83,6 +84,7 @@ export async function updateMessageAcceptCall(id, isDeclineCall) {
       input: {
         id: id,
         isDeclineCall: isDeclineCall,
+        hasRead: null,
       },
     })
   );
