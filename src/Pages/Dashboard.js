@@ -330,7 +330,7 @@ const Dashboard = ({ match }) => {
       scrollToBottom(dummy);
     }
     return () => {};
-  }, [chatList, chat, countNoti, friendList]);
+  }, [chatList, chat, countNoti, friendList, myUser]);
 
   useEffect(() => {
     setupSubscriptions();
