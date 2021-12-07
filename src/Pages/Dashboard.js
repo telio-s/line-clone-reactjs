@@ -33,7 +33,7 @@ function reducer(state, action) {
       // console.log("state x", action.payload.user);
       return [action.payload];
     case "add":
-      console.log("add x", state);
+      console.log("add x", state); // null state.user
       console.log("add y", action.payload);
       if (state) {
         if (
@@ -293,21 +293,24 @@ const Dashboard = ({ match }) => {
       return new Date(a.ISOtime).getTime() - new Date(b.ISOtime).getTime();
     });
 
-    dispatch({
-      type: "set",
-      payload: {
-        chatList: chatList,
-        chat: chat,
-        countNoti: countNoti,
-        setChat: setChat,
-        setChatList: setChatList,
-        setCountNoti: setCountNoti,
-        user: myUser,
-        setCall,
-        friendList,
-        setFriendList,
-      },
-    });
+    if (myUser) {
+      dispatch({
+        type: "set",
+        payload: {
+          chatList: chatList,
+          chat: chat,
+          countNoti: countNoti,
+          setChat: setChat,
+          setChatList: setChatList,
+          setCountNoti: setCountNoti,
+          user: myUser,
+          setCall,
+          friendList,
+          setFriendList,
+        },
+      });
+    }
+
     dispatchUser({
       type: "set",
       payload: {
