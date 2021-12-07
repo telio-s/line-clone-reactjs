@@ -72,100 +72,6 @@ export const getUser = /* GraphQL */ `
         }
         nextToken
       }
-      blocked {
-        id
-        username
-        email
-        lineID
-        displayName
-        statusMessage
-        profilePhoto {
-          bucket
-          region
-          key
-        }
-        coverPhoto {
-          bucket
-          region
-          key
-        }
-        phoneNumber
-        groups {
-          nextToken
-        }
-        blocked {
-          id
-          username
-          email
-          lineID
-          displayName
-          statusMessage
-          phoneNumber
-          createdAt
-          updatedAt
-        }
-        favourites {
-          id
-          username
-          email
-          lineID
-          displayName
-          statusMessage
-          phoneNumber
-          createdAt
-          updatedAt
-        }
-        createdAt
-        updatedAt
-      }
-      favourites {
-        id
-        username
-        email
-        lineID
-        displayName
-        statusMessage
-        profilePhoto {
-          bucket
-          region
-          key
-        }
-        coverPhoto {
-          bucket
-          region
-          key
-        }
-        phoneNumber
-        groups {
-          nextToken
-        }
-        blocked {
-          id
-          username
-          email
-          lineID
-          displayName
-          statusMessage
-          phoneNumber
-          createdAt
-          updatedAt
-        }
-        favourites {
-          id
-          username
-          email
-          lineID
-          displayName
-          statusMessage
-          phoneNumber
-          createdAt
-          updatedAt
-        }
-        createdAt
-        updatedAt
-      }
-      createdAt
-      updatedAt
     }
   }
 `;
@@ -278,26 +184,6 @@ export const getGroup = /* GraphQL */ `
         nextToken
       }
       isDirect
-      announce {
-        items {
-          id
-          type
-          message
-          createdAt
-          isBlock
-          hasRead
-          isCall
-          updatedAt
-        }
-        nextToken
-      }
-      files {
-        bucket
-        region
-        key
-      }
-      createdAt
-      updatedAt
     }
   }
 `;

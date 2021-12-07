@@ -4,7 +4,6 @@
 export const newOnCreateMessage = /* GraphQL */ `
   subscription NewOnCreateMessage {
     newOnCreateMessage {
-      id
       user {
         id
         username
@@ -26,30 +25,6 @@ export const newOnCreateMessage = /* GraphQL */ `
         groups {
           nextToken
         }
-        blocked {
-          id
-          username
-          email
-          lineID
-          displayName
-          statusMessage
-          phoneNumber
-          createdAt
-          updatedAt
-        }
-        favourites {
-          id
-          username
-          email
-          lineID
-          displayName
-          statusMessage
-          phoneNumber
-          createdAt
-          updatedAt
-        }
-        createdAt
-        updatedAt
       }
       group {
         id
@@ -61,17 +36,8 @@ export const newOnCreateMessage = /* GraphQL */ `
           nextToken
         }
         isDirect
-        announce {
-          nextToken
-        }
-        files {
-          bucket
-          region
-          key
-        }
-        createdAt
-        updatedAt
       }
+      id
       type
       message
       media
@@ -96,7 +62,6 @@ export const newOnCreateMessage = /* GraphQL */ `
           key
         }
       }
-      updatedAt
     }
   }
 `;
@@ -125,30 +90,6 @@ export const newOnUpdateMessage = /* GraphQL */ `
         groups {
           nextToken
         }
-        blocked {
-          id
-          username
-          email
-          lineID
-          displayName
-          statusMessage
-          phoneNumber
-          createdAt
-          updatedAt
-        }
-        favourites {
-          id
-          username
-          email
-          lineID
-          displayName
-          statusMessage
-          phoneNumber
-          createdAt
-          updatedAt
-        }
-        createdAt
-        updatedAt
       }
       group {
         id
@@ -160,16 +101,6 @@ export const newOnUpdateMessage = /* GraphQL */ `
           nextToken
         }
         isDirect
-        announce {
-          nextToken
-        }
-        files {
-          bucket
-          region
-          key
-        }
-        createdAt
-        updatedAt
       }
       type
       message
@@ -212,7 +143,6 @@ export const newOnUpdateUser = /* GraphQL */ `
       phoneNumber
       groups {
         items {
-          id
           group {
             id
             name
@@ -259,105 +189,9 @@ export const newOnUpdateUser = /* GraphQL */ `
               }
             }
           }
-          createdAt
-          updatedAt
         }
         nextToken
       }
-      blocked {
-        id
-        username
-        email
-        lineID
-        displayName
-        statusMessage
-        profilePhoto {
-          bucket
-          region
-          key
-        }
-        coverPhoto {
-          bucket
-          region
-          key
-        }
-        phoneNumber
-        groups {
-          nextToken
-        }
-        blocked {
-          id
-          username
-          email
-          lineID
-          displayName
-          statusMessage
-          phoneNumber
-          createdAt
-          updatedAt
-        }
-        favourites {
-          id
-          username
-          email
-          lineID
-          displayName
-          statusMessage
-          phoneNumber
-          createdAt
-          updatedAt
-        }
-        createdAt
-        updatedAt
-      }
-      favourites {
-        id
-        username
-        email
-        lineID
-        displayName
-        statusMessage
-        profilePhoto {
-          bucket
-          region
-          key
-        }
-        coverPhoto {
-          bucket
-          region
-          key
-        }
-        phoneNumber
-        groups {
-          nextToken
-        }
-        blocked {
-          id
-          username
-          email
-          lineID
-          displayName
-          statusMessage
-          phoneNumber
-          createdAt
-          updatedAt
-        }
-        favourites {
-          id
-          username
-          email
-          lineID
-          displayName
-          statusMessage
-          phoneNumber
-          createdAt
-          updatedAt
-        }
-        createdAt
-        updatedAt
-      }
-      createdAt
-      updatedAt
     }
   }
 `;

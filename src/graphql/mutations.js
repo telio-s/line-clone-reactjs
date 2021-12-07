@@ -154,7 +154,6 @@ export const updateUser = /* GraphQL */ `
       phoneNumber
       groups {
         items {
-          id
           group {
             id
             name
@@ -201,8 +200,6 @@ export const updateUser = /* GraphQL */ `
               }
             }
           }
-          createdAt
-          updatedAt
         }
         nextToken
       }
@@ -835,7 +832,6 @@ export const createMessage = /* GraphQL */ `
     $condition: ModelMessageConditionInput
   ) {
     createMessage(input: $input, condition: $condition) {
-      id
       user {
         id
         username
@@ -857,31 +853,6 @@ export const createMessage = /* GraphQL */ `
         groups {
           nextToken
         }
-
-        blocked {
-          id
-          username
-          email
-          lineID
-          displayName
-          statusMessage
-          phoneNumber
-          createdAt
-          updatedAt
-        }
-        favourites {
-          id
-          username
-          email
-          lineID
-          displayName
-          statusMessage
-          phoneNumber
-          createdAt
-          updatedAt
-        }
-        createdAt
-        updatedAt
       }
       group {
         id
@@ -898,17 +869,10 @@ export const createMessage = /* GraphQL */ `
           nextToken
         }
         isDirect
-        announce {
-          nextToken
-        }
-        files {
-          bucket
-          region
-          key
-        }
         createdAt
         updatedAt
       }
+      id
       type
       message
       media
@@ -933,7 +897,6 @@ export const createMessage = /* GraphQL */ `
           key
         }
       }
-      updatedAt
     }
   }
 `;

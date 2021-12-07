@@ -84,6 +84,7 @@ const ChatList = (props) => {
                 );
 
                 // updated hasRead on dynamodb
+                console.log(resultFilterTheirUser);
                 resultFilterTheirUser.map(async (data) => {
                   await updateMessageHasRead(data.id, true);
                 });

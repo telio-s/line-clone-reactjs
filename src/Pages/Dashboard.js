@@ -79,6 +79,7 @@ function reducer(state, action) {
                 messages: [...prevState.messages, action.payload],
                 idLastMsg: action.payload.id,
               }));
+              console.log(state[0].friendList);
               state[0].setFriendList(
                 state[0].friendList.map((flist) =>
                   flist.group.id === action.payload.group.id
@@ -156,6 +157,7 @@ function reducerUser(state, action) {
       let allUser = [];
       let theirUser;
       for (let i = 0; i < state[0].friendList.length; i++) {
+        console.log(action.payload);
         for (let j = 0; j < action.payload.groups.items.length; j++) {
           if (
             state[0].friendList[i].group.id ===
@@ -395,6 +397,7 @@ const Dashboard = ({ match }) => {
       history.push("/");
       return;
     }
+    console.log("auth", auth);
     const id = auth.attributes.sub;
     // let i = 1;
     // let userById;
@@ -422,7 +425,7 @@ const Dashboard = ({ match }) => {
       const userById = await getUserById(id);
       setMyUser(userById);
 
-      console.log(userById);
+      console.log("getUserById", userById);
       setUser(userById);
     } catch (err) {
       console.log(err);
