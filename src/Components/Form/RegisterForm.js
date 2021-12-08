@@ -39,6 +39,7 @@ function RegisterForm(props) {
               className={classes.textField}
               fullWidth
               placeholder="Username"
+              id="username"
               name="username"
               onChange={(e) => {
                 setErrMes(null);
@@ -60,6 +61,7 @@ function RegisterForm(props) {
               className={classes.textField}
               fullWidth
               name="email"
+              id="email"
               placeholder="Email address"
               onChange={(e) => {
                 setErrMes(null);
@@ -83,6 +85,7 @@ function RegisterForm(props) {
               placeholder="Password"
               type="password"
               name="password"
+              id="password"
               onChange={(e) => {
                 setErrMes(null);
                 onChange(e);
@@ -104,6 +107,7 @@ function RegisterForm(props) {
               fullWidth
               placeholder="Confirm Password"
               type="password"
+              id="confirm-password"
               value={confirmPassword}
               onChange={(e) => {
                 setErrMes(null);

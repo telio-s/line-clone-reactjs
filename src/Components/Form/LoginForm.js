@@ -89,6 +89,7 @@ function LoginForm(props) {
           {errMes && <p className={classes.errorMessage}>{errMes}</p>}
         </div>
         <Button
+          id="registerBtn"
           className={classes.regOrLogin}
           onClick={() => setForm({ ...form, type: "Register" })}
         >

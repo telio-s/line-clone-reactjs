@@ -293,23 +293,21 @@ const Dashboard = ({ match }) => {
       return new Date(a.ISOtime).getTime() - new Date(b.ISOtime).getTime();
     });
 
-    if (myUser) {
-      dispatch({
-        type: "set",
-        payload: {
-          chatList: chatList,
-          chat: chat,
-          countNoti: countNoti,
-          setChat: setChat,
-          setChatList: setChatList,
-          setCountNoti: setCountNoti,
-          user: myUser,
-          setCall,
-          friendList,
-          setFriendList,
-        },
-      });
-    }
+    dispatch({
+      type: "set",
+      payload: {
+        chatList: chatList,
+        chat: chat,
+        countNoti: countNoti,
+        setChat: setChat,
+        setChatList: setChatList,
+        setCountNoti: setCountNoti,
+        user: myUser,
+        setCall,
+        friendList,
+        setFriendList,
+      },
+    });
 
     dispatchUser({
       type: "set",
@@ -333,13 +331,16 @@ const Dashboard = ({ match }) => {
   }, [chatList, chat, countNoti, friendList, myUser]);
 
   useEffect(() => {
-    setupSubscriptions();
-    return () => {
-      subscriptionOnCreateMsg.unsubscribe();
-      subscriptionOnUpdateMsg.unsubscribe();
-      subscriptionOnUpdateUser.unsubscribe();
-    };
-  }, []);
+    if (myUser) {
+      console.log("subscribe on useEffect");
+      setupSubscriptions();
+      return () => {
+        subscriptionOnCreateMsg.unsubscribe();
+        subscriptionOnUpdateMsg.unsubscribe();
+        subscriptionOnUpdateUser.unsubscribe();
+      };
+    }
+  }, [myUser]);
 
   let subscriptionOnCreateMsg;
   let subscriptionOnUpdateMsg;
@@ -388,6 +389,7 @@ const Dashboard = ({ match }) => {
       onClick: "noClick",
       token: token,
     });
+
     setIsDeclineCall(newMsgObj.isDeclineCall);
   };
 
